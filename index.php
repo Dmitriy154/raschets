@@ -28,7 +28,7 @@
 
  </div> <!--container-->
 </main>
-<?php include ("blocks/scripts.html") ?><!-- скрипты Bootstrap -->
+<?php include ("blocks/scripts.html") ?><!-- скрипты Bootstrap, yandex metrika -->
 
 
 </body>

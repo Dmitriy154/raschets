@@ -2,27 +2,36 @@
 <html lang="en">
 
 <head>
-	<?php include ("blocks/head.html") ?><!-- CSS meta -->
+	<?php include ("../../blocks/head.html") ?><!-- CSS meta -->
 	<title>Категории помещений</title>
 </head>
 
-<body style="background: url(img/fon_pesok.png)">
+<body>
 <main>
-<?php include ("blocks/menu.html") ?><!-- МЕНЮ -->
-
 <!-- -->
  <div class="container-fluid">
 	<div class="row">
 		<div id="myTitle" class='col col-md-12 text-center bg-secondary text-white mt-0'>
 			<h6>Расчет категории помещений по взрывопожарной и пожарной опасности в соответствии с ТКП 474-2013</h6>
 		</div>
-		<div id="stage"></div>
-	</div><!-- row cards-->
+	</div>
+
+	<div class="row m-2">
+		<div class="col-lg-2 mx-auto text-center">
+			<a href="../../kat.php"><button class="btn btn-outline-primary">&#8592; Назад</button></a>
+		</div>	
+	</div>	
+	
+	<div class="row m-2">
+		<div class="col-lg-10 mx-auto text-center">
+			<img src="../../img/pages/method_a.jpg" class="img-fluid"></img>
+		</div>	
+	</div>
+
+
  </div> <!--container-->
 </main>
 
-  <?php include ("blocks/scripts.html") ?><!--  Bootstrap, yandex metrika-->
-  <script src="js/kat/boot.js"></script>
-  <script src="js/kat/kat_main.js"></script>
+  <?php include ("../../blocks/scripts.html") ?><!--  Bootstrap -->
 </body>
 </html>

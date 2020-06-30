@@ -13,6 +13,10 @@ display: block;
 width: 100%;
 margin: 10px;
 height:auto;
-border: 1px solid #004d40;
+border: 2px solid #09501b;
 border-radius: 10px;
+}
+
+.row > div {
+    border: solid 1px rgb(206, 204, 204); 
 }

@@ -38,25 +38,26 @@ let row_3 = cr(stage,'div','form-group row m-3 p-1 justify-content-center');
 
 
                 //https://developer.snapappointments.com/bootstrap-select
-                let formSpisok = cr(row_32, 'form', 'col-sm-6');
+                let formSpisok = cr(row_32, 'form');
                 formSpisok.innerHTML = `
-                    <div class="input-group mb-2">
-                        <select id="select1" class="selectpicker form-control" multiple data-live-search="true" title="Выберите горючие материалы на участке:">
-                            <option data-subtext="13.8">Древесина</option>
-                            <option data-subtext="47.14">Полиэтилен</option>
-                            <option data-subtext="13.4">Бумага</option>
-                            <option data-subtext="33,0">Резина</option>
-                            <option data-subtext="25,1">Бензин</option>
-                            <option>Другиеr</option>
-                        </select>
-                                                
-                        <div class="input-group-append">
-                            <button class="btn btn-outline-secondary" type="button" id="btn_table">Добавить</button>
-                        </div>
+                <div class="input-group mb-3">
+                    
+
+                    <select id="select1" class="selectpicker form-control" multiple data-live-search="true" title="Выберите горючие материалы на участке:">
+                        <option data-subtext="13.8">Древесина</option>
+                        <option data-subtext="47.14">Полиэтилен</option>
+                        <option data-subtext="13.4">Бумага</option>
+                        <option data-subtext="33,0">Резина</option>
+                        <option data-subtext="25,1">Бензин</option>
+                        <option>Другиеr</option>
+                    </select>
+                          
+                    <div class="input-group-append">
+                        <button class="btn btn-outline-secondary" type="button" id="btn_table">Добавить</button>
                     </div>
+
+                </div>
                 `;
-
-
                 //строка для таблицы
                 let row_33 = cr(_body1,'div', 'row p-1 mx-auto text-center justify-content-center');
                     let _table = cr(row_33, 'table', 'table table-border');
@@ -79,12 +80,13 @@ btn_table.addEventListener('click', () => {
     let selected = Array.from(select1.options)
     .filter(option => option.selected)
     .map(option => option.value);
+    console.log(selected);
 
     //получаем теплоту сгорания выбранных материалов
     let selected_t = Array.from(select1.options)
     .filter(option => option.selected)
     .map(option => option.dataset.subtext);
-
+    //console.log(selected_t);
 
     //создаем таблицу если есть выбранные варианты https://bootstrap-4.ru/docs/4.5/content/tables/#borderless-table
     //tr - строка, td - столбец
@@ -102,14 +104,11 @@ btn_table.addEventListener('click', () => {
     //узнаем количество строк selected.length
     for (let i=0; i<selected.length; i++ ) {
     }
-
-
-    //добавляем копку очистить таблицу
-                let row_34 = cr(_body1, 'div', 'row p-1 mx-auto text-center justify-content-center');
-                    let btn_clear_table = cr (row_34, 'button', 'btn btn-outline-secondary', 'Очистить таблицу');
-                    btn_clear_table.type = 'button';
 });
-          
+
+
+
+                
                 
 //инициализируем мультисписок              
 $('select').selectpicker();
