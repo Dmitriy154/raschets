@@ -2,6 +2,7 @@
 const Plot = function (options) {
     this.sq = options.sq
     this.tb = options.tb
+    this.gm = []; //горючие материалы участка
 }
 
 
@@ -48,7 +49,7 @@ let row_3 = cr(stage,'div','form-group row m-3 p-1 justify-content-center');
                 <div class="input-group mb-1">
                     
 
-                    <select id="select1" class="selectpicker" data-style="btn-primary" data-width="360px" multiple data-live-search="true" title="Выберите горючие материалы на участке:">
+                    <select id="select1" class="selectpicker"  data-width="360px" multiple data-live-search="true" title="Выберите горючие материалы на участке:">
                         <option data-subtext="13.8">Древесина</option>
                         <option data-subtext="47.14">Полиэтилен</option>
                         <option data-subtext="13.4">Бумага</option>
@@ -66,14 +67,14 @@ let row_3 = cr(stage,'div','form-group row m-3 p-1 justify-content-center');
 
                 //строка для таблицы
                 let row_33 = cr(_body1,'div', 'row p-1 mx-auto text-center justify-content-center');
-                    let _table = cr(row_33, 'table', 'table table-border');
+                    let _table = cr(row_33, 'table', 'table table-border table-sm');
                         let _thead = cr(_table, 'thead', 'thead-dark');
                         _thead.innerHTML = `
                             <tr>
                                 <th>Наименование горючего материала (вещества)</th>
                                 <th>Низшая теплота сгорания Q<sup>p</sup><sub>H</sub>, МДж/кг</th>
                                 <th>Масса, кг</th>
-                                <th>Общая пож. нагрузка участка, МДж</th>                           
+                                <th>Пож. нагрузка горючего материала (вещества), МДж</th>                           
                             </tr>
                 `
                         let _tbody = cr(_table,'tbody');
@@ -96,24 +97,40 @@ btn_table.addEventListener('click', () => {
     if (select1.selectedIndex >= 0) {
 
         _table.style = "display:block";
-        btn_clr.style = "display:block";
+        btn_clr.style = "display:block" ;
+
 
         // получаем все выбранные значения из select с multiple
         let selected = Array.from(select1.options)
         .filter(option => option.selected)
         .map(option => option.value);
 
+        plot_1.gm = selected.concat();
+
+        //выделенные позиции для последующего удаления
+        let selectedTrue = Array.from(select1.options)
+        .filter(option=> option.selected)
+
         //получаем теплоту сгорания выбранных материалов
         let selected_t = Array.from(select1.options)
         .filter(option => option.selected)
         .map(option => option.dataset.subtext);
 
-        //создаем строки и заполняем строки
+
+        //создаем строки и заполняем строки наименованиями горючих веществ
         selected.forEach((item, i)=> {
+            
+            // проверка строк первого столбца
+            if (plot_1.gm.includes(item)){
+                
+            }
+
             let _tr = cr(_tbody,'tr');
                 let _td2 = cr(_tr, 'td', '', item);
                 let _td3 = cr (_tr,'td', '', selected_t[i]);
+
         });
+
 
         //узнаем количество строк selected.length
         for (let i=0; i<selected.length; i++ ) {
