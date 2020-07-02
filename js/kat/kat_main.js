@@ -25,7 +25,7 @@ let bt_1 = cr(col_21, 'button', 'btn btn-primary btn-lg btn-block', 'Прист�
 
 let str_3 = cr(stage, 'div', 'row m-3 p-1');
 let col_31 = cr(str_3, 'div', 'col-lg-4 mx-auto');
-let bt_2 = cr(col_31, 'button', 'btn btn-secondary btn-lg btn-block', 'Упрощенный расчет для категории В1-В4, Д');
+let bt_2 = cr(col_31, 'button', 'btn btn-success btn-lg btn-block', 'Упрощенный расчет для категории В1-В4, Д');
 
 bt_1.addEventListener('click', ()=> alert('Данный раздел находится в разработке'));
 bt_2.addEventListener('click', ()=> location.href = 'pages/kat/simple_calc.php');

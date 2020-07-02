@@ -1,6 +1,8 @@
-//переменные участков
-let sq = []; //площадь хранения участков
-let tb = []; //таблицы участков
+//Объект участки
+const Plot = function (options) {
+    this.sq = options.sq
+    this.tb = options.tb
+}
 
 
 let form1 = cr(stage,'form');
@@ -20,19 +22,22 @@ let form1 = cr(stage,'form');
             input2.type = 'number';
   
 
-//участки
+
+//участок №1
+const plot_1 = new Plot({sq:'', tb:''});
+
 let row_3 = cr(stage,'div','form-group row m-3 p-1 justify-content-center');
     let _card1 = cr(row_3, 'div', 'card col-9 p-0');
         let _header1 = cr(_card1, 'div','card-header container-fluid m-0', "Участок №1 ");
         _header1.innerHTML += '<img type="button" data-toggle="modal" data-target="#exampleModal" src="../../img/icons/question.png"></img>';  
 
         let _body1 = cr(_card1, 'div','card-body p-1');
-            let row_31 = cr(_body1,'div', 'form-group row m-2 p-1');
+            let row_31 = cr(_body1,'div', 'form-group row p-1');
                 let label_3 = cr(row_31, 'label', 'col-sm-6 col-form-label border-bottom text-right', "Площадь участка (хранения)");
                     label_3.innerHTML += ", м<sup>2</sup>";
-                let col_31 = cr(row_31, 'div', 'col-sm-6');
-               sq[0] = cr(col_31, 'input', 'form-control');
-               sq[0].type = 'number';
+                let col_31 = cr(row_31, 'div', 'col-sm-4');
+               plot_1.sq = cr(col_31, 'input', 'form-control');
+               plot_1.sq.type = 'number';
             
             let row_32 = cr(_body1,'div', 'row p-1 mx-auto text-center justify-content-center');
 
@@ -40,10 +45,10 @@ let row_3 = cr(stage,'div','form-group row m-3 p-1 justify-content-center');
                 //https://developer.snapappointments.com/bootstrap-select
                 let formSpisok = cr(row_32, 'form');
                 formSpisok.innerHTML = `
-                <div class="input-group mb-3">
+                <div class="input-group mb-1">
                     
 
-                    <select id="select1" class="selectpicker form-control" multiple data-live-search="true" title="Выберите горючие материалы на участке:">
+                    <select id="select1" class="selectpicker" data-style="btn-primary" data-width="360px" multiple data-live-search="true" title="Выберите горючие материалы на участке:">
                         <option data-subtext="13.8">Древесина</option>
                         <option data-subtext="47.14">Полиэтилен</option>
                         <option data-subtext="13.4">Бумага</option>
@@ -52,12 +57,13 @@ let row_3 = cr(stage,'div','form-group row m-3 p-1 justify-content-center');
                         <option>Другиеr</option>
                     </select>
                           
-                    <div class="input-group-append">
-                        <button class="btn btn-outline-secondary" type="button" id="btn_table">Добавить</button>
+                    <div class="input-group-append ml-1">
+                        <button class="btn btn-outline-primary" type="button" id="btn_table">Добавить</button>
                     </div>
 
                 </div>
                 `;
+
                 //строка для таблицы
                 let row_33 = cr(_body1,'div', 'row p-1 mx-auto text-center justify-content-center');
                     let _table = cr(row_33, 'table', 'table table-border');
@@ -69,24 +75,60 @@ let row_3 = cr(stage,'div','form-group row m-3 p-1 justify-content-center');
                                 <th>Масса, кг</th>
                                 <th>Общая пож. нагрузка участка, МДж</th>                           
                             </tr>
-                        `
-                       
+                `
+                        let _tbody = cr(_table,'tbody');
+
+                //строка для кнопки очистить таблицу
+                let row_btn_clr_table = cr(_body1,'div', 'row p-1 mx-auto text-center justify-content-center');
+                    let btn_clr = cr(row_btn_clr_table, 'button', 'btn btn-outline-primary', 'Очистить таблицу');
+                        btn_clr.type = 'button';
+
+                 //скрываем таблицу и кнопку "Очистить таблицу"
+                _table.style = "display:none"; 
+                btn_clr.style = "display:none";    
                 
+
 
 //кнопка добавить в таблицу
 btn_table.addEventListener('click', () => {
-    
-    // получаем все выбранные значения из select с multiple
-    let selected = Array.from(select1.options)
-    .filter(option => option.selected)
-    .map(option => option.value);
-    console.log(selected);
 
-    //получаем теплоту сгорания выбранных материалов
-    let selected_t = Array.from(select1.options)
-    .filter(option => option.selected)
-    .map(option => option.dataset.subtext);
-    //console.log(selected_t);
+    //если выбран какой-либо материал, то создаем таблицу и заполняем ее
+    if (select1.selectedIndex >= 0) {
+
+        _table.style = "display:block";
+        btn_clr.style = "display:block";
+
+        // получаем все выбранные значения из select с multiple
+        let selected = Array.from(select1.options)
+        .filter(option => option.selected)
+        .map(option => option.value);
+
+        //получаем теплоту сгорания выбранных материалов
+        let selected_t = Array.from(select1.options)
+        .filter(option => option.selected)
+        .map(option => option.dataset.subtext);
+
+        //создаем строки и заполняем строки
+        selected.forEach((item, i)=> {
+            let _tr = cr(_tbody,'tr');
+                let _td2 = cr(_tr, 'td', '', item);
+                let _td3 = cr (_tr,'td', '', selected_t[i]);
+        });
+
+        //узнаем количество строк selected.length
+        for (let i=0; i<selected.length; i++ ) {
+        }
+
+
+
+    }
+  
+btn_clr.addEventListener('click', () =>{
+    _tbody.innerHTML = '';
+});
+
+
+
 
     //создаем таблицу если есть выбранные варианты https://bootstrap-4.ru/docs/4.5/content/tables/#borderless-table
     //tr - строка, td - столбец
@@ -94,16 +136,9 @@ btn_table.addEventListener('click', () => {
     //cr(cr(_table, 'tr'), 'td');
 
 
-    selected.forEach((item, i)=> {
-        let _tr = cr(_table,'tr');
-            let _td2 = cr(_tr, 'td', '', item);
-            let _td3 = cr (_tr,'td', '', selected_t[i]);
-    });
 
 
-    //узнаем количество строк selected.length
-    for (let i=0; i<selected.length; i++ ) {
-    }
+
 });
 
 

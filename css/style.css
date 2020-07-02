@@ -18,5 +18,9 @@ border-radius: 10px;
 }
 
 .row > div {
-    border: solid 1px rgb(206, 204, 204); 
+    border: solid 1px rgb(212, 238, 213); 
+}
+
+.row {
+    border: dotted 1px rgb(207, 207, 245);
 }
