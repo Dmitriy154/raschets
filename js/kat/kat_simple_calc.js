@@ -99,65 +99,42 @@ btn_table.addEventListener('click', () => {
         _table.style = "display:block";
         btn_clr.style = "display:block" ;
 
-
         // получаем все выбранные значения из select с multiple
         let selected = Array.from(select1.options)
         .filter(option => option.selected)
         .map(option => option.value);
-
-        plot_1.gm = selected.concat();
-
-        //выделенные позиции для последующего удаления
-        let selectedTrue = Array.from(select1.options)
-        .filter(option=> option.selected)
 
         //получаем теплоту сгорания выбранных материалов
         let selected_t = Array.from(select1.options)
         .filter(option => option.selected)
         .map(option => option.dataset.subtext);
 
-
         //создаем строки и заполняем строки наименованиями горючих веществ
         selected.forEach((item, i)=> {
-            
-            // проверка строк первого столбца
-            if (plot_1.gm.includes(item)){
-                
-            }
 
             let _tr = cr(_tbody,'tr');
-                let _td2 = cr(_tr, 'td', '', item);
-                let _td3 = cr (_tr,'td', '', selected_t[i]);
+                
+                if(!plot_1.gm.includes(item)) {
+                    plot_1.gm.push(item);//заполняем массив данных, которые заносятся в таблицу
+                    let _td2 = cr(_tr, 'td', 'align-middle', item);
+                    let _td3 = cr (_tr,'td', 'align-middle', selected_t[i]);
+                    let _td4 = cr(_tr, 'td');
+                        _td4.innerHTML = `<input type="number" class="form-control text-center">`;
+                    let _td5 = cr(_tr, 'td', 'align-middle');    
+                    
+                }
 
         });
 
 
-        //узнаем количество строк selected.length
-        for (let i=0; i<selected.length; i++ ) {
-        }
-
-
-
     }
-  
+});
+
+//кнопка "очистить таблицу"
 btn_clr.addEventListener('click', () =>{
     _tbody.innerHTML = '';
+    plot_1.gm = [];
 });
-
-
-
-
-    //создаем таблицу если есть выбранные варианты https://bootstrap-4.ru/docs/4.5/content/tables/#borderless-table
-    //tr - строка, td - столбец
-        
-    //cr(cr(_table, 'tr'), 'td');
-
-
-
-
-
-});
-
 
 
                 
