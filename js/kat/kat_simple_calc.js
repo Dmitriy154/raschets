@@ -120,13 +120,20 @@ btn_table.addEventListener('click', () => {
                     let _td3 = cr (_tr,'td', 'align-middle', selected_t[i]);
                     let _td4 = cr(_tr, 'td');
                         _td4.innerHTML = `<input type="number" class="form-control text-center">`;
-                    let _td5 = cr(_tr, 'td', 'align-middle');    
+                   
+                        let _td5 = cr(_tr, 'td', 'align-middle');
+                        
+                    _td4.addEventListener('input', (e)=> {
+                        if(e.target.value) {
+                            _td5.textContent = Math.round(selected_t[i]*e.target.value*100)/100;    //+num.toFixed(5)
+                        } else {
+                            _td5.textContent ='';
+                        }
+                    });    
                     
                 }
 
         });
-
-
     }
 });
 
