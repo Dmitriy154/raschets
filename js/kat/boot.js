@@ -9,7 +9,6 @@ function cr (_parent, _tagName, _class, _textContent) {
     return elem;
 }
 
-
 //ставим цифру в формуле в нижний регистр
 function createFormula (t) {
     _t = '';

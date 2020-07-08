@@ -42,28 +42,34 @@ let row_3 = cr(stage,'div','form-group row m-3 p-1 justify-content-center');
             
             let row_32 = cr(_body1,'div', 'row p-1 mx-auto text-center justify-content-center');
 
-
+                
+                //делаем список, формируем из базы данных
                 //https://developer.snapappointments.com/bootstrap-select
                 let formSpisok = cr(row_32, 'form');
-                formSpisok.innerHTML = `
-                <div class="input-group mb-1">
+                    let df1 = cr(formSpisok, 'div', 'input-group mb-1');
+                        df1.innerHTML = `
+                        <select id="select1" class="selectpicker"  data-width="360px" multiple data-live-search="true" title="Выберите горючие материалы на участке:">
+                        </select>
+                        <div class="input-group-append ml-1">
+                            <button class="btn btn-outline-primary" type="button" id="btn_table">Добавить</button>
+                        </div>
+                        `
+
+                    //сортируем массив: ставим 10..9 .. 8 позиции
+                    for (let i=0; i<tv.length; i++){
+                        if (tv[i].prio>0) console.log(tv[i]);////////////////////////////STOP
+                    }
                     
+                    
+                    // создание option в селекте
+                    tv.forEach((el) => {
+                         if (el.Q_H) {
+                            let opt = cr(select1, 'option', '', el.name);       
+                            opt.dataset.subtext = el.Q_H;
+                        }
+                    });
+                  
 
-                    <select id="select1" class="selectpicker"  data-width="360px" multiple data-live-search="true" title="Выберите горючие материалы на участке:">
-                        <option data-subtext="13.8">Древесина</option>
-                        <option data-subtext="47.14">Полиэтилен</option>
-                        <option data-subtext="13.4">Бумага</option>
-                        <option data-subtext="33,0">Резина</option>
-                        <option data-subtext="25,1">Бензин</option>
-                        <option>Другиеr</option>
-                    </select>
-                          
-                    <div class="input-group-append ml-1">
-                        <button class="btn btn-outline-primary" type="button" id="btn_table">Добавить</button>
-                    </div>
-
-                </div>
-                `;
 
                 //строка для таблицы
                 let row_33 = cr(_body1,'div', 'row p-1 mx-auto text-center justify-content-center');
@@ -124,7 +130,7 @@ btn_table.addEventListener('click', () => {
                         let _td5 = cr(_tr, 'td', 'align-middle');
                         
                     _td4.addEventListener('input', (e)=> {
-                        if(e.target.value) {
+                        if(e.target.value > 0) {
                             _td5.textContent = Math.round(selected_t[i]*e.target.value*100)/100;    //+num.toFixed(5)
                         } else {
                             _td5.textContent ='';

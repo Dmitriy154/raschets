@@ -64,9 +64,9 @@
   <?php include ("../../blocks/scripts.html") ?><!--  Bootstrap -->
  	<script src="../../js/bootstrap-select.min.js"></script>
 
-
-  <script src="../../js/kat/boot.js"></script>
-  <script src="../../js/kat/kat_simple_calc.js"></script>
+	<script src="../../db/tv.js"></script> <!--подключаем данные -->
+	<script src="../../js/kat/boot.js"></script>
+	<script src="../../js/kat/kat_simple_calc.js"></script>
   
 
 </body>
