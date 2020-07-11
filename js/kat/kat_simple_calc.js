@@ -1,99 +1,156 @@
 //Объект участки
-const Plot = function (options) {
-    this.sq = options.sq
-    this.tb = options.tb
-    this.gm = []; //горючие материалы участка
-}
+class Plot {
+    sq = 10; //площадь участка
+    gm = []; //горючие материалы участка
+    Q = 0; //общая пожарная нагрузка участка
+    q = 0; //удельная пожарная нагрузка участка
+    bodyPost;
 
 
-let form1 = cr(stage,'form');
-    let row_1 = cr(form1, 'div', 'form-group row m-3 p-1 justify-content-center');
-        let label_1 = cr(row_1, 'label', 'col-sm-3 col-form-label border-bottom text-right', "Наименование помещения");
-        let col_11 = cr(row_1, 'div', 'col-sm-3',);
-            let input1 = cr(col_11, 'input', 'form-control');
-            input1.type = 'text';
+constructor(num) {
+    this.num = num; //номер участка
 
+    let row_1 = cr(stage,'div','form-group row m-3 p-1 justify-content-center');
+    let _card1 = cr(row_1, 'div', 'card col-9 p-0');
+    let _header1 = cr(_card1, 'div','card-header container-fluid m-0');
+        _header1.innerHTML += `Участок №${num}<img type="button" data-toggle="modal" data-target="#exampleModal" src="../../img/icons/question.png"></img>`;  
 
-    let row_2 = cr(form1, 'div', 'form-group row m-3 p-1 justify-content-center');
-        let label_2 = cr(row_2, 'label', 'col-sm-3 col-form-label border-bottom text-right');
-        label_2.innerHTML = "Площадь помещения, м<sup>2</sup>";
+    this.bodyPost = cr(_card1, 'div','card-body p-1');
+        let row_11 = cr(this.bodyPost,'div', 'form-group row p-1');
+            let label_1 = cr(row_11, 'label', 'col-sm-6 col-form-label border-bottom text-right', "Площадь участка (хранения)");
+                label_1.innerHTML += ", м<sup>2</sup>";
+            let col_11 = cr(row_11, 'div', 'col-sm-4');
+                let _sq = cr(col_11, 'input', 'form-control');
+                    _sq.type = 'number';
 
-        let col_21 = cr(row_2, 'div', 'col-sm-3',);
-            let input2 = cr(col_21, 'input', 'form-control');
-            input2.type = 'number';
-  
+            //площадь участка, обработка поля ввода
+            _sq.addEventListener('input', (e)=> {
+                
+                if (e.target.value >= 10) {
+                    this.sq = e.target.value;
+                } else {
+                    this.sq.sq = 10;
+                }
 
+                if(this.sq.Q >0)  sumPN(); //расчет общей и удельной ПН 
+            }); 
 
-//участок №1
-const plot_1 = new Plot({sq:'', tb:''});
+        let row_2 = cr(this.bodyPost,'div', 'row p-1 mx-auto text-center justify-content-center');
 
-let row_3 = cr(stage,'div','form-group row m-3 p-1 justify-content-center');
-    let _card1 = cr(row_3, 'div', 'card col-9 p-0');
-        let _header1 = cr(_card1, 'div','card-header container-fluid m-0', "Участок №1 ");
-        _header1.innerHTML += '<img type="button" data-toggle="modal" data-target="#exampleModal" src="../../img/icons/question.png"></img>';  
+        //делаем список, формируем из базы данных
+        //https://developer.snapappointments.com/bootstrap-select
+            let formSpisok = cr(row_2, 'form');
+                let df1 = cr(formSpisok, 'div', 'input-group mb-1');
 
-        let _body1 = cr(_card1, 'div','card-body p-1');
-            let row_31 = cr(_body1,'div', 'form-group row p-1');
-                let label_3 = cr(row_31, 'label', 'col-sm-6 col-form-label border-bottom text-right', "Площадь участка (хранения)");
-                    label_3.innerHTML += ", м<sup>2</sup>";
-                let col_31 = cr(row_31, 'div', 'col-sm-4');
-               plot_1.sq = cr(col_31, 'input', 'form-control');
-               plot_1.sq.type = 'number';
+                //Создаем select Выбор горючих материалов
+                let select1 = cr(df1, 'select', 'selectpicker');
+                    select1.dataset.width="360px";
+                    select1.setAttribute('multiple', 'true');
+                    select1.setAttribute('title', 'Выберите горючие материалы на участке:');
+                    select1.setAttribute('data-live-search', 'true');
+
+                //кнопка Добавить ГМ
+                let btn_table = cr(df1, 'button', 'btn btn-outline-primary btn-sm ml-1', 'Добавить ГМ');
+                    btn_table.type = 'button';
+
+                //Кнопка Добавить другой ГМ
+                let btn_table_other = cr(df1, 'button', 'btn btn-outline-secondary btn-sm ml-3', 'Добавить другой ГМ');
+                    btn_table_other.type = 'button';
+                    btn_table_other.setAttribute('title', 'Если вы не нашли в списке необходимый горючий материал, то добавьте в таблицу свои данные');
+                    btn_table_other.dataset.toggle = 'tooltip';
+                    btn_table_other.dataset.placement="top";
+
+                //сортируем массив: создаем массив с распростр. веществами, сортир., соединяем
+                let arrPop = [];
+
+                //заполняем новый массив и удаляем объекты из старого, чтобы потом соединить их
+                for (let i=0; i<tv.length; i++){
+                    if (tv[i].prio>0) {
+                        arrPop.push(tv[i]);
+                        tv.splice(i,1);
+                    };
+                }
+
+                //сортируем новый массив
+                arrPop.sort((a,b) => {
+                    return a.prio-b.prio;
+                });
             
-            let row_32 = cr(_body1,'div', 'row p-1 mx-auto text-center justify-content-center');
+                //создаем массив из двух
+                let arr = arrPop.concat(tv);
 
-                
-                //делаем список, формируем из базы данных
-                //https://developer.snapappointments.com/bootstrap-select
-                let formSpisok = cr(row_32, 'form');
-                    let df1 = cr(formSpisok, 'div', 'input-group mb-1');
-                        df1.innerHTML = `
-                        <select id="select1" class="selectpicker"  data-width="360px" multiple data-live-search="true" title="Выберите горючие материалы на участке:">
-                        </select>
-                        <div class="input-group-append ml-1">
-                            <button class="btn btn-outline-primary" type="button" id="btn_table">Добавить</button>
-                        </div>
-                        `
-
-                    //сортируем массив: ставим 10..9 .. 8 позиции
-                    for (let i=0; i<tv.length; i++){
-                        if (tv[i].prio>0) console.log(tv[i]);////////////////////////////STOP
+                // создание option в селекте
+                arr.forEach((el) => {
+                    if (el.Q_H) {
+                        let opt = cr(select1, 'option', '', el.name);       
+                        opt.dataset.subtext = el.Q_H;
                     }
-                    
-                    
-                    // создание option в селекте
-                    tv.forEach((el) => {
-                         if (el.Q_H) {
-                            let opt = cr(select1, 'option', '', el.name);       
-                            opt.dataset.subtext = el.Q_H;
-                        }
-                    });
-                  
+                });
 
 
-                //строка для таблицы
-                let row_33 = cr(_body1,'div', 'row p-1 mx-auto text-center justify-content-center');
-                    let _table = cr(row_33, 'table', 'table table-border table-sm');
-                        let _thead = cr(_table, 'thead', 'thead-dark');
-                        _thead.innerHTML = `
-                            <tr>
-                                <th>Наименование горючего материала (вещества)</th>
-                                <th>Низшая теплота сгорания Q<sup>p</sup><sub>H</sub>, МДж/кг</th>
-                                <th>Масса, кг</th>
-                                <th>Пож. нагрузка горючего материала (вещества), МДж</th>                           
-                            </tr>
-                `
-                        let _tbody = cr(_table,'tbody');
+        //строка для таблицы
+        let row_3 = cr(this.bodyPost,'div', 'row p-1 mx-auto text-center justify-content-center');
+            let _table = cr(row_3, 'table', 'table table-border table-sm');
+                let _thead = cr(_table, 'thead', 'thead-dark');
+                    _thead.innerHTML = `
+                        <tr>
+                            <th>Наименование горючего материала (вещества)</th>
+                            <th>Низшая теплота сгорания Q<sup>p</sup><sub>H</sub>, МДж/кг</th>
+                            <th>Масса, кг</th>
+                            <th>Пож. нагрузка горючего материала (вещества), МДж</th>                           
+                        </tr>`
+                let _tbody = cr(_table,'tbody');
 
-                //строка для кнопки очистить таблицу
-                let row_btn_clr_table = cr(_body1,'div', 'row p-1 mx-auto text-center justify-content-center');
-                    let btn_clr = cr(row_btn_clr_table, 'button', 'btn btn-outline-primary', 'Очистить таблицу');
-                        btn_clr.type = 'button';
+        //строка для кнопки очистить таблицу
+        let row_btn_clr_table = cr(this.bodyPost,'div', 'row p-1 mx-auto text-center justify-content-center');
+            let btn_clr = cr(row_btn_clr_table, 'button', 'btn btn-outline-primary btn-sm', 'Очистить таблицу');
+                btn_clr.type = 'button';
 
-                 //скрываем таблицу и кнопку "Очистить таблицу"
-                _table.style = "display:none"; 
-                btn_clr.style = "display:none";    
-                
+        //скрываем таблицу и кнопку "Очистить таблицу"
+        _table.style = "display:none"; 
+        btn_clr.style = "display:none";
+           
+
+
+//кнопка добавить другой ГМ
+btn_table_other.addEventListener('click', () => {
+    _table.style = "display:block";
+    btn_clr.style = "display:block" ;
+    
+    //создаем строку и столбцы
+    let _tr = cr(_tbody,'tr');
+        let _td1 = cr(_tr, 'td');
+        let _td2 = cr(_tr, 'td', 'align-middle');
+        let _td3 = cr (_tr,'td','align-middle');
+        let _td4 = cr(_tr, 'td','align-middle');
+
+        _td1.innerHTML = `<input type="text" class="form-control text-center">`;
+        _td2.innerHTML = `<input type="number" class="form-control text-center">`;
+        _td3.innerHTML = `<input type="number" class="form-control text-center">`;
+
+        _td2.addEventListener('input', (e)=> {
+            if(e.target.value > 0 && _td3.lastChild.value) {
+                _td4.textContent = Math.round(_td3.lastChild.value*e.target.value*100)/100;    //+num.toFixed(5)
+            } else {
+                _td4.textContent ='';
+            }
+
+            sumPN(); //расчет общей и удельной ПН
+        });      
+        
+        _td3.addEventListener('input', (e)=> {
+            if(e.target.value > 0 && _td2.lastChild.value) {
+                _td4.textContent = Math.round(_td2.lastChild.value*e.target.value*100)/100;    //+num.toFixed(5)
+            } else {
+                _td4.textContent ='';
+            }
+
+            sumPN(); //расчет общей и удельной ПН
+        });
+        
+        last_tr(this.bodyPost); //общая ПН и удельная ПН
+});
+
 
 
 //кнопка добавить в таблицу
@@ -120,66 +177,114 @@ btn_table.addEventListener('click', () => {
 
             let _tr = cr(_tbody,'tr');
                 
-                if(!plot_1.gm.includes(item)) {
-                    plot_1.gm.push(item);//заполняем массив данных, которые заносятся в таблицу
-                    let _td2 = cr(_tr, 'td', 'align-middle', item);
-                    let _td3 = cr (_tr,'td', 'align-middle', selected_t[i]);
-                    let _td4 = cr(_tr, 'td');
-                        _td4.innerHTML = `<input type="number" class="form-control text-center">`;
+                if(!arrPlot[0].gm.includes(item)) {
+                    arrPlot[0].gm.push(item);//заполняем массив данных, которые заносятся в таблицу
+                    let _td1 = cr(_tr, 'td', 'align-middle', item);
+                    let _td2 = cr (_tr,'td', 'align-middle', selected_t[i]);
+                    let _td3 = cr(_tr, 'td');
+                        _td3.innerHTML = `<input type="number" class="form-control text-center">`;
                    
-                        let _td5 = cr(_tr, 'td', 'align-middle');
+                        let _td4 = cr(_tr, 'td', 'align-middle');
                         
-                    _td4.addEventListener('input', (e)=> {
+                    _td3.addEventListener('input', (e)=> {
                         if(e.target.value > 0) {
-                            _td5.textContent = Math.round(selected_t[i]*e.target.value*100)/100;    //+num.toFixed(5)
+                            _td4.textContent = Math.round(selected_t[i]*e.target.value*100)/100;    //+num.toFixed(5)
                         } else {
-                            _td5.textContent ='';
+                            _td4.textContent ='';
                         }
-                    });    
-                    
-                }
 
+                        sumPN(); //расчет общей и удельной ПН
+                    });    
+                }
         });
-    }
+
+        last_tr(this.bodyPost); //общая ПН и удельная ПН
+    };
+     
 });
+
+
 
 //кнопка "очистить таблицу"
 btn_clr.addEventListener('click', () =>{
     _tbody.innerHTML = '';
-    plot_1.gm = [];
+    arrPlot[0].gm = [];
 });
 
 
-                
+} //constructor
+
+}//class
+
+
+
+// Наименование помещения и Площадь помещения
+let form1 = cr(stage,'form');
+    let row_1 = cr(form1, 'div', 'form-group row m-3 p-1 justify-content-center');
+        let label_1 = cr(row_1, 'label', 'col-sm-3 col-form-label border-bottom text-right', "Наименование помещения");
+        let col_11 = cr(row_1, 'div', 'col-sm-3',);
+            let input1 = cr(col_11, 'input', 'form-control');
+            input1.type = 'text';
+
+
+    let row_2 = cr(form1, 'div', 'form-group row m-3 p-1 justify-content-center');
+        let label_2 = cr(row_2, 'label', 'col-sm-3 col-form-label border-bottom text-right');
+        label_2.innerHTML = "Площадь помещения, м<sup>2</sup>";
+
+        let col_21 = cr(row_2, 'div', 'col-sm-3',);
+            let input2 = cr(col_21, 'input', 'form-control');
+            input2.type = 'number';
+//
+
+
+//участок №1
+let arrPlot = [];
+arrPlot[0] = new Plot(1);
+         
+
+//последние две строки таблицы ОБЩАЯ и удельная ПН
+function last_tr(_body) {
+
+    //делаем отдельную таблицу
+    let row_tablePN = cr(_body, 'div', 'row p-1 mx-auto text-center justify-content-center');
+        let _tablePN = cr(row_tablePN, 'table', 'table table-border table-sm');
+            let _tbody = cr(_tablePN,'tbody');
+                let _tr = cr(_tbody,'tr');
+
+                    let _td1 = cr(_tr, 'td', 'align-middle');
+                    _td1.innerHTML = `Общая пожарная нагрузка участка, МДж`;
+                    _td1.setAttribute('colspan', '3');
+
+                    let _td2 = cr(_tr, 'td', 'align-rigth');
+                    _td2.textContent = arrPlot[0].Q;
+
+                let _trq = cr(_tbody,'tr');
+                    let _td11 = cr(_trq, 'td', 'align-middle');
+                    _td11.innerHTML = `Удельная пожарная нагрузка участка, МДж/м<sup>2</sup>`;
+                    _td11.setAttribute('colspan', '3');
+                    let _td22 = cr(_trq, 'td', 'align-rigth');
+                    _td22.textContent = arrPlot[0].q;
+}
+
+
+//суммируем общую пожарную нагузку
+function sumPN(){
+    let sum = _tbody.childNodes.length - 2;
+
+    arrPlot[0].Q = 0;
+    arrPlot[0].q = 0;
+
+    for(let i=0; i<sum; i++){
+        arrPlot[0].Q += Math.round(_tbody.childNodes[i].childNodes[3].textContent*100)/100;
+    }
+    
+    //ячейка общая ПН
+    _tbody.childNodes[sum].childNodes[1].textContent = +arrPlot[0].Q.toFixed(2);
+
+    //ячейка удельной ПН
+    _tbody.childNodes[sum+1].childNodes[1].textContent = +(arrPlot[0].Q/arrPlot[0].sq).toFixed(2);
+}
                 
 //инициализируем мультисписок              
 $('select').selectpicker();
             
-
-
-
-
-/*
-<div class="form-check">
-  <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
-  <label class="form-check-label" for="defaultCheck1">
-    Default checkbox
-  </label>
-</div>
-*/
-
-/*
-var expanded = false; 
-function showCheckboxes() { var checkboxes = document.getElementById("checkboxes"); 
-if (!expanded) { 
-    checkboxes.style.display = "block"; expanded = true; 
-} else { checkboxes.style.display = "none"; expanded = false; } 
-} 
-
-.multiselect { width: 200px; } .selectBox { position: relative; } .selectBox select { width: 100%; font-weight: bold; } .overSelect { position: absolute; left: 0; right: 0; top: 0; bottom: 0; } #checkboxes { display: none; border: 1px #dadada solid; } #checkboxes label { display: block; } #checkboxes label:hover { background-color: #1e90ff; } 
-<form> <div class="multiselect"> <div class="selectBox" onclick="showCheckboxes()"> <select> <option>Select an option</option> </select> <div class="overSelect"></div> </div> <div id="checkboxes"> <label for="one"> <input type="checkbox" id="one" />First checkbox</label> <label for="two"> <input type="checkbox" id="two" />Second checkbox</label> <label for="three"> <input type="checkbox" id="three" />Third checkbox</label> </div> </div> </form> 
-
-*/
-
-
-//https://stackoverflow.com/questions/17714705/how-to-use-checkbox-inside-select-option
