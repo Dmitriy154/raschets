@@ -4,13 +4,15 @@ class Plot {
     gm = []; //горючие материалы участка
     Q = 0; //общая пожарная нагрузка участка
     q = 0; //удельная пожарная нагрузка участка
+    value_Q = 0; //ссылка на ячейку Общей пожарной нагрузки
+    value_q = 0;
 
 
 constructor(num) {
     this.num = num; //номер участка
 
     let row_1 = cr(stage,'div','form-group row m-3 p-1 justify-content-center');
-    let _card1 = cr(row_1, 'div', 'card col-9 p-0');
+    let _card1 = cr(row_1, 'div', 'card col-9 p-0 border');
     let _header1 = cr(_card1, 'div','card-header container-fluid m-0');
         _header1.innerHTML += `Участок №${num}<img type="button" data-toggle="modal" data-target="#exampleModal" src="../../img/icons/question.png"></img>`;  
 
@@ -24,13 +26,11 @@ constructor(num) {
 
             //площадь участка, обработка поля ввода
             _sq.addEventListener('input', (e)=> {
-                
                 if (e.target.value >= 10) {
                     this.sq = e.target.value;
                 } else {
                     this.sq = 10;
                 }
-
                 update(this);
             }); 
 
@@ -86,7 +86,6 @@ constructor(num) {
                     }
                 });
 
-
         //строка для таблицы 1
         let row_3 = cr(bodyPost,'div', 'row p-1 mx-auto text-center justify-content-center');
             let _table = cr(row_3, 'table', 'table table-border table-sm');
@@ -102,24 +101,25 @@ constructor(num) {
 
         //делаем отдельную таблицу для ОПН и УПН
         let row_tablePN = cr(bodyPost, 'div', 'row p-1 mx-auto text-center justify-content-center');
-            let _tablePN = cr(row_tablePN, 'table', 'table table-border table-sm tablePN');
-                let _tbodyPN = cr(_tablePN,'tbody');
-                    let _tr = cr(_tbodyPN,'tr');
+            let _tablePN = cr(row_tablePN, 'table', 'table table-success table-border');
 
-                        let _td1 = cr(_tr, 'td', 'align-middle');
+                let _tbodyPN = cr(_tablePN,'tbody', 'border');                  
+                   
+                    let _trQ = cr(_tbodyPN,'tr');
+
+                        let _td1 = cr(_trQ, 'td', 'align-middle col-8');
                         _td1.innerHTML = `Общая пожарная нагрузка участка, МДж`;
-                        _td1.setAttribute('colspan', '3');
 
-                        let _td2 = cr(_tr, 'td', 'align-rigth');
-                        _td2.textContent = this.Q;
+                        this.value_Q = cr(_trQ, 'td', 'align-middle'); //ячейка со значением Q
+                        
 
                     let _trq = cr(_tbodyPN,'tr');
-                        let _td11 = cr(_trq, 'td', 'align-middle');
+                        let _td11 = cr(_trq, 'td', 'align-middle col-8');
                         _td11.innerHTML = `Удельная пожарная нагрузка участка, МДж/м<sup>2</sup>`;
-                        _td11.setAttribute('colspan', '3');
-                        let _td22 = cr(_trq, 'td', 'align-rigth');
-                        _td22.textContent = this.q;
 
+
+                        this.value_q = cr(_trq, 'td', 'align-middle'); //ячейка со значением q
+                        
 
         //строка для кнопки очистить таблицу
         let row_btn_clr_table = cr(bodyPost,'div', 'row p-1 mx-auto text-center justify-content-center');
@@ -276,14 +276,13 @@ arrPlot[0] = new Plot(1);
 
 //суммируем общую пожарную нагузку Q и q
 function sumPN(_tbody){
-    let sum = _tbody.childNodes.length; //количество строк таблицы без заголовка
+    let sum = _tbody.childNodes.length; //количество строк таблицы без заголовка 
     let Q = 0;
-
 
     for(let i=0; i<sum; i++){
         Q += Math.round(_tbody.childNodes[i].childNodes[3].textContent*100)/100;
     }
-    
+
     return Q;
 }
  
@@ -293,16 +292,8 @@ function sumPN(_tbody){
 function update(plot) {
     plot.q = plot.Q/plot.sq;
 
-
-
-    //ячейка общая ПН
-    
-    //_tbody.childNodes[sum].childNodes[1].textContent = +arrPlot[0].Q.toFixed(2);
-
-    //ячейка удельной ПН
-
-    //_tbody.childNodes[sum+1].childNodes[1].textContent = +(arrPlot[0].Q/arrPlot[0].sq).toFixed(2);
-
+    plot.value_Q.textContent = +plot.Q.toFixed(2);
+    plot.value_q.textContent = Math.round((plot.Q/plot.sq)*100)/100;
 
 }
 
