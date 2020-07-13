@@ -4,7 +4,7 @@ class Plot {
     gm = []; //горючие материалы участка
     Q = 0; //общая пожарная нагрузка участка
     q = 0; //удельная пожарная нагрузка участка
-    bodyPost; 
+
 
 
 constructor(num) {
@@ -15,8 +15,8 @@ constructor(num) {
     let _header1 = cr(_card1, 'div','card-header container-fluid m-0');
         _header1.innerHTML += `Участок №${num}<img type="button" data-toggle="modal" data-target="#exampleModal" src="../../img/icons/question.png"></img>`;  
 
-    this.bodyPost = cr(_card1, 'div','card-body p-1');
-        let row_11 = cr(this.bodyPost,'div', 'form-group row p-1');
+    let bodyPost = cr(_card1, 'div','card-body p-1');
+        let row_11 = cr(bodyPost,'div', 'form-group row p-1');
             let label_1 = cr(row_11, 'label', 'col-sm-6 col-form-label border-bottom text-right', "Площадь участка (хранения)");
                 label_1.innerHTML += ", м<sup>2</sup>";
             let col_11 = cr(row_11, 'div', 'col-sm-4');
@@ -29,13 +29,13 @@ constructor(num) {
                 if (e.target.value >= 10) {
                     this.sq = e.target.value;
                 } else {
-                    this.sq.sq = 10;
+                    this.sq = 10;
                 }
 
-                if(this.sq.Q >0)  sumPN(this.bodyPost); //расчет общей и удельной ПН 
+                update(this);
             }); 
 
-        let row_2 = cr(this.bodyPost,'div', 'row p-1 mx-auto text-center justify-content-center');
+        let row_2 = cr(bodyPost,'div', 'row p-1 mx-auto text-center justify-content-center');
 
         //делаем список, формируем из базы данных
         //https://developer.snapappointments.com/bootstrap-select
@@ -88,8 +88,8 @@ constructor(num) {
                 });
 
 
-        //строка для таблицы
-        let row_3 = cr(this.bodyPost,'div', 'row p-1 mx-auto text-center justify-content-center');
+        //строка для таблицы 1
+        let row_3 = cr(bodyPost,'div', 'row p-1 mx-auto text-center justify-content-center');
             let _table = cr(row_3, 'table', 'table table-border table-sm');
                 let _thead = cr(_table, 'thead', 'thead-dark');
                     _thead.innerHTML = `
@@ -101,13 +101,38 @@ constructor(num) {
                         </tr>`
                 let _tbody = cr(_table,'tbody');
 
+        //делаем отдельную таблицу для ОПН и УПН
+
+        let row_tablePN = cr(bodyPost, 'div', 'row p-1 mx-auto text-center justify-content-center');
+            let _tablePN = cr(row_tablePN, 'table', 'table table-border table-sm tablePN');
+                let _tbodyPN = cr(_tablePN,'tbody');
+                    let _tr = cr(_tbodyPN,'tr');
+
+                        let _td1 = cr(_tr, 'td', 'align-middle');
+                        _td1.innerHTML = `Общая пожарная нагрузка участка, МДж`;
+                        _td1.setAttribute('colspan', '3');
+
+                        let _td2 = cr(_tr, 'td', 'align-rigth');
+                        _td2.textContent = this.Q;
+
+                    let _trq = cr(_tbodyPN,'tr');
+                        let _td11 = cr(_trq, 'td', 'align-middle');
+                        _td11.innerHTML = `Удельная пожарная нагрузка участка, МДж/м<sup>2</sup>`;
+                        _td11.setAttribute('colspan', '3');
+                        let _td22 = cr(_trq, 'td', 'align-rigth');
+                        _td22.textContent = this.q;
+
+
         //строка для кнопки очистить таблицу
-        let row_btn_clr_table = cr(this.bodyPost,'div', 'row p-1 mx-auto text-center justify-content-center');
+        let row_btn_clr_table = cr(bodyPost,'div', 'row p-1 mx-auto text-center justify-content-center');
             let btn_clr = cr(row_btn_clr_table, 'button', 'btn btn-outline-primary btn-sm', 'Очистить таблицу');
                 btn_clr.type = 'button';
 
         //скрываем таблицу и кнопку "Очистить таблицу"
         _table.style = "display:none"; 
+        _tablePN.style = "display:none";
+        //если создана таблица с классом tablePN, то повторно не создавать
+        //if (_body.querySelector('.tablePN') !== null) return;
         btn_clr.style = "display:none";
            
 
@@ -115,6 +140,7 @@ constructor(num) {
 btn_table_other.addEventListener('click', () => {
     
     _table.style = "display:block";
+    _tablePN.style = "display:block"; 
     btn_clr.style = "display:block" ;
     
     //создаем строку и столбцы
@@ -135,7 +161,9 @@ btn_table_other.addEventListener('click', () => {
                 _td4.textContent ='';
             }
 
-            sumPN(_tbody); //расчет общей и удельной ПН
+            this.Q = sumPN(_tbody); //расчет общей и удельной ПН
+
+            update(this);
         });      
         
         _td3.addEventListener('input', (e)=> {
@@ -145,10 +173,11 @@ btn_table_other.addEventListener('click', () => {
                 _td4.textContent ='';
             }
 
-            sumPN(_tbody); //расчет общей и удельной ПН
+            this.Q = sumPN(_tbody); //расчет общей и удельной ПН
+
+            update(this);
         });
-        
-        last_tr(this.bodyPost); //общая ПН и удельная ПН
+
 });
 
 
@@ -160,7 +189,8 @@ btn_table.addEventListener('click', () => {
     if (select1.selectedIndex >= 0) {
 
         _table.style = "display:block";
-        btn_clr.style = "display:block" ;
+        _tablePN.style = "display:block";
+        btn_clr.style = "display:block";
 
         // получаем все выбранные значения из select с multiple
         let selected = Array.from(select1.options)
@@ -177,8 +207,8 @@ btn_table.addEventListener('click', () => {
 
             let _tr = cr(_tbody,'tr');
                 
-                if(!arrPlot[0].gm.includes(item)) {
-                    arrPlot[0].gm.push(item);//заполняем массив данных, которые заносятся в таблицу
+                if(!this.gm.includes(item)) {
+                    this.gm.push(item);//заполняем массив данных, которые заносятся в таблицу
                     let _td1 = cr(_tr, 'td', 'align-middle', item);
                     let _td2 = cr (_tr,'td', 'align-middle', selected_t[i]);
                     let _td3 = cr(_tr, 'td');
@@ -193,12 +223,13 @@ btn_table.addEventListener('click', () => {
                             _td4.textContent ='';
                         }
 
-                        sumPN(_tbody); //расчет общей и удельной ПН
+                        this.Q = sumPN(_tbody); //расчет общей и удельной ПН
+
+                        update(this);
                     });    
                 }
         });
 
-        last_tr(this.bodyPost); //общая ПН и удельная ПН
     };
      
 });
@@ -208,11 +239,14 @@ btn_table.addEventListener('click', () => {
 //кнопка "очистить таблицу"
 btn_clr.addEventListener('click', () =>{
     _tbody.innerHTML = '';
-    arrPlot[0].gm = [];
+    this.gm = [];
+    this.Q = 0;
 });
 
 
 } //constructor
+
+
 
 }//class
 
@@ -242,47 +276,27 @@ let arrPlot = [];
 arrPlot[0] = new Plot(1);
         
 
-
-//последние две строки таблицы ОБЩАЯ и удельная ПН
-function last_tr(_body) {
-    //если создана таблица с классом tablePN, то повторно не создавать
-    if (_body.querySelector('.tablePN') !== null) return;
-
-    //делаем отдельную таблицу
-    let row_tablePN = cr(_body, 'div', 'row p-1 mx-auto text-center justify-content-center');
-        let _tablePN = cr(row_tablePN, 'table', 'table table-border table-sm tablePN');
-            let _tbody = cr(_tablePN,'tbody');
-                let _tr = cr(_tbody,'tr');
-
-                    let _td1 = cr(_tr, 'td', 'align-middle');
-                    _td1.innerHTML = `Общая пожарная нагрузка участка, МДж`;
-                    _td1.setAttribute('colspan', '3');
-
-                    let _td2 = cr(_tr, 'td', 'align-rigth');
-                    _td2.textContent = arrPlot[0].Q;
-
-                let _trq = cr(_tbody,'tr');
-                    let _td11 = cr(_trq, 'td', 'align-middle');
-                    _td11.innerHTML = `Удельная пожарная нагрузка участка, МДж/м<sup>2</sup>`;
-                    _td11.setAttribute('colspan', '3');
-                    let _td22 = cr(_trq, 'td', 'align-rigth');
-                    _td22.textContent = arrPlot[0].q;
-
-}
-
-
-
-//суммируем общую пожарную нагузку
+//суммируем общую пожарную нагузку Q и q
 function sumPN(_tbody){
-    let sum = _tbody.childNodes.length;
+    let sum = _tbody.childNodes.length; //количество строк таблицы без заголовка
+    let Q = 0;
 
-    this.Q = 0;
-    this.q = 0;
 
     for(let i=0; i<sum; i++){
-        //this.Q += Math.round(_tbody.childNodes[i].childNodes[3].textContent*100)/100;
+        Q += Math.round(_tbody.childNodes[i].childNodes[3].textContent*100)/100;
     }
     
+    return Q;
+}
+ 
+
+
+//общий обработчик для input
+function update(plot) {
+    plot.q = plot.Q/plot.sq;
+
+
+
     //ячейка общая ПН
     
     //_tbody.childNodes[sum].childNodes[1].textContent = +arrPlot[0].Q.toFixed(2);
@@ -290,8 +304,10 @@ function sumPN(_tbody){
     //ячейка удельной ПН
 
     //_tbody.childNodes[sum+1].childNodes[1].textContent = +(arrPlot[0].Q/arrPlot[0].sq).toFixed(2);
+
+
 }
- 
+
 
 
 //инициализируем мультисписок              
