@@ -6,7 +6,6 @@ class Plot {
     q = 0; //удельная пожарная нагрузка участка
 
 
-
 constructor(num) {
     this.num = num; //номер участка
 
@@ -102,7 +101,6 @@ constructor(num) {
                 let _tbody = cr(_table,'tbody');
 
         //делаем отдельную таблицу для ОПН и УПН
-
         let row_tablePN = cr(bodyPost, 'div', 'row p-1 mx-auto text-center justify-content-center');
             let _tablePN = cr(row_tablePN, 'table', 'table table-border table-sm tablePN');
                 let _tbodyPN = cr(_tablePN,'tbody');
