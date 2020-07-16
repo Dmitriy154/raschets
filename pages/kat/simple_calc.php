@@ -24,13 +24,6 @@
 		</div>
 	</div>
 
-
-	<div class="row m-2">
-		<div class="col-lg-2 mx-auto text-center">
-			<a href="../../kat.php"><button class="btn btn-outline-primary">&#8592; Назад</button></a>
-		</div>	
-	</div>	
-
  </div> <!--container-->
 
 <!-- Modal: УЧАСТКИ -->

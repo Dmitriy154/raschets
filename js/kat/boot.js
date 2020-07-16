@@ -23,3 +23,7 @@ function createFormula (t) {
     }
     return _t;
 }
+
+function _round (num) {
+    return Math.round(num*10)/10;
+}

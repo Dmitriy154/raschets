@@ -7,24 +7,36 @@ class Plot {
     H = 0; //минимальное расстояние до перекрытия
     value_Q = 0; //ссылка на ячейку Общей пожарной нагрузки
     value_q = 0;
+    rowPost; // ссылка на row участка
     bodyPost; //ссылка на body участка
 
 constructor(num) {
     this.num = num; //номер участка
 
     let row_1 = cr(stage,'div','form-group row m-3 p-1 justify-content-center');
+
+    this.rowPost = row_1;
+
     let _card1 = cr(row_1, 'div', 'card col-9 p-0 border');
-    let _header1 = cr(_card1, 'div','card-header container-fluid m-0');
-        _header1.innerHTML += `Участок №${num}<img type="button" data-toggle="modal" data-target="#exampleModal" src="../../img/icons/question.png"></img>`;  
+        let _header1 = cr(_card1, 'div','card-header container-fluid m-0');
+            _header1.style = 'background-color: #bdbdbb';
+       
+        if(num == 1) {
+            _header1.innerHTML += `Участок №${num}<img type="button" class='m-2' data-toggle="modal" data-target="#exampleModal" src="../../img/icons/question.png"></img>`;  
+        } else {
+            _header1.innerHTML += `Участок №${num}`; //для 2-го и др. участков кружок вопроса не нужно
+        }
+
 
     let bodyPost = cr(_card1, 'div','card-body p-1');
+        bodyPost.style = 'background-color: #fcffe0';
     this.bodyPost = bodyPost; //свойство объекта ссылается на переменную
 
-        let row_11 = cr(bodyPost,'div', 'form-group row p-1');
+        let row_11 = cr(bodyPost,'div', 'form-group row m-1');
             let label_1 = cr(row_11, 'label', 'col-sm-7 col-form-label text-right', "Площадь участка (хранения)");
                 label_1.innerHTML += ", м<sup>2</sup>";
             let col_11 = cr(row_11, 'div', 'col-sm-2');
-                let _sq = cr(col_11, 'input', 'form-control');
+                let _sq = cr(col_11, 'input', 'form-control text-center');
                     _sq.type = 'number';
 
             //площадь участка, обработка поля ввода
@@ -45,14 +57,15 @@ constructor(num) {
                 let df1 = cr(formSpisok, 'div', 'input-group mb-1');
 
                 //Создаем select Выбор горючих материалов
-                let select1 = cr(df1, 'select', 'selectpicker');
+                let select1 = cr(df1, 'select', 'selectpicker border');
                     select1.dataset.width="360px";
                     select1.setAttribute('multiple', 'true');
                     select1.setAttribute('title', 'Выберите горючие материалы на участке:');
                     select1.setAttribute('data-live-search', 'true');
-
+                    
                 //кнопка Добавить ГМ
-                let btn_table = cr(df1, 'button', 'btn btn-outline-primary btn-sm ml-1', 'Добавить ГМ');
+                let btn_table = cr(df1, 'button', 'btn btn-outline-primary btn-sm ml-3', 'Добавить ГМ');
+                    btn_table.setAttribute('title', 'Добавить горючий материал из списка');
                     btn_table.type = 'button';
 
                 //Кнопка Добавить другой ГМ
@@ -92,15 +105,16 @@ constructor(num) {
         //строка для таблицы 1
         let row_3 = cr(bodyPost,'div', 'row p-1 mx-auto text-center justify-content-center');
             let _table = cr(row_3, 'table', 'table table-border table-sm border mb-1');
-                let _thead = cr(_table, 'thead', 'thead-dark border');
+                let _thead = cr(_table, 'thead', 'bg-light');
                     _thead.innerHTML = `
                         <tr>
-                            <th>Наименование горючего материала (вещества)</th>
-                            <th>Низшая теплота сгорания Q<sup>p</sup><sub>H</sub>, МДж/кг</th>
-                            <th>Масса, кг</th>
-                            <th>Пож. нагрузка горючего материала (вещества), МДж</th>                           
+                            <th class='align-middle'>Наименование горючего материала (вещества)</th>
+                            <th class='align-middle'>Низшая теплота сгорания Q<sup>p</sup><sub>H</sub>, МДж/кг</th>
+                            <th class='align-middle'>Масса, кг</th>
+                            <th class='align-middle'>Пож. нагрузка горючего материала (вещества), МДж</th>                           
                         </tr>`
                 let _tbody = cr(_table,'tbody');
+                    _tbody.style = 'background-color: #fff';
         
         
         //строка для кнопки очистить таблицу
@@ -127,9 +141,7 @@ constructor(num) {
                         _td11.style = "width:800px";
 
                         this.value_q = cr(_trq, 'td', 'align-middle table-warning table-border'); //ячейка со значением q
-                        this.value_q.style = "width:250px";
-
-
+                        this.value_q.style = "width:250px";           
 
         //скрываем таблицу и кнопку "Очистить таблицу"
         _table.style = "display:none"; 
@@ -138,7 +150,7 @@ constructor(num) {
         //if (_body.querySelector('.tablePN') !== null) return;
         btn_clr.style = "display:none";
            
-
+      
 //кнопка добавить другой ГМ
 btn_table_other.addEventListener('click', () => {
     
@@ -271,10 +283,74 @@ let form1 = cr(stage,'form');
 //
 
 
-//участок №1
+///////  создаем участок №1 ////////////////////
 let arrPlot = [];
+let numPlot = 1; //номер участка
 arrPlot[0] = new Plot(1);
+
+//инициализируем мультисписок              
+$('select').selectpicker();
+
+//строка для кнопок "Добавить участок" и "Выполнить расчет категории помещения"
+let row_btns = cr(stage,'div','row justify-content-center m-1');
+    let btn_addPlot = cr(row_btns, 'button', 'btn btn-primary m-2', 'Добавить участок');
+        btn_addPlot.type = 'button';
+
+    let btn_calc = cr(row_btns, 'button', 'btn btn-success m-2', 'Выполнить расчет категории помещения');
+        btn_calc.type = 'button';      
+
+    
+//обработчик для кнопки добавить участок
+    btn_addPlot.addEventListener('click', ()=> {
+        let newPlot = new Plot(arrPlot.length + 1);
+        arrPlot[arrPlot.length] = newPlot;
         
+        //вставляем участок перед кнопками
+        row_btns.before(newPlot.rowPost);
+
+        $('select').selectpicker();
+    });
+
+
+//обработчик для кнопки "выполнить расчет категории помещения"
+btn_calc.addEventListener('click', ()=> {
+    //скрываем все участки и кнопки
+    arrPlot.forEach((plot) => {
+        plot.rowPost.style = "display:none";
+    });
+
+    btn_addPlot.style = "display:none";
+    btn_calc.style = "display:none";
+    btn_back.style = "display:block";
+    ////
+
+    //card - вывод
+    createPIN();
+});
+
+
+//добавляем кнопку назад к участкам 
+let btn_back = cr(stage, 'button', 'btn btn-outline-primary m-auto mt-2 mb-2');
+    btn_back.innerHTML = '&#8592 Назад к участкам';
+    btn_back.type = 'button';
+    btn_back.style = "display:none";
+
+btn_back.addEventListener('click', ()=> {
+    arrPlot.forEach((plot) => {
+        plot.rowPost.style = "display:flex";
+    });
+
+    btn_addPlot.style = "display:block";
+    btn_calc.style = "display:block";
+    btn_back.style = "display:none";
+
+    //скрываем вывод
+    $('div.rowPIN').remove();
+    
+});
+
+
+//////////////////////////  МЕТОДЫ  ///////////////////////////////
 
 //суммируем общую пожарную нагузку Q и q
 function sumPN(_tbody){
@@ -290,7 +366,6 @@ function sumPN(_tbody){
 
 //общий обработчик для input
 function update(plot) {
-    console.log('вход в update');
     plot.q = plot.Q/plot.sq;
 
     plot.value_Q.textContent = +plot.Q.toFixed(2);
@@ -301,9 +376,10 @@ function update(plot) {
 
     if (plot.Q > 1000 && plot.q > 100 && !plot.bodyPost.querySelector('div.row_H')) {
          
-        let row_H = cr(plot.bodyPost,'div', 'form-group row p-1 mx-auto border row_H');  
-        let label = cr(row_H, 'label', 'col-sm-9 col-form-label ', "Минимальное расстояние от поверхности пожарной нагрузки данного участка до перекрытия, м");
-        let _h = cr(row_H, 'input', 'form-control col-sm-2 mx-auto align-middle m-auto');
+        let row_H = cr(plot.bodyPost,'div', 'form-group row p-1 mx-auto border row_H');
+        row_H.style = 'background-color: #fff';  
+        let label = cr(row_H, 'label', 'col-sm-9 col-form-label ', "Укажите минимальное расстояние от поверхности пожарной нагрузки данного участка до перекрытия (расстояние от горючих материалов до потолка), м");
+        let _h = cr(row_H, 'input', 'form-control col-sm-2 m-auto text-center');
             _h.type = 'number';
 
             //обработчик поля ввода H
@@ -319,23 +395,59 @@ function update(plot) {
         plot.H = 0;
         plot.bodyPost.querySelector('div.row_H').remove();
     }
-
-    //предполагаемая категория помещения
-    if() {
-        let kat = '';
-        let usl = uslv(plot.Q, plot.q, plot.H);
-
-        if ((plot.q > 2200 || 1400<plot.q<2200) && usl)
-
-
-
-
-        let row_kat = cr(plot.bodyPost,'div', 'form-group row p-1 mx-auto border row_H m-1 p-o');
-        row_kat.innerHTML = `Предполагаемая категория помщения - ${}`
-    }
-
-
 }
+
+function createPIN() {
+    let rowPIN = cr(stage, 'div', 'form-group row m-3 p-1 rowPIN');
+        let cardPIN = cr(rowPIN, 'div', 'card col-9 p-0 border mx-auto');
+
+            let headerPIN = cr (cardPIN, 'div', 'card-header container-fluid m-0', 'Результат расчета');
+            headerPIN.style = 'background-color: #7dfa89';
+            let bodyPIN = cr (cardPIN, 'div', 'card-body text-left');
+            bodyPIN.style = 'background-color: #fcffe0';
+    
+    //рассчитаем общую ПН
+    let Q = 0;
+    let q = arrPlot[0].q;
+    let h = 0; // минимальное H
+    let arr_h = [];
+    let kat = '';
+
+    arrPlot.forEach((plot) => {
+        Q += plot.Q;  
+        if (q < plot.q) q = plot.q;
+        if(plot.H >0) arr_h.push(+plot.H);
+        Q = _round(Q);
+        q = _round(q);
+    });
+
+    h = Math.min(...arr_h); //извлекаем минимальное значение из массива
+
+    //расчет категории помещения 
+
+    //проверка условия 5.3.2 
+    let g_t;
+    if(1400<q<=2200) g_t = 2200;
+    if(200<q<=1400) g_t = 1400;
+
+    console.log('g_t = ' + g_t);
+
+    let odds = Q >= 0.64*g_t*h**2;
+
+    console.log(odds);
+    
+
+    bodyPIN.innerHTML = `
+    <p>Общая пожарная нагрузка в помещении составит: <span class="font-weight-bold">${Q} МДж</span>;</p>
+    <p>Максимальная удельная пожарная нагрузка в помещении составит: <span class="font-weight-bold">${q} МДж/м<sup>2</sup></span>;</p>
+    <p>Категория помщения: <span class="font-weight-bold">${kat}</span>;</p>
+    `;
+}
+
+
+
+
+
 
 //проверка условия 5.3.2
 function uslv (Q, q, H) {
@@ -343,6 +455,5 @@ function uslv (Q, q, H) {
 }
 
 
-//инициализируем мультисписок              
-$('select').selectpicker();
-            
+
+
