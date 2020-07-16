@@ -9,6 +9,7 @@ class Plot {
     value_q = 0;
     rowPost; // ссылка на row участка
     bodyPost; //ссылка на body участка
+    q_kr = 0; // мин. крит. значение для ТГМ, если не известно, то 0. Если на участке есть ГЖ или ЛВЖ, то -1
 
 constructor(num) {
     this.num = num; //номер участка
@@ -374,7 +375,7 @@ function update(plot) {
 
     //создаем поле "минимальная высота H" если известны Q и q и условии кат. Д, а также не создан div.row_H
 
-    if (plot.Q > 1000 && plot.q > 100 && !plot.bodyPost.querySelector('div.row_H')) {
+    if (plot.Q > 2000 && plot.q > 200 && !plot.bodyPost.querySelector('div.row_H')) {
          
         let row_H = cr(plot.bodyPost,'div', 'form-group row p-1 mx-auto border row_H');
         row_H.style = 'background-color: #fff';  
@@ -390,7 +391,7 @@ function update(plot) {
                             
     }  
     
-    if(plot.Q < 1000 && plot.q < 100 && plot.bodyPost.querySelector('div.row_H')){
+    if(plot.Q < 2000 && plot.q < 200 && plot.bodyPost.querySelector('div.row_H')){
         //удаляем div.row_H 
         plot.H = 0;
         plot.bodyPost.querySelector('div.row_H').remove();
@@ -412,11 +413,13 @@ function createPIN() {
     let h = 0; // минимальное H
     let arr_h = [];
     let kat = '';
+    let S = 10; //максимальная площадь участка
 
     arrPlot.forEach((plot) => {
         Q += plot.Q;  
         if (q < plot.q) q = plot.q;
         if(plot.H >0) arr_h.push(+plot.H);
+        if(S < plot.sq) S = plot.sq; //ищем максимальную площадь участка
         Q = _round(Q);
         q = _round(q);
     });
@@ -424,18 +427,55 @@ function createPIN() {
     h = Math.min(...arr_h); //извлекаем минимальное значение из массива
 
     //расчет категории помещения 
+    //проверка условий 5.3.2, 5.3.4
+    let g_t = '';
+    let odds = false; // 5.3.2
+    let odds2 = false; //5.3.4 если true, то В4 иначе В3
 
-    //проверка условия 5.3.2 
-    let g_t;
-    if(1400<q<=2200) g_t = 2200;
-    if(200<q<=1400) g_t = 1400;
+    if(q>1400 && q<=2200) {
+        g_t = 2200;
+        odds = Q >= 0.64*g_t*h**2;
+    } 
 
-    console.log('g_t = ' + g_t);
-
-    let odds = Q >= 0.64*g_t*h**2;
-
-    console.log(odds);
+    if(q>200 && q<=1400) {
+        g_t = 1400;
+        odds = Q >= 0.64*g_t*h**2;
+    }
     
+    //условие 5.3.4 ............................................
+    if(Q>2000 && (q>100 && q<=200) && S<=10) {
+        //здесь условия соблюдения расстояний предельных
+        arrPlot.forEach((plot) => {
+            console.log(plot.gm);
+        })
+        
+        odds2 = true;
+    }
+
+
+    if (q>2200 || ((q>1400 && q<=2200) && odds)) {
+        kat = 'В1';
+        console.log('в1');
+        console.log('Q='+Q+" q="+q+" S="+S+" h="+h+' g_t='+g_t+' odds='+odds+' odds2='+odds2);
+    }
+    
+    if (((q>1400 && q<=2200) && !odds) || ((q>200 && q<=1400) && odds)) {
+        kat = 'В2';
+        console.log('в2');
+        console.log('Q='+Q+" q="+q+" S="+S+" h="+h+' g_t='+g_t+' odds='+odds+' odds2='+odds2);
+    }
+     
+    if (((q>200 && q<=1400) && !odds) || (q<200 && S>10 && Q>1000) || !odds2) {
+        kat = 'В3';
+        console.log('в3');
+        console.log('Q='+Q+" q="+q+" S="+S+" h="+h+' g_t='+g_t+' odds='+odds+' odds2='+odds2);
+    }
+    
+    if (((q>100 && q<=200) && S<=10) || odds2) {
+        kat = 'В4';
+        console.log('в4');
+        console.log('Q='+Q+" q="+q+" S="+S+" h="+h+' g_t='+g_t+' odds='+odds+' odds2='+odds2);
+    }
 
     bodyPIN.innerHTML = `
     <p>Общая пожарная нагрузка в помещении составит: <span class="font-weight-bold">${Q} МДж</span>;</p>
@@ -457,3 +497,5 @@ function uslv (Q, q, H) {
 
 
 
+//на втором и след. участках нет приоритета в селекте
+//450
