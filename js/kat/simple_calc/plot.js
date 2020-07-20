@@ -9,7 +9,7 @@ class Plot {
     value_q = 0;
     rowPost; // ссылка на row участка
     bodyPost; //ссылка на body участка
-    q_kr = 0; // мин. крит. значение для ТГМ, если не известно, то 0. Если на участке есть ГЖ или ЛВЖ, то -1
+    userGM = false //есть ли материалы пользователя не из бд
 
 constructor(num) {
     this.num = num; //номер участка
@@ -76,32 +76,14 @@ constructor(num) {
                     btn_table_other.dataset.toggle = 'tooltip';
                     btn_table_other.dataset.placement="top";
 
-                //сортируем массив: создаем массив с распростр. веществами, сортир., соединяем
-                let arrPop = [];
-
-                //заполняем новый массив и удаляем объекты из старого, чтобы потом соединить их
-                for (let i=0; i<tv.length; i++){
-                    if (tv[i].prio>0) {
-                        arrPop.push(tv[i]);
-                        tv.splice(i,1);
-                    };
-                }
-
-                //сортируем новый массив
-                arrPop.sort((a,b) => {
-                    return a.prio-b.prio;
-                });
-            
-                //создаем массив из двух
-                let arr = arrPop.concat(tv);
-
                 // создание option в селекте
-                arr.forEach((el) => {
+                arrTV.forEach((el) => {
                     if (el.Q_H) {
                         let opt = cr(select1, 'option', '', el.name);       
                         opt.dataset.subtext = el.Q_H;
                     }
                 });
+
 
         //строка для таблицы 1
         let row_3 = cr(bodyPost,'div', 'row p-1 mx-auto text-center justify-content-center');
@@ -159,6 +141,8 @@ btn_table_other.addEventListener('click', () => {
     _tablePN.style = "display:block"; 
     btn_clr.style = "display:block" ;
     
+    this.userGM = true;
+
     //создаем строку и столбцы
     let _tr = cr(_tbody,'tr');
         let _td1 = cr(_tr, 'td');
@@ -194,9 +178,9 @@ btn_table_other.addEventListener('click', () => {
             update(this);
         });
 
+
+
 });
-
-
 
 //кнопка добавить в таблицу
 btn_table.addEventListener('click', () => {
@@ -231,6 +215,7 @@ btn_table.addEventListener('click', () => {
                     _td3.innerHTML = `<input type="number" class="form-control text-center">`;
                 
                     let _td4 = cr(_tr, 'td', 'align-middle');
+                   
                     
                 _td3.addEventListener('input', (e)=> {
                     if(e.target.value > 0) {
@@ -250,252 +235,17 @@ btn_table.addEventListener('click', () => {
      
 });
 
-    //кнопка "очистить таблицу"
+//кнопка "очистить таблицу"
     btn_clr.addEventListener('click', () =>{
         _tbody.innerHTML = '';
         this.gm = [];
         this.Q = 0;
         this.H = 0;
         update(this);
+        this.userGM = false
     });
 
 
 } //constructor
 
 }//class
-
-
-// Наименование помещения и Площадь помещения
-let form1 = cr(stage,'form');
-    let row_1 = cr(form1, 'div', 'form-group row m-1 p-1 justify-content-center');
-        let label_1 = cr(row_1, 'label', 'col-sm-3 col-form-label text-left', "Наименование помещения");
-        let col_11 = cr(row_1, 'div', 'col-sm-3',);
-            let input1 = cr(col_11, 'input', 'form-control');
-            input1.type = 'text';
-
-
-    let row_2 = cr(form1, 'div', 'form-group row m-1 p-1 justify-content-center');
-        let label_2 = cr(row_2, 'label', 'col-sm-3 col-form-label text-left');
-        label_2.innerHTML = "Площадь помещения, м<sup>2</sup>";
-
-        let col_21 = cr(row_2, 'div', 'col-sm-3',);
-            let input2 = cr(col_21, 'input', 'form-control');
-            input2.type = 'number';
-//
-
-
-///////  создаем участок №1 ////////////////////
-let arrPlot = [];
-let numPlot = 1; //номер участка
-arrPlot[0] = new Plot(1);
-
-//инициализируем мультисписок              
-$('select').selectpicker();
-
-//строка для кнопок "Добавить участок" и "Выполнить расчет категории помещения"
-let row_btns = cr(stage,'div','row justify-content-center m-1');
-    let btn_addPlot = cr(row_btns, 'button', 'btn btn-primary m-2', 'Добавить участок');
-        btn_addPlot.type = 'button';
-
-    let btn_calc = cr(row_btns, 'button', 'btn btn-success m-2', 'Выполнить расчет категории помещения');
-        btn_calc.type = 'button';      
-
-    
-//обработчик для кнопки добавить участок
-    btn_addPlot.addEventListener('click', ()=> {
-        let newPlot = new Plot(arrPlot.length + 1);
-        arrPlot[arrPlot.length] = newPlot;
-        
-        //вставляем участок перед кнопками
-        row_btns.before(newPlot.rowPost);
-
-        $('select').selectpicker();
-    });
-
-
-//обработчик для кнопки "выполнить расчет категории помещения"
-btn_calc.addEventListener('click', ()=> {
-    //скрываем все участки и кнопки
-    arrPlot.forEach((plot) => {
-        plot.rowPost.style = "display:none";
-    });
-
-    btn_addPlot.style = "display:none";
-    btn_calc.style = "display:none";
-    btn_back.style = "display:block";
-    ////
-
-    //card - вывод
-    createPIN();
-});
-
-
-//добавляем кнопку назад к участкам 
-let btn_back = cr(stage, 'button', 'btn btn-outline-primary m-auto mt-2 mb-2');
-    btn_back.innerHTML = '&#8592 Назад к участкам';
-    btn_back.type = 'button';
-    btn_back.style = "display:none";
-
-btn_back.addEventListener('click', ()=> {
-    arrPlot.forEach((plot) => {
-        plot.rowPost.style = "display:flex";
-    });
-
-    btn_addPlot.style = "display:block";
-    btn_calc.style = "display:block";
-    btn_back.style = "display:none";
-
-    //скрываем вывод
-    $('div.rowPIN').remove();
-    
-});
-
-
-//////////////////////////  МЕТОДЫ  ///////////////////////////////
-
-//суммируем общую пожарную нагузку Q и q
-function sumPN(_tbody){
-    let sum = _tbody.childNodes.length; //количество строк таблицы без заголовка 
-    let Q = 0;
-
-    for(let i=0; i<sum; i++){
-        Q += Math.round(_tbody.childNodes[i].childNodes[3].textContent*100)/100;
-    }
-
-    return Q;
-}
-
-//общий обработчик для input
-function update(plot) {
-    plot.q = plot.Q/plot.sq;
-
-    plot.value_Q.textContent = +plot.Q.toFixed(2);
-    plot.value_q.textContent = Math.round((plot.Q/plot.sq)*100)/100;
-
-
-    //создаем поле "минимальная высота H" если известны Q и q и условии кат. Д, а также не создан div.row_H
-
-    if (plot.Q > 2000 && plot.q > 200 && !plot.bodyPost.querySelector('div.row_H')) {
-         
-        let row_H = cr(plot.bodyPost,'div', 'form-group row p-1 mx-auto border row_H');
-        row_H.style = 'background-color: #fff';  
-        let label = cr(row_H, 'label', 'col-sm-9 col-form-label ', "Укажите минимальное расстояние от поверхности пожарной нагрузки данного участка до перекрытия (расстояние от горючих материалов до потолка), м");
-        let _h = cr(row_H, 'input', 'form-control col-sm-2 m-auto text-center');
-            _h.type = 'number';
-
-            //обработчик поля ввода H
-            _h.addEventListener('input', (e)=> {
-                plot.H = e.target.value;
-                update(plot); // повторяем обновление 
-            });
-                            
-    }  
-    
-    if(plot.Q < 2000 && plot.q < 200 && plot.bodyPost.querySelector('div.row_H')){
-        //удаляем div.row_H 
-        plot.H = 0;
-        plot.bodyPost.querySelector('div.row_H').remove();
-    }
-}
-
-function createPIN() {
-    let rowPIN = cr(stage, 'div', 'form-group row m-3 p-1 rowPIN');
-        let cardPIN = cr(rowPIN, 'div', 'card col-9 p-0 border mx-auto');
-
-            let headerPIN = cr (cardPIN, 'div', 'card-header container-fluid m-0', 'Результат расчета');
-            headerPIN.style = 'background-color: #7dfa89';
-            let bodyPIN = cr (cardPIN, 'div', 'card-body text-left');
-            bodyPIN.style = 'background-color: #fcffe0';
-    
-    //рассчитаем общую ПН
-    let Q = 0;
-    let q = arrPlot[0].q;
-    let h = 0; // минимальное H
-    let arr_h = [];
-    let kat = '';
-    let S = 10; //максимальная площадь участка
-
-    arrPlot.forEach((plot) => {
-        Q += plot.Q;  
-        if (q < plot.q) q = plot.q;
-        if(plot.H >0) arr_h.push(+plot.H);
-        if(S < plot.sq) S = plot.sq; //ищем максимальную площадь участка
-        Q = _round(Q);
-        q = _round(q);
-    });
-
-    h = Math.min(...arr_h); //извлекаем минимальное значение из массива
-
-    //расчет категории помещения 
-    //проверка условий 5.3.2, 5.3.4
-    let g_t = '';
-    let odds = false; // 5.3.2
-    let odds2 = false; //5.3.4 если true, то В4 иначе В3
-
-    if(q>1400 && q<=2200) {
-        g_t = 2200;
-        odds = Q >= 0.64*g_t*h**2;
-    } 
-
-    if(q>200 && q<=1400) {
-        g_t = 1400;
-        odds = Q >= 0.64*g_t*h**2;
-    }
-    
-    //условие 5.3.4 ............................................
-    if(Q>2000 && (q>100 && q<=200) && S<=10) {
-        //здесь условия соблюдения расстояний предельных
-        arrPlot.forEach((plot) => {
-            console.log(plot.gm);
-        })
-        
-        odds2 = true;
-    }
-
-
-    if (q>2200 || ((q>1400 && q<=2200) && odds)) {
-        kat = 'В1';
-        console.log('в1');
-        console.log('Q='+Q+" q="+q+" S="+S+" h="+h+' g_t='+g_t+' odds='+odds+' odds2='+odds2);
-    }
-    
-    if (((q>1400 && q<=2200) && !odds) || ((q>200 && q<=1400) && odds)) {
-        kat = 'В2';
-        console.log('в2');
-        console.log('Q='+Q+" q="+q+" S="+S+" h="+h+' g_t='+g_t+' odds='+odds+' odds2='+odds2);
-    }
-     
-    if (((q>200 && q<=1400) && !odds) || (q<200 && S>10 && Q>1000) || !odds2) {
-        kat = 'В3';
-        console.log('в3');
-        console.log('Q='+Q+" q="+q+" S="+S+" h="+h+' g_t='+g_t+' odds='+odds+' odds2='+odds2);
-    }
-    
-    if (((q>100 && q<=200) && S<=10) || odds2) {
-        kat = 'В4';
-        console.log('в4');
-        console.log('Q='+Q+" q="+q+" S="+S+" h="+h+' g_t='+g_t+' odds='+odds+' odds2='+odds2);
-    }
-
-    bodyPIN.innerHTML = `
-    <p>Общая пожарная нагрузка в помещении составит: <span class="font-weight-bold">${Q} МДж</span>;</p>
-    <p>Максимальная удельная пожарная нагрузка в помещении составит: <span class="font-weight-bold">${q} МДж/м<sup>2</sup></span>;</p>
-    <p>Категория помщения: <span class="font-weight-bold">${kat}</span>;</p>
-    `;
-}
-
-
-
-
-
-
-//проверка условия 5.3.2
-function uslv (Q, q, H) {
-
-}
-
-
-
-
-//на втором и след. участках нет приоритета в селекте
-//450

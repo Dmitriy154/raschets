@@ -51,6 +51,21 @@
 </div>
 
 
+<!-- Modal: confirm -->
+<div class="modal fade" id="modal_confirm_if" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-body questionUser">
+      </div>
+      <div class="modal-footer">
+		<button type="button" class="btn btn-success modal_confirm_if_yes" data-dismiss="modal">Да</button>
+		<button type="button" class="btn btn-secondary modal_confirm_if_now" data-dismiss="modal">Нет</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
 </main>
 
 
@@ -59,7 +74,10 @@
 
 	<script src="../../db/tv.js"></script> <!--подключаем данные -->
 	<script src="../../js/kat/boot.js"></script>
-	<script src="../../js/kat/kat_simple_calc.js"></script>
+	<script src="../../js/kat/simple_calc/plot.js"></script>
+	<script src="../../js/kat/simple_calc/main.js"></script>
+
+
   
 
 </body>
