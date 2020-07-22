@@ -190,30 +190,22 @@ function createPIN() {
     });
 
     h = Math.min(...arr_h); //извлекаем минимальное значение из массива
-    
-    //расчет категории помещения 
 
 
                         //проверка условия 5.3.2.............................
-
     let g_t = '';
     let odds = false; // 5.3.2
     let odds2 = false; //5.3.4 если true, то В4 иначе В3
 
-    if(q>1400 && q<=2200) {
-        g_t = 2200;
-        odds = Q >= 0.64*g_t*h**2;
-    } 
+    if(q>1400 && q<=2200) g_t = 2200
+    if(q>200 && q<=1400) g_t = 1400
 
-    if(q>200 && q<=1400) {
-        g_t = 1400;
-        odds = Q >= 0.64*g_t*h**2;
-    }
+    odds = Q >= 0.64*g_t*h**2;
 
 
                 // проверка условия 5.3.4 ............................................
 
-    if(Q>2000 && (q>100 && q<=200) && S<=10) {
+    if(Q>2000 && (q>100 && q<=200) && S<=10 && sqP>26) {
         //здесь условия соблюдения расстояний предельных
         //двойной цикличный поиск: ищем в массиве с ТГМ объекты с ГМ в помещении, ещем агрег.сост. - Жидкость
         for (name of gmP) {
@@ -224,13 +216,11 @@ function createPIN() {
             })
         }
 
-        //вопросы пользователю 
+        //вопросы пользователю (стандартное модальное окно)
         let h_b4 = prompt('Укажите минимальное расстояние от поверхности пожарной нагрузки в помещении до перекрытия (расстояние от горючих материалов до потолка), м');
         let user_fluid = false // имеется ли ГЖ в материалах полльзователя
 
-        if (userGM) {
-            user_fluid = confirm('Имеются ли среди добавленных Вами веществ и материалов горючие жидкости, в т.ч. ЛВЖ? (если "да" - нажмите "ок")')
-        }
+        if (userGM) user_fluid = confirm('Имеются ли среди добавленных Вами веществ и материалов горючие жидкости, в т.ч. ЛВЖ? (если "да" - нажмите "ок", если "нет" - "отмена")')
           
         if (fluid || user_fluid) {
             if (h_b4>=11) l_pr=15; else l_pr = 26-h_b4;
@@ -244,55 +234,63 @@ function createPIN() {
         //если среди гор. материалов есть древесина, полиэтилен, хлопок
         if (gmP.includes('полиэтилен (пластмасса)')) {
             if (h_b4>=11) l_pr = 5; else l_pr = 5 + 11-h_b4;
-            return
         } else if (gmP.includes('древесина') ||  gmP.includes('древесно-волокнистая плита') ||  gmP.includes('древесно-стружечная плита') ||  gmP.includes('древесные опилки')) {
             if (h_b4>=11) l_pr = 6; else l_pr = 6 + 11-h_b4;
-            return 
         } else if (gmP.includes('хлопок (ткань)') ||  gmP.includes('хлопок в тюках')) {
             if (h_b4>=11) l_pr = 8; else l_pr = 8 + 11-h_b4;
-            return
         } else {
             if (h_b4>=11) l_pr = 12; else l_pr = 12 + 11-h_b4;
         }
-    }
 
-/*
-        console.log( $('#modal_confirm_if'));
         //вызываем модальное окно с вопросом, соблюдается ли предельное расстояние
         $('#modal_confirm_if').modal('show')
+        
+        document.querySelector('.questionUser').innerHTML = `
+            <p>Превышают ли расстояния между участками хранения горючих веществ и материалов в помещении <span class="font-weight-bold">${l_pr} м</span></p>`
 
-        console.log($('.modal_confirm_if_yes'));
-        //odds2 = true;
-        //если условие не выполняется, то odds=false
-*/
-    
-    console.log('nen');
+        document.querySelector('.modal_confirm_if_yes').addEventListener('click', () => {
+            odds2 = true
+            cr(bodyPIN, 'p','',`Расстояния между участками храненияя горючих веществ и материалов превышает предельное расстояние для хранимых горючих материалов ${l_pr} м`)
+            console.log('yes');
+        })
+        
+        document.querySelector('.modal_confirm_if_no').addEventListener('click', () => {
+            odds2 = false
+            kat = 'В3';
+            cr(bodyPIN, 'p','',`Расстояния между участками храненияя горючих веществ и материалов меньше предельного расстояния для хранимых горючих материалов ${l_pr} м.`)
+            p_kat.innerHTML = `Категория помщения: <span class="font-weight-bold">${kat}</span>;`
+
+        })
+
+    } //5.3.4
+
+
 
                 // Выбор категории .............................
 
     if (q>2200 || ((q>1400 && q<=2200) && odds)) {
         kat = 'В1';
-        //console.log('в1');
-        //console.log('Q='+Q+" q="+q+" S="+S+" h="+h+' g_t='+g_t+' odds='+odds+' odds2='+odds2);
+        console.log('в1');
+        console.log('Q='+Q+" q="+q+" S="+S+" h="+h+' g_t='+g_t+' odds='+odds+' odds2='+odds2);
     }
     
     if (((q>1400 && q<=2200) && !odds) || ((q>200 && q<=1400) && odds)) {
         kat = 'В2';
-        //console.log('в2');
-        //console.log('Q='+Q+" q="+q+" S="+S+" h="+h+' g_t='+g_t+' odds='+odds+' odds2='+odds2);
+        console.log('в2');
+        console.log('Q='+Q+" q="+q+" S="+S+" h="+h+' g_t='+g_t+' odds='+odds+' odds2='+odds2);
     }
      
-    if (((q>200 && q<=1400) && !odds) || (q<200 && S>10 && Q>1000) || odds2) {
+    if (((q>200 && q<=1400) && !odds) || ((q<200 && S>10 && Q>1000) && !odds2)) {
         kat = 'В3';
-        //console.log('в3');
-        //console.log('Q='+Q+" q="+q+" S="+S+" h="+h+' g_t='+g_t+' odds='+odds+' odds2='+odds2);
-        //console.log(!odds2);
+        console.log('в3');
+        console.log('Q='+Q+" q="+q+" S="+S+" h="+h+' g_t='+g_t+' odds='+odds+' odds2='+odds2);
+        console.log(!odds2);
     }
     
     if (((q>100 && q<=200) && S<=10) || odds2) {
         kat = 'В4';
-        //console.log('в4');
-        //console.log('Q='+Q+" q="+q+" S="+S+" h="+h+' g_t='+g_t+' odds='+odds+' odds2='+odds2);
+        console.log('в4');
+        console.log('Q='+Q+" q="+q+" S="+S+" h="+h+' g_t='+g_t+' odds='+odds+' odds2='+odds2);
     }
 
     if(kat == '') kat = 'не определена'
@@ -310,10 +308,12 @@ function createPIN() {
             bodyPIN.style = 'background-color: #fcffe0';
 
     bodyPIN.innerHTML = `
-    <p>Наименование помещения: <span class="font-weight-bold">${nameP}</span>;</p>
-    <p>Площадь помещения: <span class="font-weight-bold">${sqP} м<sup>2</sup></span>;</p>
-    <p>Общая пожарная нагрузка в помещении составит: <span class="font-weight-bold">${Q} МДж</span>;</p>
-    <p>Максимальная удельная пожарная нагрузка в помещении составит: <span class="font-weight-bold">${q} МДж/м<sup>2</sup></span>;</p>
-    <p>Категория помщения: <span class="font-weight-bold">${kat}</span>;</p>
+    <p id='p_nameP'>Наименование помещения: <span class="font-weight-bold">${nameP}</span>;</p>
+    <p id='p_sqP'>Площадь помещения: <span class="font-weight-bold">${sqP} м<sup>2</sup></span>;</p>
+    <p id='p_Q'>Общая пожарная нагрузка в помещении составит: <span class="font-weight-bold">${Q} МДж</span>;</p>
+    <p id='p_q'>Максимальная удельная пожарная нагрузка в помещении составит: <span class="font-weight-bold">${q} МДж/м<sup>2</sup></span>;</p>
+    <p id='p_kat'>Категория помщения: <span class="font-weight-bold">${kat}</span>;</p>
     `;
+
 }
+
