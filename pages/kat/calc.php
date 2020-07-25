@@ -12,18 +12,17 @@
 
 <main>
 <!-- -->
- <div class="container-fluid p-0">
+ <div class="container-fluid">
 	<div class="row">
 		<div id="myTitle" class='col col-md-12 text-center bg-secondary text-white mt-0'>
 			<h6>Расчет категории помещений по пожарной опасности (для определения катагорий В1-В4, Д)</h6>
 		</div>
 	</div>
 	
-	<div class="row m-1">	
-		<div class="col p-1 mx-auto text-center" id="stage">
+	<div class="row m-2">	
+		<div class="col-lg-10 mx-auto text-center" id="stage">
 		</div>
-  </div>
-
+	</div>
 
  </div> <!--container-->
 
@@ -77,8 +76,7 @@
 
 	<script src="../../db/tv.js"></script> <!--подключаем данные -->
 	<script src="../../js/kat/boot.js"></script>
-	<script src="../../js/kat/simple_calc/plot.js"></script>
-	<script src="../../js/kat/simple_calc/main.js"></script>
+	<script src="../../js/kat/calc/main.js"></script>
  
 
 </body>

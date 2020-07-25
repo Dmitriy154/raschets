@@ -8,16 +8,23 @@ main {
 flex: 1 0 auto;
 }
 
+
 #stage {
 display: block;
 width: 100%;
 margin: 10px;
 height:auto;
-border: 2px solid #09501b;
+border: 1px solid #b4a448;
 border-radius: 10px;
 }
 
-/* .row > div {
+div.dropdown-menu.show {
+    width: 320px;
+}
+
+
+/*
+ .row > div {
     border: solid 1px rgb(212, 238, 213); 
 }
 

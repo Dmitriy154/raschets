@@ -12,7 +12,7 @@
  <div class="container-fluid">
 	<div class="row">
 		<div id="myTitle" class='col col-md-12 text-center bg-secondary text-white mt-0'>
-			<h6>Справочные данные. Индивидуальные вещества</h6>
+			<h6>Справочные данные. Показатели пожарной опасности индивидуальных веществ и смесей</h6>
 		</div>
 	</div>
 

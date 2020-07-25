@@ -4,8 +4,8 @@ let _table = cr(divData, 'table', "table table-bordered table-sm");
 _table.innerHTML = `
     <thead class='thead-dark'>
     <tr>
-        <th scope="col">Вещества и материалы</th>
-        <th scope="col">Низшая теплота сгорания Q<sup>p</sup><sub>H</sub>, МДж/кг</th>
+        <th class='align-middle' scope="col">Вещества и материалы</th>
+        <th class='align-middle' scope="col">Низшая теплота сгорания Q<sup>p</sup><sub>H</sub>, МДж/кг</th>
     </tr>
     </thead>
     <tbody id="_tbody"></tbody>

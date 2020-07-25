@@ -4,18 +4,18 @@ let _table = cr(divData, 'table', "table table-bordered table-sm");
 _table.innerHTML = `
     <thead class='thead-dark'>
         <tr>
-            <th scope="col">Наименование вещества</th>
-            <th scope="col">Хим. формула</th>
-            <th scope="col">Молярная масса, кг&middot;к&middot;моль<sup>-1</sup></th>
-            <th scope="col">Температура вспышки, &deg;C</th>
-            <th scope="col">Температура самовосплам., &deg;C</th>
-            <th scope="col">конст. A</th>
-            <th scope="col">конст. B</th>
-            <th scope="col">конст. C<sub>A</sub></th>
-            <th scope="col">Темп. интервал констант уравнения Антуана, &deg;C</th>
-            <th scope="col">НКПР пламени, %(об.)</th>
-            <th scope="col">Характеристика вещества</th>
-            <th scope="col">Теплота сгорания, кДж&middot;кг<sup>-1</sup></th>
+            <th class='align-middle' scope="col">Наименование вещества</th>
+            <th class='align-middle' scope="col">Хим. формула</th>
+            <th class='align-middle' scope="col">Молярная масса, кг&middot;к&middot;моль<sup>-1</sup></th>
+            <th class='align-middle' scope="col">Температура вспышки, &deg;C</th>
+            <th class='align-middle' scope="col">Температура самовосплам., &deg;C</th>
+            <th class='align-middle' scope="col">конст. A</th>
+            <th class='align-middle' scope="col">конст. B</th>
+            <th class='align-middle' scope="col">конст. C<sub>A</sub></th>
+            <th class='align-middle' scope="col">Темп. интервал констант уравнения Антуана, &deg;C</th>
+            <th class='align-middle' scope="col">НКПР пламени, %(об.)</th>
+            <th class='align-middle' scope="col">Характеристика вещества</th>
+            <th class='align-middle' scope="col">Теплота сгорания, кДж&middot;кг<sup>-1</sup></th>
         </tr> 
     </thead>
     <tbody id="_tbody"></tbody>

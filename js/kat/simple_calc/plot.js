@@ -1,4 +1,4 @@
-//Объект участки
+//Объект участок
 class Plot {
     sq = 10; //площадь участка
     gm = []; //горючие материалы участка
@@ -14,13 +14,13 @@ class Plot {
 constructor(num) {
     this.num = num; //номер участка
 
-    let row_1 = cr(stage,'div','form-group row m-3 p-1 justify-content-center');
+    let row_1 = cr(stage,'div','form-group row m-2 p-2 justify-content-center');
 
     this.rowPost = row_1;
 
-    let _card1 = cr(row_1, 'div', 'card col-9 p-0 border');
+    let _card1 = cr(row_1, 'div', 'card col-sm col-sm-10 p-2 border container-sm');
         let _header1 = cr(_card1, 'div','card-header container-fluid m-0');
-            _header1.style = 'background-color: #bdbdbb';
+            _header1.style = 'background-color: #d4cbab';
        
         if(num == 1) {
             _header1.innerHTML += `Участок №${num}<img type="button" class='m-2' data-toggle="modal" data-target="#exampleModal" src="../../img/icons/question.png"></img>`;  
@@ -30,7 +30,7 @@ constructor(num) {
 
 
     let bodyPost = cr(_card1, 'div','card-body p-1');
-        bodyPost.style = 'background-color: #fcffe0';
+        bodyPost.style = 'background-color: #fcf2ca';
     this.bodyPost = bodyPost; //свойство объекта ссылается на переменную
 
         let row_11 = cr(bodyPost,'div', 'form-group row m-1');
@@ -59,7 +59,7 @@ constructor(num) {
 
                 //Создаем select Выбор горючих материалов
                 let select1 = cr(df1, 'select', 'selectpicker border');
-                    select1.dataset.width="360px";
+                    select1.dataset.width="340px";
                     select1.setAttribute('multiple', 'true');
                     select1.setAttribute('title', 'Выберите горючие материалы на участке:');
                     select1.setAttribute('data-live-search', 'true');
@@ -107,7 +107,7 @@ constructor(num) {
 
         //делаем отдельную таблицу для ОПН и УПН
         let row_tablePN = cr(bodyPost, 'div', 'row p-1 mt-2 mx-auto text-center justify-content-center');
-            let _tablePN = cr(row_tablePN, 'table', 'table table-success table-border');
+            let _tablePN = cr(row_tablePN, 'table', 'table table-secondary table-border');
                 let _tbodyPN = cr(_tablePN,'tbody', 'border');                  
                 
                     let _trQ = cr(_tbodyPN,'tr');
@@ -115,7 +115,7 @@ constructor(num) {
                         _td1.innerHTML = `Общая пожарная нагрузка участка, МДж`;
                         _td1.style = "width:800px";
 
-                        this.value_Q = cr(_trQ, 'td', 'align-middle table-warning table-border'); //ячейка со значением Q
+                        this.value_Q = cr(_trQ, 'td', 'align-middle table-light table-border'); //ячейка со значением Q
                         this.value_Q.style = "width:250px";
 
                     let _trq = cr(_tbodyPN,'tr');
@@ -123,7 +123,7 @@ constructor(num) {
                         _td11.innerHTML = `Удельная пожарная нагрузка участка, МДж/м<sup>2</sup>`;
                         _td11.style = "width:800px";
 
-                        this.value_q = cr(_trq, 'td', 'align-middle table-warning table-border'); //ячейка со значением q
+                        this.value_q = cr(_trq, 'td', 'align-middle table-light table-border'); //ячейка со значением q
                         this.value_q.style = "width:250px";           
 
         //скрываем таблицу и кнопку "Очистить таблицу"
@@ -156,7 +156,7 @@ btn_table_other.addEventListener('click', () => {
 
         _td2.addEventListener('input', (e)=> {
             if(e.target.value > 0 && _td3.lastChild.value) {
-                _td4.textContent = Math.round(_td3.lastChild.value*e.target.value*100)/100;    //+num.toFixed(5)
+                _td4.textContent = Math.round(_td3.lastChild.value*e.target.value*100)/100;   
             } else {
                 _td4.textContent ='';
             }
@@ -168,7 +168,7 @@ btn_table_other.addEventListener('click', () => {
         
         _td3.addEventListener('input', (e)=> {
             if(e.target.value > 0 && _td2.lastChild.value) {
-                _td4.textContent = Math.round(_td2.lastChild.value*e.target.value*100)/100;    //+num.toFixed(5)
+                _td4.textContent = Math.round(_td2.lastChild.value*e.target.value*100)/100;    
             } else {
                 _td4.textContent ='';
             }
@@ -177,8 +177,6 @@ btn_table_other.addEventListener('click', () => {
 
             update(this);
         });
-
-
 
 });
 

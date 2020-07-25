@@ -1,5 +1,5 @@
 //переменные помещени
-let nameP =  ''
+let nameP 
 let sqP // площадь помещения
 let l_pr = 26 // предельное расстояние
 
@@ -37,8 +37,6 @@ arrPop.sort((a,b) => {
 //создаем массив из двух
 let arrTV = arrPop.concat(tv);
 
-
-
 ///////  создаем участок №1 ////////////////////
 let arrPlot = [];
 let numPlot = 1; //номер участка
@@ -46,6 +44,9 @@ arrPlot[0] = new Plot(1);
 
 //инициализируем мультисписок              
 $('select').selectpicker();
+
+
+console.log($('.dropdown-menu'));
 
 //строка для кнопок "Добавить участок" и "Выполнить расчет категории помещения"
 let row_btns = cr(stage,'div','row justify-content-center m-1');
@@ -55,7 +56,12 @@ let row_btns = cr(stage,'div','row justify-content-center m-1');
     let btn_calc = cr(row_btns, 'button', 'btn btn-success m-2', 'Выполнить расчет категории помещения');
         btn_calc.type = 'button';      
 
-    
+//кнопка "На главную"
+let _rowIndex = cr(stage,'div','row justify-content-center m-2');
+let btn_index = cr(_rowIndex, 'button', 'btn btn-secondary btn-sm m-2', 'На главную');
+    btn_index.type = 'button';
+    btn_index.addEventListener('click', ()=> location.href = '../../kat.php');    
+
 //обработчик для кнопки добавить участок
     btn_addPlot.addEventListener('click', ()=> {
         let newPlot = new Plot(arrPlot.length + 1);
@@ -70,6 +76,7 @@ let row_btns = cr(stage,'div','row justify-content-center m-1');
 
 //обработчик для кнопки "выполнить расчет категории помещения"
 btn_calc.addEventListener('click', ()=> {
+
     //скрываем все участки и кнопки
     arrPlot.forEach((plot) => {
         plot.rowPost.style = "display:none";
@@ -78,10 +85,11 @@ btn_calc.addEventListener('click', ()=> {
     btn_addPlot.style = "display:none";
     btn_calc.style = "display:none";
     btn_back.style = "display:block";
+    btn_index.style = "display:none";
     ////
 
-    nameP = input1.value
-    sqP = +input2.value
+    nameP = input1.value || 'не указано'
+    sqP = +input2.value || '--'
     
     form1.style = 'display:none';
     //card - вывод
@@ -103,6 +111,7 @@ btn_back.addEventListener('click', ()=> {
     btn_addPlot.style = "display:block";
     btn_calc.style = "display:block";
     btn_back.style = "display:none";
+    btn_index.style = "display:block";
 
     //скрываем вывод
     $('div.rowPIN').remove();
@@ -137,8 +146,8 @@ function update(plot) {
 
     //создаем поле "минимальная высота H" если известны Q и q и условии кат. Д, а также не создан div.row_H
 
-    if (plot.Q > 2000 && plot.q > 200 && !plot.bodyPost.querySelector('div.row_H')) {
-         
+    if (((plot.Q > 2000 && plot.q > 200) || (plot.Q > 1000 && plot.q > 100 && plot.sq>10)) && !plot.bodyPost.querySelector('div.row_H')) {
+      
         let row_H = cr(plot.bodyPost,'div', 'form-group row p-1 mx-auto border row_H');
         row_H.style = 'background-color: #fff';  
         let label = cr(row_H, 'label', 'col-sm-9 col-form-label ', "Укажите минимальное расстояние от поверхности пожарной нагрузки данного участка до перекрытия (расстояние от горючих материалов до потолка), м");
@@ -191,10 +200,9 @@ function createPIN() {
 
     h = Math.min(...arr_h); //извлекаем минимальное значение из массива
 
-
                         //проверка условия 5.3.2.............................
     let g_t = '';
-    let odds = false; // 5.3.2
+    let odds = false; // 5.3.2, если true, то увеличиваем категорию
     let odds2 = false; //5.3.4 если true, то В4 иначе В3
 
     if(q>1400 && q<=2200) g_t = 2200
@@ -202,10 +210,12 @@ function createPIN() {
 
     odds = Q >= 0.64*g_t*h**2;
 
-
                 // проверка условия 5.3.4 ............................................
 
-    if(Q>2000 && (q>100 && q<=200) && S<=10 && sqP>26) {
+    if(Q>2000 && (q>100 && q<=200) && S<=10 && sqP<25) kat = "В3" //площадь не позволит соблюдать пред.расст.
+
+    if(Q>2000 && (q>100 && q<=200) && S<=10) {
+        console.log('проверка 5.3.4');
         //здесь условия соблюдения расстояний предельных
         //двойной цикличный поиск: ищем в массиве с ТГМ объекты с ГМ в помещении, ещем агрег.сост. - Жидкость
         for (name of gmP) {
@@ -229,7 +239,6 @@ function createPIN() {
                 if (h_b4>=11) l_pr = 12; else l_pr = 12 + 11-h_b4;
             }
         }
-        
 
         //если среди гор. материалов есть древесина, полиэтилен, хлопок
         if (gmP.includes('полиэтилен (пластмасса)')) {
@@ -250,8 +259,9 @@ function createPIN() {
 
         document.querySelector('.modal_confirm_if_yes').addEventListener('click', () => {
             odds2 = true
+            kat = "В4"    
             cr(bodyPIN, 'p','',`Расстояния между участками храненияя горючих веществ и материалов превышает предельное расстояние для хранимых горючих материалов ${l_pr} м`)
-            console.log('yes');
+            p_kat.innerHTML = `Категория помщения: <span class="font-weight-bold">${kat}</span>;`
         })
         
         document.querySelector('.modal_confirm_if_no').addEventListener('click', () => {
@@ -265,36 +275,19 @@ function createPIN() {
     } //5.3.4
 
 
-
                 // Выбор категории .............................
 
-    if (q>2200 || ((q>1400 && q<=2200) && odds)) {
-        kat = 'В1';
-        console.log('в1');
-        console.log('Q='+Q+" q="+q+" S="+S+" h="+h+' g_t='+g_t+' odds='+odds+' odds2='+odds2);
-    }
+    if (q>2200 || ((q>1400 && q<=2200) && odds)) kat = 'В1';
     
-    if (((q>1400 && q<=2200) && !odds) || ((q>200 && q<=1400) && odds)) {
-        kat = 'В2';
-        console.log('в2');
-        console.log('Q='+Q+" q="+q+" S="+S+" h="+h+' g_t='+g_t+' odds='+odds+' odds2='+odds2);
-    }
+    if (((q>1400 && q<=2200) && !odds) || ((q>200 && q<=1400) && odds)) kat = 'В2';
      
-    if (((q>200 && q<=1400) && !odds) || ((q<200 && S>10 && Q>1000) && !odds2)) {
-        kat = 'В3';
-        console.log('в3');
-        console.log('Q='+Q+" q="+q+" S="+S+" h="+h+' g_t='+g_t+' odds='+odds+' odds2='+odds2);
-        console.log(!odds2);
-    }
+    if (((q>200 && q<=1400) && !odds) || ((q<200 && S>10 && Q>1000) && !odds2))  kat = 'В3';
     
-    if (((q>100 && q<=200) && S<=10) || odds2) {
-        kat = 'В4';
-        console.log('в4');
-        console.log('Q='+Q+" q="+q+" S="+S+" h="+h+' g_t='+g_t+' odds='+odds+' odds2='+odds2);
-    }
+    if (((q>100 && q<=200) && S<=10 && Q<=2000) || odds2) kat = 'В4';
+
+    if(Q<=1000 && q<=100) kat = 'Д'
 
     if(kat == '') kat = 'не определена'
-
 
                             // структура вывода .........................
 
@@ -315,5 +308,9 @@ function createPIN() {
     <p id='p_kat'>Категория помщения: <span class="font-weight-bold">${kat}</span>;</p>
     `;
 
-}
+    if (odds) {
+        cr(bodyPIN, 'p').innerHTML = 'Соблюдается неравенство Q &ge; 0,64 &middot; g<sub>т</sub> &middot; H<sup>2</sup>'
+    }
 
+    console.log('nameP: '+nameP+'; sqP: '+sqP+'; Q: '+Q+'; q: '+q+ '; s_уч_макс: '+S+'; kat: '+kat+'; odds: '+odds+'; odds2: '+odds2);
+}
