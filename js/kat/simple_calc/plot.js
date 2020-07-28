@@ -59,18 +59,18 @@ constructor(num) {
 
                 //Создаем select Выбор горючих материалов
                 let select1 = cr(df1, 'select', 'selectpicker border');
-                    select1.dataset.width="340px";
+                    select1.dataset.width="360px";
                     select1.setAttribute('multiple', 'true');
                     select1.setAttribute('title', 'Выберите горючие материалы на участке:');
                     select1.setAttribute('data-live-search', 'true');
                     
                 //кнопка Добавить ГМ
-                let btn_table = cr(df1, 'button', 'btn btn-outline-primary btn-sm ml-3', 'Добавить ГМ');
+                let btn_table = cr(df1, 'button', 'btn btn-primary btn-sm ml-3', 'Добавить ГМ');
                     btn_table.setAttribute('title', 'Добавить горючий материал из списка');
                     btn_table.type = 'button';
 
                 //Кнопка Добавить другой ГМ
-                let btn_table_other = cr(df1, 'button', 'btn btn-outline-secondary btn-sm ml-3', 'Другой ГМ');
+                let btn_table_other = cr(df1, 'button', 'btn btn-secondary btn-sm ml-3', 'Добавить другой ГМ');
                     btn_table_other.type = 'button';
                     btn_table_other.setAttribute('title', 'Если вы не нашли в списке необходимый горючий материал, то добавьте в таблицу свои данные');
                     btn_table_other.dataset.toggle = 'tooltip';
