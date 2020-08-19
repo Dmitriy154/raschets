@@ -85,17 +85,20 @@ constructor(num) {
                 });
 
 
-        //строка для таблицы 1
-        let row_3 = cr(bodyPost,'div', 'row p-1 mx-auto text-center justify-content-center');
-            let _table = cr(row_3, 'table', 'table table-border table-sm border mb-1');
+        //строка для таблицы
+        let row_3 = cr(bodyPost,'div', 'row p-1 ');
+        let row_33 = cr(row_3, 'div', 'col-10 mx-auto text-center justify-content-center')
+            let _table = cr(row_33, 'table', 'table mb-1 table-bordered');
                 let _thead = cr(_table, 'thead', 'bg-light');
-                    _thead.innerHTML = `
-                        <tr>
+                    _thead.innerHTML = `   
+                       
+                        <tr class="mx-auto">
                             <th class='align-middle'>Наименование горючего материала (вещества)</th>
                             <th class='align-middle'>Низшая теплота сгорания Q<sup>p</sup><sub>H</sub>, МДж/кг</th>
                             <th class='align-middle'>Масса, кг</th>
                             <th class='align-middle'>Пож. нагрузка горючего материала (вещества), МДж</th>                           
                         </tr>`
+                  
                 let _tbody = cr(_table,'tbody');
                     _tbody.style = 'background-color: #fff';
         
@@ -106,31 +109,23 @@ constructor(num) {
                 btn_clr.type = 'button';
 
         //делаем отдельную таблицу для ОПН и УПН
-        let row_tablePN = cr(bodyPost, 'div', 'row p-1 mt-2 mx-auto text-center justify-content-center');
-            let _tablePN = cr(row_tablePN, 'table', 'table table-secondary table-border');
-                let _tbodyPN = cr(_tablePN,'tbody', 'border');                  
-                
-                    let _trQ = cr(_tbodyPN,'tr');
-                        let _td1 = cr(_trQ, 'td', 'align-middle');
-                        _td1.innerHTML = `Общая пожарная нагрузка участка, МДж`;
-                        _td1.style = "width:800px";
+        let row_tablePN = cr(bodyPost, 'div', 'container p-1 mt-2 mx-auto text-center justify-content-center');
+            
+            let str_OPN = cr(row_tablePN, 'div', 'row mx-auto justify-content-center');
+                cr(str_OPN, 'div', 'col-6 p-2 border bg-light', 'Общая пожарная нагрузка участка, МДж');
+                this.value_Q = cr(str_OPN, 'div', 'col-2 p-2 border bg-light', '100'); //ячейка со значением Q
 
-                        this.value_Q = cr(_trQ, 'td', 'align-middle table-light table-border'); //ячейка со значением Q
-                        this.value_Q.style = "width:250px";
-
-                    let _trq = cr(_tbodyPN,'tr');
-                        let _td11 = cr(_trq, 'td', 'align-middle');
-                        _td11.innerHTML = `Удельная пожарная нагрузка участка, МДж/м<sup>2</sup>`;
-                        _td11.style = "width:800px";
-
-                        this.value_q = cr(_trq, 'td', 'align-middle table-light table-border'); //ячейка со значением q
-                        this.value_q.style = "width:250px";           
-
+            let str_UPN = cr(row_tablePN, 'div', 'row mx-auto justify-content-center');
+                cr(str_UPN, 'div', 'col-6 p-2 border bg-light').innerHTML = `Удельная пожарная нагрузка участка, МДж/м<sup>2</sup>`;
+                this.value_q = cr(str_UPN, 'div', 'col-2 p-2 border bg-light'); //ячейка со значением q            
+    
         //скрываем таблицу и кнопку "Очистить таблицу"
         _table.style = "display:none"; 
-        _tablePN.style = "display:none";
+        row_tablePN.style = "display:none";
+
         //если создана таблица с классом tablePN, то повторно не создавать
         //if (_body.querySelector('.tablePN') !== null) return;
+
         btn_clr.style = "display:none";
            
       
@@ -138,7 +133,7 @@ constructor(num) {
 btn_table_other.addEventListener('click', () => {
     
     _table.style = "display:block";
-    _tablePN.style = "display:block"; 
+    row_tablePN.style = "display:block";
     btn_clr.style = "display:block" ;
     
     this.userGM = true;
@@ -187,7 +182,7 @@ btn_table.addEventListener('click', () => {
     if (select1.selectedIndex >= 0) {
 
         _table.style = "display:block";
-        _tablePN.style = "display:block";
+        row_tablePN.style = "display:block";
         btn_clr.style = "display:block";
 
         // получаем все выбранные значения из select с multiple

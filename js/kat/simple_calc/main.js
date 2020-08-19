@@ -45,9 +45,6 @@ arrPlot[0] = new Plot(1);
 //инициализируем мультисписок              
 $('select').selectpicker();
 
-
-console.log($('.dropdown-menu'));
-
 //строка для кнопок "Добавить участок" и "Выполнить расчет категории помещения"
 let row_btns = cr(stage,'div','row justify-content-center m-1');
     let btn_addPlot = cr(row_btns, 'button', 'btn btn-primary m-2', 'Добавить участок');
@@ -148,11 +145,11 @@ function update(plot) {
 
     if (((plot.Q > 2000 && plot.q > 200) || (plot.Q > 1000 && plot.q > 100 && plot.sq>10)) && !plot.bodyPost.querySelector('div.row_H')) {
       
-        let row_H = cr(plot.bodyPost,'div', 'form-group row p-1 mx-auto border row_H');
-        row_H.style = 'background-color: #fff';  
-        let label = cr(row_H, 'label', 'col-sm-9 col-form-label ', "Укажите минимальное расстояние от поверхности пожарной нагрузки данного участка до перекрытия (расстояние от горючих материалов до потолка), м");
-        let _h = cr(row_H, 'input', 'form-control col-sm-2 m-auto text-center');
-            _h.type = 'number';
+        let row_H = cr(plot.bodyPost,'div', 'form-group row row_H');
+ 
+            let label = cr(row_H, 'label', 'col-sm-6 col-form-label text-right', "Укажите минимальное расстояние от поверхности пожарной нагрузки данного участка до перекрытия (расстояние от горючих материалов до потолка), м");
+            let _h = cr(row_H, 'input', 'form-control col-2 m-auto text-center border');
+                _h.type = 'number';
 
             //обработчик поля ввода H
             _h.addEventListener('input', (e)=> {

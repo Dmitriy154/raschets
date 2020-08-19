@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-	<?php include ("blocks/head.html") ?><!-- CSS meta -->
+	<?php include ("blocks/head.php") ?><!-- CSS meta -->
 	<title>Инженерные расчеты</title>
 </head>
 
