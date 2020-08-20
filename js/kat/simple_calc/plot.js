@@ -14,11 +14,12 @@ class Plot {
 constructor(num) {
     this.num = num; //номер участка
 
-    let row_1 = cr(stage,'div','form-group row m-2 p-2 justify-content-center');
+    let divPlot = cr(stage, 'div', 'container-xl')
+        let row_1 = cr(divPlot,'div','form-group row m-2 p-2 justify-content-center');
 
     this.rowPost = row_1;
 
-    let _card1 = cr(row_1, 'div', 'card col-sm col-sm-10 p-2 border container-sm');
+    let _card1 = cr(row_1, 'div', 'card col-12 p-2 border');
         let _header1 = cr(_card1, 'div','card-header container-fluid m-0');
             _header1.style = 'background-color: #d4cbab';
        
@@ -87,7 +88,7 @@ constructor(num) {
 
         //строка для таблицы
         let row_3 = cr(bodyPost,'div', 'row p-1 ');
-        let row_33 = cr(row_3, 'div', 'col-10 mx-auto text-center justify-content-center')
+        let row_33 = cr(row_3, 'div', 'm-2 text-center justify-content-center')
             let _table = cr(row_33, 'table', 'table mb-1 table-bordered');
                 let _thead = cr(_table, 'thead', 'bg-light');
                     _thead.innerHTML = `   
@@ -105,18 +106,18 @@ constructor(num) {
         
         //строка для кнопки очистить таблицу
         let row_btn_clr_table = cr(bodyPost,'div', 'row m-1 mx-auto text-center justify-content-center');
-            let btn_clr = cr(row_btn_clr_table, 'button', 'btn btn-outline-primary btn-sm', 'Очистить таблицу');
+            let btn_clr = cr(row_btn_clr_table, 'button', 'btn btn-light border', 'Очистить таблицу');
                 btn_clr.type = 'button';
 
         //делаем отдельную таблицу для ОПН и УПН
         let row_tablePN = cr(bodyPost, 'div', 'container p-1 mt-2 mx-auto text-center justify-content-center');
             
             let str_OPN = cr(row_tablePN, 'div', 'row mx-auto justify-content-center');
-                cr(str_OPN, 'div', 'col-6 p-2 border bg-light', 'Общая пожарная нагрузка участка, МДж');
+                cr(str_OPN, 'div', 'col-8 p-2 border bg-light', 'Общая пожарная нагрузка участка, МДж');
                 this.value_Q = cr(str_OPN, 'div', 'col-2 p-2 border bg-light', '100'); //ячейка со значением Q
 
             let str_UPN = cr(row_tablePN, 'div', 'row mx-auto justify-content-center');
-                cr(str_UPN, 'div', 'col-6 p-2 border bg-light').innerHTML = `Удельная пожарная нагрузка участка, МДж/м<sup>2</sup>`;
+                cr(str_UPN, 'div', 'col-8 p-2 border bg-light').innerHTML = `Удельная пожарная нагрузка участка, МДж/м<sup>2</sup>`;
                 this.value_q = cr(str_UPN, 'div', 'col-2 p-2 border bg-light'); //ячейка со значением q            
     
         //скрываем таблицу и кнопку "Очистить таблицу"
@@ -142,7 +143,7 @@ btn_table_other.addEventListener('click', () => {
     let _tr = cr(_tbody,'tr');
         let _td1 = cr(_tr, 'td');
         let _td2 = cr(_tr, 'td', 'align-middle');
-        let _td3 = cr (_tr,'td','align-middle');
+        let _td3 = cr (_tr,'td','align-middle p-1');
         let _td4 = cr(_tr, 'td','align-middle');
 
         _td1.innerHTML = `<input type="text" class="form-control text-center">`;
@@ -202,12 +203,12 @@ btn_table.addEventListener('click', () => {
                 let _tr = cr(_tbody,'tr');
 
                 this.gm.push(item);//заполняем массив данных, которые заносятся в таблицу
-                let _td1 = cr(_tr, 'td', 'align-middle', item);
-                let _td2 = cr (_tr,'td', 'align-middle', selected_t[i]);
-                let _td3 = cr(_tr, 'td');
-                    _td3.innerHTML = `<input type="number" class="form-control text-center">`;
+                let _td1 = cr(_tr, 'td', 'align-middle p-1', item);
+                let _td2 = cr (_tr,'td', 'align-middle p-1', selected_t[i]);
+                let _td3 = cr(_tr, 'td', 'p-1');
+                    _td3.innerHTML = `<input type="number" class="form-control text-center p-1">`;
                 
-                    let _td4 = cr(_tr, 'td', 'align-middle');
+                    let _td4 = cr(_tr, 'td', 'align-middle p-1');
                    
                     
                 _td3.addEventListener('input', (e)=> {

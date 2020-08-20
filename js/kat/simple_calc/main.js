@@ -5,20 +5,21 @@ let l_pr = 26 // предельное расстояние
 
 // Наименование помещения и Площадь помещения
 let form1 = cr(stage,'form');
-    let row_1 = cr(form1, 'div', 'form-group row m-1 p-1 justify-content-center');
-        let label_1 = cr(row_1, 'label', 'col-sm-3 col-form-label text-left', "Наименование помещения");
-        let col_11 = cr(row_1, 'div', 'col-sm-3',);
-            let input1 = cr(col_11, 'input', 'form-control');
-            input1.type = 'text';
+    let divForm = cr(form1, 'div', 'container-lg')
+        let row_1 = cr(divForm, 'div', 'form-group row m-1 p-1 justify-content-center');
+            let label_1 = cr(row_1, 'label', 'col-sm-3 col-form-label text-left', "Наименование помещения");
+            let col_11 = cr(row_1, 'div', 'col-sm-3',);
+                let input1 = cr(col_11, 'input', 'form-control');
+                input1.type = 'text';
 
 
-    let row_2 = cr(form1, 'div', 'form-group row m-1 p-1 justify-content-center');
-        let label_2 = cr(row_2, 'label', 'col-sm-3 col-form-label text-left');
-        label_2.innerHTML = "Площадь помещения, м<sup>2</sup>";
+        let row_2 = cr(divForm, 'div', 'form-group row m-1 p-1 justify-content-center');
+            let label_2 = cr(row_2, 'label', 'col-sm-3 col-form-label text-left');
+            label_2.innerHTML = "Площадь помещения, м<sup>2</sup>";
 
-        let col_21 = cr(row_2, 'div', 'col-sm-3',);
-            let input2 = cr(col_21, 'input', 'form-control');
-            input2.type = 'number';
+            let col_21 = cr(row_2, 'div', 'col-sm-3',);
+                let input2 = cr(col_21, 'input', 'form-control');
+                input2.type = 'number';
 
 
 //сортируем массив: создаем массив с распростр. веществами, сортир., соединяем
@@ -144,12 +145,12 @@ function update(plot) {
     //создаем поле "минимальная высота H" если известны Q и q и условии кат. Д, а также не создан div.row_H
 
     if (((plot.Q > 2000 && plot.q > 200) || (plot.Q > 1000 && plot.q > 100 && plot.sq>10)) && !plot.bodyPost.querySelector('div.row_H')) {
-      
-        let row_H = cr(plot.bodyPost,'div', 'form-group row row_H');
+            let row_H = cr(plot.bodyPost,'div','row row_H m-2 justify-content-center');
  
-            let label = cr(row_H, 'label', 'col-sm-6 col-form-label text-right', "Укажите минимальное расстояние от поверхности пожарной нагрузки данного участка до перекрытия (расстояние от горючих материалов до потолка), м");
-            let _h = cr(row_H, 'input', 'form-control col-2 m-auto text-center border');
-                _h.type = 'number';
+            let label = cr(row_H, 'div', 'col-8 col-form-label bg-white', "Укажите минимальное расстояние от поверхности пожарной нагрузки данного участка до перекрытия (расстояние от горючих материалов до потолка), м");
+            let div_h = cr(row_H, 'div', 'col-2 d-flex flex-wrap align-content-center bg-light');
+                let _h = cr(div_h, 'input', 'form-control text-center');
+                    _h.type = 'number';
 
             //обработчик поля ввода H
             _h.addEventListener('input', (e)=> {
