@@ -4,10 +4,10 @@ class Plot {
     gm = []; //горючие материалы участка
     Q = 0; //общая пожарная нагрузка участка
     q = 0; //удельная пожарная нагрузка участка 
-    H = 0; //минимальное расстояние до перекрытия
+    H = false; //минимальное расстояние до перекрытия (false - для данного участка не требуется вводить H)
     value_Q = 0; //ссылка на ячейку Общей пожарной нагрузки
     value_q = 0;
-    rowPost; // ссылка на row участка
+    rowPost; // ссылка на container участка
     bodyPost; //ссылка на body участка
     userGM = false //есть ли материалы пользователя не из бд
 
@@ -17,7 +17,7 @@ constructor(num) {
     let divPlot = cr(stage, 'div', 'container-xl')
         let row_1 = cr(divPlot,'div','form-group row m-2 p-2 justify-content-center');
 
-    this.rowPost = row_1;
+    this.rowPost = divPlot;
 
     let _card1 = cr(row_1, 'div', 'card col-12 p-2 border');
         let _header1 = cr(_card1, 'div','card-header container-fluid m-0');
@@ -88,7 +88,7 @@ constructor(num) {
 
         //строка для таблицы
         let row_3 = cr(bodyPost,'div', 'row p-1 ');
-        let row_33 = cr(row_3, 'div', 'm-2 text-center justify-content-center')
+        let row_33 = cr(row_3, 'div', 'ml-3 mr-3 text-center justify-content-center');
             let _table = cr(row_33, 'table', 'table mb-1 table-bordered');
                 let _thead = cr(_table, 'thead', 'bg-light');
                     _thead.innerHTML = `   

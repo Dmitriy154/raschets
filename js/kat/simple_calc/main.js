@@ -11,8 +11,6 @@ let form1 = cr(stage,'form');
             let col_11 = cr(row_1, 'div', 'col-sm-3',);
                 let input1 = cr(col_11, 'input', 'form-control');
                 input1.type = 'text';
-
-
         let row_2 = cr(divForm, 'div', 'form-group row m-1 p-1 justify-content-center');
             let label_2 = cr(row_2, 'label', 'col-sm-3 col-form-label text-left');
             label_2.innerHTML = "Площадь помещения, м<sup>2</sup>";
@@ -74,6 +72,20 @@ let btn_index = cr(_rowIndex, 'button', 'btn btn-secondary btn-sm m-2', 'На г
 
 //обработчик для кнопки "выполнить расчет категории помещения"
 btn_calc.addEventListener('click', ()=> {
+    //если пустая ячейка с минимальной высотой, то подсвечиваем ее
+    //циклом пройтись по всем участкам и проверить plot.H и подсветить ее
+    
+    let mistake_H = false;
+
+    arrPlot.forEach((plot) => {
+        if (plot.H == true) {
+            plot.bodyPost.querySelector('div.div_h').classList.remove("bg-light");
+            plot.bodyPost.querySelector('div.div_h').classList.add("bg-danger");
+            mistake_H = true;
+        } 
+    })
+
+    if (mistake_H) return;
 
     //скрываем все участки и кнопки
     arrPlot.forEach((plot) => {
@@ -103,7 +115,7 @@ let btn_back = cr(stage, 'button', 'btn btn-outline-primary m-auto mt-2 mb-2');
 
 btn_back.addEventListener('click', ()=> {
     arrPlot.forEach((plot) => {
-        plot.rowPost.style = "display:flex";
+        plot.rowPost.style = "display:block";
     });
 
     btn_addPlot.style = "display:block";
@@ -148,13 +160,21 @@ function update(plot) {
             let row_H = cr(plot.bodyPost,'div','row row_H m-2 justify-content-center');
  
             let label = cr(row_H, 'div', 'col-8 col-form-label bg-white', "Укажите минимальное расстояние от поверхности пожарной нагрузки данного участка до перекрытия (расстояние от горючих материалов до потолка), м");
-            let div_h = cr(row_H, 'div', 'col-2 d-flex flex-wrap align-content-center bg-light');
+            let div_h = cr(row_H, 'div', 'col-2 d-flex flex-wrap align-content-center bg-light div_h');
                 let _h = cr(div_h, 'input', 'form-control text-center');
                     _h.type = 'number';
+                plot.H = true; //знать, что для участка необходимо ввести значение
 
             //обработчик поля ввода H
             _h.addEventListener('input', (e)=> {
                 plot.H = e.target.value;
+
+                if (plot.H == '') plot.H = true; else plot.H = false;
+
+                if(div_h.classList.contains("bg-danger")) {
+                    div_h.className = 'col-2 d-flex flex-wrap align-content-center bg-light div_h'
+                }
+
                 update(plot); // повторяем обновление 
             });
                             
@@ -162,7 +182,7 @@ function update(plot) {
     
     if(plot.Q < 2000 && plot.q < 200 && plot.bodyPost.querySelector('div.row_H')){
         //удаляем div.row_H 
-        plot.H = 0;
+        plot.H = false;
         plot.bodyPost.querySelector('div.row_H').remove();
     }
 }
@@ -213,7 +233,6 @@ function createPIN() {
     if(Q>2000 && (q>100 && q<=200) && S<=10 && sqP<25) kat = "В3" //площадь не позволит соблюдать пред.расст.
 
     if(Q>2000 && (q>100 && q<=200) && S<=10) {
-        console.log('проверка 5.3.4');
         //здесь условия соблюдения расстояний предельных
         //двойной цикличный поиск: ищем в массиве с ТГМ объекты с ГМ в помещении, ещем агрег.сост. - Жидкость
         for (name of gmP) {
