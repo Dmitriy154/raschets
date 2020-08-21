@@ -78,7 +78,8 @@ btn_calc.addEventListener('click', ()=> {
     let mistake_H = false;
 
     arrPlot.forEach((plot) => {
-        if (plot.H == true) {
+        //=== т.к. если поставить ==, то '1' приравнивается к true ....
+        if (plot.H === true) {
             plot.bodyPost.querySelector('div.div_h').classList.remove("bg-light");
             plot.bodyPost.querySelector('div.div_h').classList.add("bg-danger");
             mistake_H = true;
@@ -157,19 +158,23 @@ function update(plot) {
     //создаем поле "минимальная высота H" если известны Q и q и условии кат. Д, а также не создан div.row_H
 
     if (((plot.Q > 2000 && plot.q > 200) || (plot.Q > 1000 && plot.q > 100 && plot.sq>10)) && !plot.bodyPost.querySelector('div.row_H')) {
-            let row_H = cr(plot.bodyPost,'div','row row_H m-2 justify-content-center');
- 
+           
+        let row_H = cr(plot.bodyPost,'div','row row_H m-2 justify-content-center');
             let label = cr(row_H, 'div', 'col-8 col-form-label bg-white', "Укажите минимальное расстояние от поверхности пожарной нагрузки данного участка до перекрытия (расстояние от горючих материалов до потолка), м");
             let div_h = cr(row_H, 'div', 'col-2 d-flex flex-wrap align-content-center bg-light div_h');
                 let _h = cr(div_h, 'input', 'form-control text-center');
                     _h.type = 'number';
+
                 plot.H = true; //знать, что для участка необходимо ввести значение
+
+                _h.title = getTitle(plot); //подсказка - пограничное значение H
 
             //обработчик поля ввода H
             _h.addEventListener('input', (e)=> {
                 plot.H = e.target.value;
-
-                if (plot.H == '') plot.H = true; else plot.H = false;
+                if (plot.H == '') {
+                    plot.H = true;
+                }
 
                 if(div_h.classList.contains("bg-danger")) {
                     div_h.className = 'col-2 d-flex flex-wrap align-content-center bg-light div_h'
@@ -185,6 +190,7 @@ function update(plot) {
         plot.H = false;
         plot.bodyPost.querySelector('div.row_H').remove();
     }
+
 }
 
 ////РАСЧЕТ
@@ -204,7 +210,7 @@ function createPIN() {
     arrPlot.forEach((plot) => {
         Q += plot.Q  
         if (q < plot.q) q = plot.q
-        if(plot.H >0) arr_h.push(+plot.H)
+        if(plot.H >0 || plot.H == 0) arr_h.push(+plot.H)  //т.к. plot.H = true занят другой логикой
         if(S < plot.sq) S = plot.sq //ищем максимальную площадь участка
         if (plot.userGM) userGM = true
   
@@ -227,6 +233,8 @@ function createPIN() {
     if(q>200 && q<=1400) g_t = 1400
 
     odds = Q >= 0.64*g_t*h**2;
+
+    console.log("Q="+Q+'; g_t ='+g_t+'; h ='+h);
 
                 // проверка условия 5.3.4 ............................................
 
@@ -329,5 +337,20 @@ function createPIN() {
         cr(bodyPIN, 'p').innerHTML = 'Соблюдается неравенство Q &ge; 0,64 &middot; g<sub>т</sub> &middot; H<sup>2</sup>'
     }
 
-    console.log('nameP: '+nameP+'; sqP: '+sqP+'; Q: '+Q+'; q: '+q+ '; s_уч_макс: '+S+'; kat: '+kat+'; odds: '+odds+'; odds2: '+odds2);
+   // console.log('nameP: '+nameP+'; sqP: '+sqP+'; Q: '+Q+'; q: '+q+ '; s_уч_макс: '+S+'; kat: '+kat+'; odds: '+odds+'; odds2: '+odds2);
+}
+
+function getTitle(plot) {
+    let H, gt=0, _text = '';
+
+    if (plot.q>200 && plot.q<=1400) gt = 1400
+    if (plot.q>1400 && plot.q<=2200) gt = 2200
+    if (gt) H= Math.round(Math.sqrt(plot.Q/(0.64*gt))*100)/100;
+
+
+    if(gt == 1400) _text = `Подсказка: если данное расстояние будет меньше ${H} м, то категория участка изменится на В2`
+    if(gt == 2200) _text `Подсказка: если данное расстояние будет меньше ${H} м, то категория участка изменится на В1`
+    console.log(_text);
+
+    return _text;
 }

@@ -16,7 +16,7 @@
 		<div id="myTitle" class='col col-md-12 text-center bg-secondary text-white mt-0'>
 			<h6>Расчет категории помещений по взрывопожарной и пожарной опасности в соответствии с ТКП 474-2013</h6>
 		</div>
-		<div id="stage"></div>
+		<div id="stage" class="container-lg m-auto"></div>
 	</div><!-- row cards-->
  </div> <!--container-->
 </main>
