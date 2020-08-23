@@ -15,7 +15,7 @@
  <div class="container-fluid">
 	<div class="row">
 		<div id="myTitle" class='col col-md-12 text-center bg-secondary text-white mt-0'>
-			<h6>Расчет категории помещений по пожарной опасности (для определения катагорий В1-В4, Д)</h6>
+			<h6>Расчет категории помещений по взрывопожарной и пожарной опасности</h6>
 		</div>
 	</div>
 	
@@ -75,7 +75,12 @@
  	<script src="../../js/bootstrap-select.min.js"></script>
 
 	<script src="../../db/tv.js"></script> <!--подключаем данные -->
-	<script src="../../js/kat/boot.js"></script>
+  <script src="../../js/kat/boot.js"></script>
+  
+  <script src="../../js/kat/calc/html.js"></script>
+  <script src="../../js/kat/calc/methods.js"></script>
+  <script src="../../js/kat/calc/click.js"></script>
+  <script src="../../js/kat/calc/input.js"></script>
 	<script src="../../js/kat/calc/main.js"></script>
  
 

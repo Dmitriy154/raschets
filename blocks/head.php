@@ -5,4 +5,12 @@
 <!-- CSS  -->
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
 
-<link href="http://raschets.ru/css/style.css" type="text/css" rel="stylesheet" media="screen,projection" />
+<?php
+		$path = '';	
+		if ($_SERVER['DOCUMENT_ROOT'] == "C:/xampp/htdocs") {
+			$path = "http://localhost/raschets/css/style.css";
+		} else {
+			$path = "http://raschets.ru/css/style.css";
+		}
+?>  
+<link href=<?php echo $path  ?>   type="text/css" rel="stylesheet" media="screen,projection" />
