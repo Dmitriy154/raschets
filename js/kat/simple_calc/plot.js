@@ -237,6 +237,8 @@ btn_table.addEventListener('click', () => {
         this.H = 0;
         update(this);
         this.userGM = false
+       console.log($('.selectpicker'));
+        $('.selectpicker').selectpicker('deselectAll') //отменяем выбор элементов
     });
 
 
