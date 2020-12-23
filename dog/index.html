@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
+
+	<title>Договор ФЛ на ТП</title>
+	<style>
+		input {
+			width: 300px;
+			height: 40px;
+			display: block;
+			margin-bottom: 10px;
+		}
+		button {
+			width: 300px;
+			display: block;
+		}
+
+		form {
+			display: none;
+		}
+	</style>
+	
+</head>
+<body style="background: url(../img/fon_pesok.png)">
+
+	<div class="container">
+		<div class="row mt-2 mb-2">
+			<div class="col-sm"><button type="button" class="btn btn-primary" id="b_tp">Тепловой поток (физ. лица)</button></div>
+			<div class="col-sm"><button type="button" class="btn btn-primary" id="b_ry">Расчеты (юр. лица)</button></div>
+			<div class="col-sm"><button type="button" class="btn btn-primary" id="b_ri">Испытания</button></div>
+		</div>
+
+		<div class="row mt-3">
+			<div class="col-sm">
+				<form action="word_tp.php" method="POST" id="f_tp" style="display: block">
+					<input type="number" name="nomerD" placeholder="№ договора">
+					<input type="text" name="dateD" placeholder="дата договора">
+					<input type="text" name="name" placeholder="фамилия ИО">
+					<input type="text" name="address1" placeholder="Адрес расчета">
+					<input type="text" name="address2" placeholder="Адрес проживания">
+					<input type="text" name="tel" placeholder="контактный телефон">
+					<input type="number" name="hours" placeholder="Количество часов" title=" часы - сумма
+						1 - 11,36
+						2 - 22,72
+						3 - 34,08
+						4 - 45,44
+						5 - 56,80
+						6 - 68,16
+						7 - 79,52
+						8 - 90,88
+						9 - 102,24
+						10 - 113,60
+						12 - 136,32
+						14 - 159,04
+						16 - 181,76
+						18 - 204,48
+						22 - 249,92
+						26 - 295,36
+						30 - 340,80
+						34 - 386,24
+						">
+					<input type="text" name="passport1" value="паспорт HB">
+					<input type="text" name="passport2" placeholder="дата выдачи">
+					<input type="text" name="passport3" placeholder="кем выдан">
+					
+					<button type="submit">Отправить</button>
+				</form>
+			</div>
+
+			<div class="col-sm">
+				<form action="word_ry.php" method="POST" id="f_ry">
+					<input type="number" name="nomerD" placeholder="№ договора">
+					<input type="text" name="dateD" placeholder="дата договора">
+					<button type="submit">Отправить</button>		
+				</form>
+			</div>
+
+			<div class="col-sm">
+				<form action="word_ri.php" method="POST" id="f_ri">
+					<input type="number" name="nomerD" placeholder="№ договора">
+					<input type="text" name="dateD" placeholder="дата договора">
+					<button type="submit">Отправить</button>		
+				</form>
+			</div>
+		</div>
+	</div>
+
+	<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
+	<script src="main.js"></script>
+
+</body>
+</html>
