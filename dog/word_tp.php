@@ -3,8 +3,6 @@ require_once 'vendor/autoload.php';
 
 $document = new \PhpOffice\PhpWord\TemplateProcessor('./files/template_dogfiz_tp.docx');
 
-$outputFile = 'dog'. $_POST['nomerD']. '.docx'; // имя документа с учетом номера
-
 $document->setValue('nomerD', $_POST['nomerD']);
 $document->setValue('dateD', $_POST['dateD']);
 $document->setValue('name', $_POST['name']);
@@ -14,11 +12,11 @@ $document->setValue('hours', $_POST['hours']);
 $document->setValue('passport1', $_POST['passport1']);
 $document->setValue('passport2', $_POST['passport2']);
 $document->setValue('passport3', $_POST['passport3']);
+$document->setValue('tel', $_POST['tel']);
 
 $hours = $_POST['hours'];
 $min = $hours*60;
 $sum = $hours*11.36;
-
 $summa = 'summa';
 
 switch ($hours) {
@@ -78,12 +76,11 @@ switch ($hours) {
 		break;
 }
 
-
-
 $document->setValue('min', $min);
 $document->setValue('sum', $sum);
 $document->setValue('summa', $summa);
 
+$outputFile = $_POST['nomerD'].' '. $_POST['name'].' '.$sum. '.docx'; // имя документа с учетом номера
 $document->saveAs($outputFile);
 
 // Имя скачиваемого файла
@@ -111,7 +108,5 @@ unlink($outputFile);
 /*
 $uploadFile = $uploadDir . '\\' . basename($_FILES['file']['name']);
 move_uploaded_file($_FILES['file']['tmp_name'], $uploadFile);
-$document->setValue('name', $name);
-$document->setValue('birthdate', $birth);
 $document->setImageValue('image', array('path' => $uploadFile, 'width' => 120, 'height' => 120, 'ratio' => false));
 */
