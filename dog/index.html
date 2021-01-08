@@ -30,13 +30,12 @@
 		<div class="row mt-2 mb-2">
 			<div class="col-sm"><button type="button" class="btn btn-primary" id="b_tp">Тепловой поток (физ. лица)</button></div>
 			<div class="col-sm"><button type="button" class="btn btn-primary" id="b_ry">Расчеты (юр. лица)</button></div>
-			<div class="col-sm"><button type="button" class="btn btn-primary" id="b_ri">Испытания</button></div>
 		</div>
 
 		<div class="row mt-3">
 			<div class="col-sm">
 				<form action="word_tp.php" method="POST" id="f_tp" style="display: block">
-					<input type="number" name="nomerD" placeholder="№ договора">
+					<input type="text" name="nomerD" placeholder="№ договора">
 					<input type="text" name="dateD" placeholder="дата договора">
 					<input type="text" name="name" placeholder="фамилия ИО">
 					<input type="text" name="address1" placeholder="Адрес расчета">
@@ -66,23 +65,70 @@
 					<input type="text" name="passport2" placeholder="дата выдачи">
 					<input type="text" name="passport3" placeholder="кем выдан">
 					
-					<button type="submit">Отправить</button>
+					<button type="submit" id="btn_send_1">Отправить</button>
 				</form>
 			</div>
 
 			<div class="col-sm">
 				<form action="word_ry.php" method="POST" id="f_ry">
-					<input type="number" name="nomerD" placeholder="№ договора">
+					<input type="text" name="nomerD" placeholder="№ договора">
 					<input type="text" name="dateD" placeholder="дата договора">
-					<button type="submit">Отправить</button>		
-				</form>
-			</div>
-
-			<div class="col-sm">
-				<form action="word_ri.php" method="POST" id="f_ri">
-					<input type="number" name="nomerD" placeholder="№ договора">
-					<input type="text" name="dateD" placeholder="дата договора">
-					<button type="submit">Отправить</button>		
+					<input type="text" name="org" placeholder="наименование организации">
+					<input type="text" name="dolgn" placeholder="должность (И.п.)">
+					<input type="text" name="dolgn_r" placeholder="должность (Р.п.)">
+					<input type="text" name="name" placeholder="фамилия и инициалы (И.п.)">
+					<input type="text" name="name_r" placeholder="фамилия и инициалы (Р.п.)">
+					<input type="text" name="osnov" placeholder="на основании (доверенность, устав)">
+					<input type="text" name="usluga" placeholder="услуга">
+					<input type="number" name="hours" placeholder="количество часов" title=" часы - сумма
+						1 - 11,36
+						2 - 22,72
+						3 - 34,08
+						4 - 45,44
+						5 - 56,80
+						6 - 68,16
+						7 - 79,52
+						8 - 90,88
+						9 - 102,24
+						10 - 113,60
+						12 - 136,32
+						14 - 159,04
+						16 - 181,76
+						18 - 204,48
+						22 - 249,92
+						26 - 295,36
+						30 - 340,80
+						34 - 386,24
+						35 - 397,60
+						40 - 454,40
+						45 - 511,20
+						50 - 568,00
+						55 - 624,80
+						60 - 681,60
+						65 - 738,40
+						70 - 795,20
+						75 - 852,00
+						80 - 908,80
+						85 - 965,60
+						90 - 1022,40
+						95 - 1079,20
+						100 - 1136,00
+						110 - 1249,60
+						120 - 1363,20
+						130 - 1476,80
+						140 - 1590,40
+						150 - 1704,00
+						160 - 1817,60
+						170 - 1931,20
+						180 - 2044,80
+						190 - 2158,40
+						200 - 2272,00
+						210 - 2385,60
+						220 - 2499,20 
+						">
+					<input type="text" name="address" placeholder="адрес">
+					<textarea name="rekv" placeholder="реквизиты" cols="40" rows="4"></textarea>
+					<button type="submit" id="btn_send_2">Отправить</button>		
 				</form>
 			</div>
 		</div>
@@ -90,7 +136,7 @@
 
 	<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
-	<script src="main.js"></script>
+	<script src="js/main.js"></script>
 
 </body>
 </html>
