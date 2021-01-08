@@ -14,14 +14,11 @@ main {
 flex: 1 0 auto;
 }
 
-
 #stage {
 display: block;
 width: 95%;
 margin: 10px;
 height:auto;
-border: 1px solid #b4a448;
-border-radius: 10px;
 }
 
 div.dropdown-menu.show {
