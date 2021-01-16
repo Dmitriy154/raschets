@@ -6,17 +6,22 @@ function cr (_parent, _tagName, _class, _textContent) {
     return elem; 
 }
 
+// КАДР 1 - исходные данные ///////////////////////
+
 let _stage1 = cr(stage,'form'); //_stage1 - скрываемая часть (кроме кнопок) _stage2 - таблица и т.д.
     let divForm = cr(_stage1, 'div', 'container-xl');
         let row1 = cr(divForm, 'div', 'row'); 
             
+            //населенный пункт расчета
+            let div_city = cr(row1, 'div', 'col-sm-2 m-1 p-0');
+                let _city = cr(div_city, 'input', 'form-control');
+                _city.setAttribute('placeholder', 'Населенный пункт');          
+        
+        
             //адрес расчета
-            let div_address = cr(row1, 'div', 'col-sm-6 input-group m-1 p-0').innerHTML = `
-                <div class="input-group-prepend">
-                    <span class="input-group-text">Адрес расчета</span>
-                </div>
-                <input type="text" class="form-control">
-            `;
+            let div_address = cr(row1, 'div', 'col-sm-4 m-1 p-0');
+                let _address = cr(div_address, 'input', 'form-control');
+                _address.setAttribute('placeholder', 'адрес (улица)');
 
             //Дата расчета
             let div_date = cr(row1, 'div', 'col-sm-2 m-1 p-0');
@@ -28,12 +33,12 @@ let _stage1 = cr(stage,'form'); //_stage1 - скрываемая часть (к�
                 let _rast = cr(div_rast, 'input', 'form-control');
                     _rast.setAttribute('placeholder', 'Расст. до ПАСЧ, км');
             
-            //чек в населенном пункте
+            //чек в городе
             let _divNP = cr(row1, 'div', 'col mt-2 p-1');
                 let _divNP2 = cr(_divNP, 'div', 'custom-control custom-radio');
                     _divNP2.innerHTML = `
                         <input type="radio" id="customRadio1" name="customRadio" class="custom-control-input">
-                        <label class="custom-control-label" for="customRadio1">в нас. пункте</label>
+                        <label class="custom-control-label" for="customRadio1">в городе</label>
                     `;
        
         let row2 = cr(divForm, 'div', 'row');
@@ -72,4 +77,88 @@ btn_addZd.addEventListener('click', ()=> {
 btn_next1.addEventListener('click', ()=> {
     //скрываем первый кадр, сцену
     _stage1.style = "display:none";
+    kadr2 ();
 });
+
+
+//КАДР №2 - формируем таблицу, указываем направления ///////////////////////
+
+function kadr2() {
+    let _stage2 = cr(stage,'div', 'container-xl');
+
+       //строка для таблицы
+       let row_table = cr(_stage2,'div', 'row justify-content-center');
+            let _table = cr(row_table, 'table', 'table table-sm mt-2 table-bordered');
+                    let _thead = cr(_table, 'thead', 'bg-light');
+                        _thead.innerHTML = ` 
+                            <tr class="mx-auto">
+                                <th class='align-middle'>№ Здания</th>
+                                <th class='align-middle'>Краткое обозначение здания</th>
+                                <th class='align-middle'>Номера облучаемых зданий</th>
+                                <th class='align-middle'></th>                       
+                            </tr>`
+                        
+                    let _tbody = cr(_table,'tbody');
+                        _tbody.style = 'background-color: #fff';
+
+            //заполняем таблицу
+            arrZd.forEach((item, i)=> {
+                let _tr = cr(_tbody,'tr');
+                    let _td1 = cr(_tr, 'td', 'align-middle text-center', item.num);
+                    let _td2 = cr (_tr,'td', 'align-middle p-1', item.address.value);
+                    
+                    //поле ввода номеров облучаемых зданий
+                    let _td3 = cr(_tr, 'td', 'align-middle pl-5 pr-5');
+                        let _input = cr(_td3, 'input', 'form-control text-center');
+                        _input.setAttribute('placeholder', 'ввод цифр через запятую');
+                        
+                        //добавляем свойство классу Zd ссылка на inputNums - инпут с номерами зданий облучения
+                        item.inputNums = _input;
+                    
+                    //значок крестик для удаления строк
+                    let _td4 = cr(_tr, 'td', 'align-middle p-1 text-center');
+                        let bt_close = cr(_td4, 'button', 'close');
+                            bt_close.setAttribute('aria-label', 'Close');
+                            bt_close.type = 'button';
+                            bt_close.innerHTML = `<span class="center" aria-hidden="true">&times;</span>`;
+
+                    //обработчики в строке таблицы
+
+                        //обработчик input на ввод
+                        _input.addEventListener('input', (e)=>{
+                            //запрет ввода пробелов или удаляем сразу все пробелы при попытке ввода
+                            _input.value = e.target.value.replace(/\s+/g,'').trim();
+                            //запрет ввода букв
+                            _input.value = e.target.value.replace(/[A-Za-zА-Яа-яЁё]/,'');
+                            
+                            //автоматическая вставка противоположных направлений
+                            //массив с номерами домов облучения
+                            let numbers = e.target.value.split(',');
+
+                            numbers.forEach((num)=>{
+                                //if((i+1) == num) alert('alarm!');
+                                
+                                //проверяем содержит ли импут облучаемого здания номер здания пожара
+                                //if (arrZd[(num-1)].inputNums.value.split(',').includes(arrZd.num)) alert('Свершилось!!!');
+                                console.log(arrZd[(num-1)]);
+                                console.log('stroka № '+ i);
+
+                            });
+                        });
+
+
+                        //вешаем слушатель на данный значок закрытия
+                        bt_close.addEventListener('click', ()=> {
+                        console.log(arrZd);
+                            //удаляем текущую строку и элемент массива строим ЗАНОВО таблицу
+                            arrZd.splice(i,1);
+                            _stage2.remove();
+                            kadr2();
+                        });
+
+            });
+            
+            
+            
+};
+

@@ -32,15 +32,15 @@ constructor(num, _stage) {
                             this.tip = _tip;
                
                     //адрес
-                    let divAdr = cr(row_zd_1, 'div', 'col-sm-6 m-1 p-0');
+                    let divAdr = cr(row_zd_1, 'div', 'col-sm-5 m-1 p-0');
                         let _adr = cr(divAdr, 'input', 'form-control');
-                        _adr.setAttribute('placeholder', 'Адрес здания');
+                        _adr.setAttribute('placeholder', 'Адрес здания (без названия нас. пункта');
                             this.address = _adr;
 
                     //материал стен
-                    let divMat = cr(row_zd_1, 'div', 'col-sm-2 m-1 p-0');
+                    let divMat = cr(row_zd_1, 'div', 'col-sm-3 m-1 p-0');
                         let _mat = cr(divMat, 'input', 'form-control');
-                        _mat.setAttribute('placeholder', 'Материал стен');
+                        _mat.setAttribute('placeholder', 'Материал стен (отделка)');
                             this.walls = _mat;                           
 
 
