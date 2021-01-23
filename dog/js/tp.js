@@ -128,28 +128,41 @@ function kadr2() {
                         _input.addEventListener('input', (e)=>{
                             //запрет ввода пробелов или удаляем сразу все пробелы при попытке ввода
                             _input.value = e.target.value.replace(/\s+/g,'').trim();
-                            //запрет ввода букв
-                            _input.value = e.target.value.replace(/[A-Za-zА-Яа-яЁё]/,'');
-                            
+                            //запрет ввода букв и некоторых символов
+                            _input.value = e.target.value.replace(/[/;*()A-Za-zА-Яа-яЁё]/,'');
+                            //вместо точки пишем запятую
+                            _input.value = e.target.value.replace(/[.]/g, ",");
+
                             //автоматическая вставка противоположных направлений
                             //массив с номерами домов облучения
                             let numbers = e.target.value.split(',');
 
                             numbers.forEach((num)=>{
-                                //if((i+1) == num) alert('alarm!');
+                                num = +num; // переводим из строки в число
                                 
-                                //проверяем содержит ли импут облучаемого здания номер здания пожара
-                                //if (arrZd[(num-1)].inputNums.value.split(',').includes(arrZd.num)) alert('Свершилось!!!');
-                                console.log(arrZd[(num-1)]);
-                                console.log('stroka № '+ i);
+                                //исключаем ошибки введенные номер здания - целое число и не превышает кол-во зданий
+                                if (num>0 && (num <= arrZd.length) && Number.isInteger(num) && num !== (i+1)) {
+                                    //console.log('i: '+i+ '; num: ' + num +'; numbers: '+numbers+'; arrZd[(num-1)].input.value = ' + arrZd[(num-1)].inputNums.value + '; arrZd.length = ' + arrZd.length);
+                                    //проверка наличия обратного значения
+                                    if (!arrZd[(num-1)].inputNums.value.split(',').includes(String(i+1))) {
+                                       
+                                        let str = ',' + (i+1);
 
+                                        if(arrZd[(num-1)].inputNums.value !=='') {
+                                            arrZd[(num-1)].inputNums.value += str;
+                                        } else {
+                                            arrZd[(num-1)].inputNums.value += (i+1);
+                                        }
+                                        
+                                    }                               
+                                } 
                             });
+
                         });
 
 
                         //вешаем слушатель на данный значок закрытия
                         bt_close.addEventListener('click', ()=> {
-                        console.log(arrZd);
                             //удаляем текущую строку и элемент массива строим ЗАНОВО таблицу
                             arrZd.splice(i,1);
                             _stage2.remove();
@@ -157,8 +170,92 @@ function kadr2() {
                         });
 
             });
+
+        //кнопка далее - переход на кадр 3 "направления и расстояния"
+        let row_btns = cr(_stage2,'div','row justify-content-center');
+
+            let btn_next1 = cr(row_btns, 'button', 'btn btn-success btn-sm m-2', 'Продолжить расчет');
+                btn_next1.type = 'button';            
             
-            
-            
-};
+        //обработчик для кнопки продолжить расчет
+        btn_next1.addEventListener('click', ()=> {
+            //скрываем первый кадр, сцену
+            _stage2.style = "display:none";
+            let arr = [];
+
+            arrZd.forEach((item, i)=> {
+                arr.push(item.inputNums.value.split(','));   
+            });
+
+            kadr3 (arr);
+        });
+}; //kadr 2
+
+function kadr3(arr) {
+
+    let _stage3 = cr(stage,'div', 'container-xl');
+
+    //строка для таблицы
+    let row_table = cr(_stage3,'div', 'row justify-content-center');
+    let _table = cr(row_table, 'table', 'table table-sm mt-2 table-bordered');
+            let _thead = cr(_table, 'thead', 'bg-light');
+                _thead.innerHTML = ` 
+                    <tr class="mx-auto">
+                        <th class='align-middle text-center'>Здание пожара, адрес</th>
+                        <th class='align-middle text-center'>Облучаемое здание, адрес</th>
+                        <th style="width: 20%" class='align-middle text-center'>Расстояние, м</th>                  
+                    </tr>`
+                
+            let _tbody = cr(_table,'tbody');
+                _tbody.style = 'background-color: #fff';
+
+    //удалить из массива дубликаты !!!!!!!
+
+    arr.forEach((item, i)=> {
+        //item ['2', '3']
+
+        item.forEach((_item)=>{ 
+            //ищем обратную ссылку и удаляем ее из item
+            if(arr[_item-1].includes(String(i+1))) arr[_item-1].splice(arr[_item-1].indexOf(String(i+1)),1);
+        });
+    });
+   
+    //заполняем таблицу 
+    arr.forEach((item, i)=> {
+        +item;
+        let _address1; 
+        let _address2;
+        
+        if(i==0){
+            arr[0].forEach((item)=>{
+                _address1 = arrZd[i].address.value;
+                if(item>1)_address2 = arrZd[(item-1)].address.value;
+                rasst_stroka(_address1, _address2);
+            })        
+        } else {
+            arr[i].forEach((item)=>{
+                //проверка на содержание в предыдущих строках
+
+                _address1 = arrZd[i].address.value;
+                _address2 = arrZd[(item-1)].address.value;
+                rasst_stroka(_address1, _address2);
+            })  
+        }        
+    });
+
+    //cоздаем строку и заполняем адреса
+    function rasst_stroka(_address1, _address2){
+        let _tr = cr(_tbody,'tr');
+        let _td1 = cr(_tr, 'td', 'align-middle text-center',_address1);
+        let _td2 = cr (_tr,'td', 'align-middle text-center',_address2);
+        //поле ввода расстояния между зданиями
+        let _td3 = cr(_tr, 'td', 'align-middle pl-5 pr-5');
+            let _input = cr(_td3, 'input', 'form-control text-center');
+            _input.setAttribute('placeholder', 'расстояние');
+            _input.type = 'number';   
+    }
+
+
+} //kadr 3
+
 
