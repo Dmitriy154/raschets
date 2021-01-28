@@ -2,6 +2,7 @@
 class Zd {
     tip; //тип здания (дом, сарай, гараж ....)
     address;
+    name; // краткое обохначение дом, ул. Крупской, 5 tip + address
     walls; //материал стен, отделка
     h; // высота здания
     hk; // высота крыши
@@ -11,9 +12,10 @@ class Zd {
 constructor(num, _stage) {
     this.num = num; //номер здания
 
-    let divZd = cr(_stage, 'div', 'container-lg p-0');
+    this.row_container_zd = divZd; //свойство ссылается на контейнер для каждого здания
 
-        this.row_container_zd = divZd; //свойство ссылается на контейнер для каждого здания
+        //поместить divZd до кнопок
+       divZd.after(_stage.querySelector('div.row_btns_1'));
 
         let row_zd = cr(divZd,'div','row m-0 p-0 justify-content-center border border-primary');
             let col_zd = cr(row_zd, 'div', 'container m-0 p-0');
@@ -34,7 +36,7 @@ constructor(num, _stage) {
                     //адрес
                     let divAdr = cr(row_zd_1, 'div', 'col-sm-5 m-1 p-0');
                         let _adr = cr(divAdr, 'input', 'form-control');
-                        _adr.setAttribute('placeholder', 'Адрес здания (без названия нас. пункта');
+                        _adr.setAttribute('placeholder', 'Адрес здания (без названия нас. пункта)');
                             this.address = _adr;
 
                     //материал стен
@@ -57,11 +59,13 @@ constructor(num, _stage) {
                         _Hk.setAttribute('placeholder', 'h крыши');
                             this.hk = _Hk;   
                     
-                    //Причечание дял здания
+                    //Причечание для здания
                     let divInf = cr(row_zd_2, 'div', 'col-sm-10 p-1');
                         let _Inf = cr(divInf, 'input', 'form-control');
                         _Inf.setAttribute('placeholder', 'Примечание для здания');
-                            this.info = _Inf;               
+                            this.info = _Inf;
+                            
+
 
 }//конструктор
 }//class
