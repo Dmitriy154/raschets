@@ -1,8 +1,15 @@
 let arrZd = []; // массив зданий
 let arr = []; //массив номеров зданий облучения [['2','3'],['1'],['1']]
 let napr = []; // двумерный массив [name1, name2, rasst]; для кадра 4
+let arrIP = []; // массив ИП
 
-kadr1();
+//для теста
+napr = [['adr11','adr22', 2],['adr11','adr33', 2],['adr22','adr44', 2],['adr33','adr44', 2]];
+//kadr1();
+kadr4();
+
+
+
 
 // КАДР 1 - исходные данные ///////////////////////
 function kadr1() {
@@ -129,6 +136,21 @@ function kadr3() {
 //КАДР 4 - расчет каждого направления
 function kadr4(){
     build_kadr_4();
+
+    bt_sh.addEventListener('click', ()=>{
+
+        arrIP.forEach((ip, i)=>{
+            ip.num = i+1;
+            ip.w = +ip.i_w.value;
+            ip.h = +ip.i_h.value;
+            ip.r = +ip.i_r.value;
+            ip.x = +ip.i_x.value;
+            ip.y = +ip.i_y.value;
+            ip.a = +ip.i_а.value;       
+        });
+    
+    console.log(arrIP);
+    })
    
 }//кадр 4
 

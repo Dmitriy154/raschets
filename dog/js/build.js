@@ -165,12 +165,99 @@ function rasst_stroka(_address1, _address2){
 } 
 
 
-
 function build_kadr_4(){
     chK(4);
 
+    let _stage4 = cr(stage,'div', 'container-xl mt-2');
+        _stage4.id = '_stage4';
 
+        //НАПРАВЛЕНИЕ РАСЧЕТА И РАССТОЯНИЕ
+        let divrow1 = cr(_stage4, 'div', 'row');
+            let divcol11 = cr(divrow1, 'div', 'col');
+            let namerow = '';
+            divcol11.innerHTML += `<h6>Направление расчета: 
+            <span class="text-danger">${napr[0][0]}</span> &#8594   <span class="text-primary">${napr[0][1]}</span>. &nbsp
+            Расстояние: <span class="text-info">${napr[0][2]} м</span>
+            </h6>`;
 
+        //ПРИНИМАЮЩАЯ ПОВЕРХНОСТЬ
+        let divrow2 = cr(_stage4, 'div', 'row');
+            let divcol21 = cr(divrow2, 'div', 'col-3 mt-auto');
+                divcol21.innerHTML += `<h6>Принимающая поверхность:</h6>`;
+            let divcol22 = cr(divrow2, 'div', 'col-3');  
+                divcol22.innerHTML += `
+                <div>
+                    <select class="form-control" id="exampleFormControlSelect1">
+                        <option value='1'>Древесина</option>
+                        <option value='2'>Пластик</option>
+                        <option value='3'>Лакокрасочное покрытие</option>
+                        <option value='4'>Рулонная кровля</option>
+                    </select>
+                </div>
+            `;
+
+        //КНОПКА СХЕМА
+        let divrow4 = cr(_stage4, 'div', 'row justify-content-center row_bt_sh p-1');
+            let bt_sh = cr(divrow4, 'button', 'btn btn-outline-info', 'Схема ИП');
+                bt_sh.type = 'button';
+                bt_sh.id = 'bt_sh';    
+
+        createIP();  //создаем строку ИП
 }////////////////////////////////// 4
+
+function createIP(){
+    let divrow3 = cr(_stage4, 'div', 'row pt-1');
+
+        //поместить divrow3 до кнопки СХЕМА ИП
+        divrow3.after(stage.querySelector('div.row_bt_sh'));
+
+        let div31 = cr(divrow3, 'div', 'col-2 mt-auto');
+            div31.innerHTML += `<h6>Излучающая поверхность: </h6>`;
+
+        let div_w = cr(divrow3, 'div', 'col-sm-1 m-1 p-0');
+            let input_w = cr(div_w, 'input', 'form-control');
+                input_w.setAttribute('placeholder', 'w');  
+
+        let div_h = cr(divrow3, 'div', 'col-sm-1 m-1 p-0');
+            let input_h = cr(div_h, 'input', 'form-control');
+                input_h.setAttribute('placeholder', 'h');
+
+        let div_r = cr(divrow3, 'div', 'col-sm-1 m-1 p-0');
+            let input_r = cr(div_r, 'input', 'form-control');
+                input_r.setAttribute('placeholder', 'r');
+
+        let div_x = cr(divrow3, 'div', 'col-sm-1 m-1 p-0');
+            let input_x = cr(div_x, 'input', 'form-control');
+                input_x.setAttribute('placeholder', 'x');
+
+        let div_y = cr(divrow3, 'div', 'col-sm-1 m-1 p-0');
+            let input_y = cr(div_y, 'input', 'form-control');
+                input_y.setAttribute('placeholder', 'y');
+
+        let div_a = cr(divrow3, 'div', 'col-sm-1 m-1 p-0');
+            let input_а = cr(div_a, 'input', 'form-control');
+                input_а.setAttribute('placeholder', 'angle');
+
+        let div_bt = cr(divrow3, 'div', 'col-sm-1 m-1 p-0');
+            let bt_ip = cr(div_bt, 'button', 'btn btn-info btn-sm mt-1', '+ИП');
+                bt_ip.type = 'button';
+                
+        //ИЗЛУЧАЮЩАЯ ПОВЕРХНОСТЬ
+        let ip = {};
+            ip.i_w = input_w;
+            ip.i_h = input_h;
+            ip.i_r = input_r;
+            ip.i_x = input_x;
+            ip.i_y = input_y;
+            ip.i_а = input_а;
+            arrIP.push(ip);                 
+
+        bt_ip.addEventListener('click', ()=>{
+            bt_ip.remove();
+            createIP();
+        }); 
+} // createIP()
+
+
 
 
