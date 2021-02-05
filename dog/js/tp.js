@@ -1,7 +1,7 @@
 let arrZd = []; // массив зданий
 let arr = []; //массив номеров зданий облучения [['2','3'],['1'],['1']]
 let napr = []; // двумерный массив [name1, name2, rasst]; для кадра 4
-let arrIP = []; // массив ИП
+let arrIP = []; // массив ИП, имеет свойства х и у - координаты точки Х;
 
 //для теста
 napr = [['adr11','adr22', 2],['adr11','adr33', 2],['adr22','adr44', 2],['adr33','adr44', 2]];
@@ -137,8 +137,8 @@ function kadr3() {
 function kadr4(){
     build_kadr_4();
 
+    //кнопка схема ИП
     bt_sh.addEventListener('click', ()=>{
-
         arrIP.forEach((ip, i)=>{
             ip.num = i+1;
             ip.w = +ip.i_w.value;
@@ -146,16 +146,42 @@ function kadr4(){
             ip.r = +ip.i_r.value;
             ip.x = +ip.i_x.value;
             ip.y = +ip.i_y.value;
-            ip.a = +ip.i_а.value;       
-        });
-    
+            ip.a = +ip.i_а.value;
+         });
+          
+        //получение координат точки Х
+        arrIP.x = +arrIP.x.value;
+        arrIP.y = +arrIP.y.value;
+
     console.log(arrIP);
-    })
+
+        //функция анализа координат и размеров ИП и коорд. точки X
+        let canvasWidth = 600;
+        let canvasHeight = 300;
+
+
+
+
+
+
+
+        let _stage = drawCanvas(canvasWidth, canvasHeight); //добавляем canvas
+
+        //drawIP(_stage, ip);
+        //drawLine(_stage);
+
+
+         //создать кнопку следующее направление (очистка arrIP = []; либо строим снова кадр 4?)
+
+    })//кнопка схема расчета
    
+
+    
+
 }//кадр 4
 
 
-
+//очистка массива arrIP?
 
 
 

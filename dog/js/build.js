@@ -95,7 +95,7 @@ function build_kadr_2(){
                     
                     //значок крестик для удаления строк
                     let _td4 = cr(_tr, 'td', 'align-middle p-1 text-center');
-                        let bt_close = cr(_td4, 'button', 'close');
+                        let bt_close = cr(_td4, 'button', 'close w-100');
                             bt_close.setAttribute('aria-label', 'Close');
                             bt_close.type = 'button';
                             bt_close.innerHTML = `<span class="center" aria-hidden="true">&times;</span>`;
@@ -167,6 +167,7 @@ function rasst_stroka(_address1, _address2){
 
 function build_kadr_4(){
     chK(4);
+    arrIP = []; //очищаем предыдущие значения, если они были
 
     let _stage4 = cr(stage,'div', 'container-xl mt-2');
         _stage4.id = '_stage4';
@@ -196,16 +197,31 @@ function build_kadr_4(){
                 </div>
             `;
 
-        //КНОПКА СХЕМА
-        let divrow4 = cr(_stage4, 'div', 'row justify-content-center row_bt_sh p-1');
-            let bt_sh = cr(divrow4, 'button', 'btn btn-outline-info', 'Схема ИП');
-                bt_sh.type = 'button';
-                bt_sh.id = 'bt_sh';    
+        //Точка Х и КНОПКА СХЕМА
+        let divrow4 = cr(_stage4, 'div', 'row row_bt_sh p-1');
+            let divcol41 = cr(divrow4, 'div', 'col-2 mt-auto');
+                divcol41.innerHTML += `<h6>Точка Х: </h6>`;
+            let divcol42 = cr(divrow4, 'div', 'col-sm-1 m-1 p-0'); 
+                let inputX_x = cr(divcol42, 'input', 'form-control');
+                    inputX_x.setAttribute('placeholder', 'x');  
+            let divcol43 = cr(divrow4, 'div', 'col-sm-1 m-1 p-0'); 
+                    let inputX_y = cr(divcol43, 'input', 'form-control');
+                        inputX_y.setAttribute('placeholder', 'y');
+
+            let divcol44 = cr(divrow4, 'div', 'col-sm-3 justify-content-center ml-3 pt-1');
+                let bt_sh = cr(divcol44, 'button', 'btn btn-outline-info', 'Схема ИП');
+                    bt_sh.type = 'button';
+                    bt_sh.id = 'bt_sh';
+            
+            //координаты точки Х делаем как свойства массива arrIP
+            arrIP.x = inputX_x;
+            arrIP.y = inputX_y;
 
         createIP();  //создаем строку ИП
 }////////////////////////////////// 4
 
 function createIP(){
+    
     let divrow3 = cr(_stage4, 'div', 'row pt-1');
 
         //поместить divrow3 до кнопки СХЕМА ИП
@@ -217,31 +233,41 @@ function createIP(){
         let div_w = cr(divrow3, 'div', 'col-sm-1 m-1 p-0');
             let input_w = cr(div_w, 'input', 'form-control');
                 input_w.setAttribute('placeholder', 'w');  
-
+                input_w.type = 'number';
         let div_h = cr(divrow3, 'div', 'col-sm-1 m-1 p-0');
             let input_h = cr(div_h, 'input', 'form-control');
                 input_h.setAttribute('placeholder', 'h');
-
+                input_h.type = 'number';
         let div_r = cr(divrow3, 'div', 'col-sm-1 m-1 p-0');
             let input_r = cr(div_r, 'input', 'form-control');
                 input_r.setAttribute('placeholder', 'r');
-
+                input_r.type = 'number';
         let div_x = cr(divrow3, 'div', 'col-sm-1 m-1 p-0');
             let input_x = cr(div_x, 'input', 'form-control');
                 input_x.setAttribute('placeholder', 'x');
-
+                input_x.type = 'number';
         let div_y = cr(divrow3, 'div', 'col-sm-1 m-1 p-0');
             let input_y = cr(div_y, 'input', 'form-control');
                 input_y.setAttribute('placeholder', 'y');
-
+                input_y.type = 'number';
         let div_a = cr(divrow3, 'div', 'col-sm-1 m-1 p-0');
             let input_а = cr(div_a, 'input', 'form-control');
                 input_а.setAttribute('placeholder', 'angle');
+                input_а.setAttribute('title', '0 - параллельно, 90 - перпендикулярно, 45 - под углом 45 град');
+                input_а.type = 'number';
 
+        //копка добавить ИП       
         let div_bt = cr(divrow3, 'div', 'col-sm-1 m-1 p-0');
-            let bt_ip = cr(div_bt, 'button', 'btn btn-info btn-sm mt-1', '+ИП');
+            let bt_ip = cr(div_bt, 'button', 'btn btn-info btn-sm mt-1 w-75', '+ИП');
                 bt_ip.type = 'button';
-                
+
+        //крестик удаление 
+            let bt_close = cr(divrow3, 'button', 'close');
+                bt_close.setAttribute('aria-label', 'Close');
+                bt_close.type = 'button';
+                bt_close.innerHTML = `<span class="center" aria-hidden="true">&times;</span>`;
+                bt_close.style.display = 'none';               
+               
         //ИЗЛУЧАЮЩАЯ ПОВЕРХНОСТЬ
         let ip = {};
             ip.i_w = input_w;
@@ -254,10 +280,87 @@ function createIP(){
 
         bt_ip.addEventListener('click', ()=>{
             bt_ip.remove();
+            bt_close.style.display = 'block';
             createIP();
         }); 
-} // createIP()
+
+        bt_close.addEventListener('click', ()=>{
+            bt_close.parentNode.remove();
+        });
+} // createIP() kadr 4
+
+function drawCanvas(w, h){
+let div_canvas = cr(_stage4,'div','row justify-content-center');
+    let canvas = cr(div_canvas,'canvas');
+        canvas.setAttribute('width', w);
+        canvas.setAttribute('height', h);
+        canvas.style = "border:1px solid #ccc;";
+        canvas.id = 'canvas';
+
+    let stage = new createjs.Stage("canvas");
+    
+    stage.w = w;
+    stage.h = h;
+
+    return stage;
+}
+
+function drawLine (stage){
+    //w,h - размеры канвас, потом координаты сетки и осей
+    let _w = x + _x; 
+    let _h = y + _y;
+    let xx = (stage.w - _w)/2;
+    let yy = (stage.h - _h)/2;
+
+    console.log('_w, _h, xx, yy = '+_w +', '+ _h +', '+  xx +', '+ yy);
+    console.log('stage.w = '+ stage.w);
+
+    //рисуем сетку
 
 
+    //рисуем координатные оси
+    let line = new createjs.Shape();
+    stage.addChild(line);
+    line.graphics.setStrokeStyle(1).beginStroke("#000");
 
+    line.graphics.moveTo(xx+_x, yy);
+    line.graphics.lineTo(xx+_x, stage.h-yy);
 
+    line.graphics.moveTo(xx, yy+y);
+    line.graphics.lineTo(stage.w-xx, yy+y);    
+
+    line.graphics.endStroke();
+    stage.update();  
+
+}
+
+/*
+function drawIP(stage, num, w, h, r, x, y) {
+
+	let _border = new createjs.Shape();
+	_border.graphics.beginStroke("red").drawRect(0, 0, 100, 100);
+	_border.x = 100;
+	_border.y = 100;
+    stage.addChild(_border);
+    
+	let ip = new createjs.Shape();
+	ip.graphics.beginFill("#e0e0e0").drawRect(0, 0, 100, 100);
+	ip.x = 100;
+	ip.y = 100;
+	stage.addChild(ip);
+	
+	let pointX = new createjs.Shape();
+	pointX.graphics.beginFill("Red").drawCircle(0, 0, 2);
+	pointX.x = 150;
+	pointX.y = 150;
+	stage.addChild(pointX);
+	
+	let text = new createjs.Text("ИП №1", "9x Arial", "#004DFF");
+	text.x = 120;
+	text.y = 120;
+	//text.textBaseline = "alphabetic";
+	stage.addChild(text);
+	
+	stage.update();
+}
+*/
