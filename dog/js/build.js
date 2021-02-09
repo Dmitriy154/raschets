@@ -276,7 +276,8 @@ function createIP(){
             ip.i_x = input_x;
             ip.i_y = input_y;
             ip.i_а = input_а;
-            arrIP.push(ip);                 
+            arrIP.push(ip);
+             
 
         bt_ip.addEventListener('click', ()=>{
             bt_ip.remove();
@@ -285,6 +286,8 @@ function createIP(){
         }); 
 
         bt_close.addEventListener('click', ()=>{
+            let num = arrIP.indexOf(ip); //номер удаляемого объекта в массиве
+            arrIP.splice(num, 1); // удаляем один объект в массиве
             bt_close.parentNode.remove();
         });
 } // createIP() kadr 4

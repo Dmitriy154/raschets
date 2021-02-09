@@ -1,7 +1,7 @@
 let arrZd = []; // массив зданий
 let arr = []; //массив номеров зданий облучения [['2','3'],['1'],['1']]
 let napr = []; // двумерный массив [name1, name2, rasst]; для кадра 4
-let arrIP = []; // массив ИП, имеет свойства х и у - координаты точки Х;
+let arrIP = []; // массив ИП, имеет свойства х и у - координаты точки Х; kx и ky - координаты нуля координатной оси
 
 //для теста
 napr = [['adr11','adr22', 2],['adr11','adr33', 2],['adr22','adr44', 2],['adr33','adr44', 2]];
@@ -139,6 +139,18 @@ function kadr4(){
 
     //кнопка схема ИП
     bt_sh.addEventListener('click', ()=>{
+        //если есть canvas то обновить (удалить)
+        if (stage.querySelector("canvas")) stage.querySelector("canvas").parentNode.remove();
+
+        //получение координат точки Х
+        arrIP.x = +arrIP.x.value;
+        arrIP.y = +arrIP.y.value;
+
+        //функция анализа координат и размеров ИП и коорд. точки X
+        let minX, minY; // минимальные значения x  и y  после перебора
+        let maxXW, maxYH; //максимальные значения после перебора
+        let zonaW, zonaH; //размеры рабочей зоны
+        
         arrIP.forEach((ip, i)=>{
             ip.num = i+1;
             ip.w = +ip.i_w.value;
@@ -147,28 +159,53 @@ function kadr4(){
             ip.x = +ip.i_x.value;
             ip.y = +ip.i_y.value;
             ip.a = +ip.i_а.value;
-         });
+
+            if (i==0){
+                minX = ip.x;
+                minY = ip.y;
+                maxXW = (ip.x + ip.w);
+                maxYH = (ip.y + ip.h);
+            } else {
+                if(ip.x < minX) minX = ip.x;
+                if(ip.y < minY) minY = ip.y;
+                if(maxXW < (ip.x + ip.w)) maxXW = ip.x + ip.w;
+                if(maxYH < (ip.y + ip.h)) maxYH = ip.y + ip.h;
+            }
+         });//перебор объектов
+
+         zonaW = maxXW - minX;
+         zonaH = maxYH - minY;
+
+         let stepW, stepH;
           
-        //получение координат точки Х
-        arrIP.x = +arrIP.x.value;
-        arrIP.y = +arrIP.y.value;
+         switch(true) {
+            case(zonaW < 5)  :  stepW = 100;  break;
+            case(zonaW < 10) :  stepW = 50;   break;
+            case(zonaW < 15) :  stepW = 30;   break;
+            case(zonaW < 20) :  stepW = 25;   break;
+            case(zonaW < 50) :  stepW = 10;   break;
+            default: alert('ошибка ввода');   break;
+        }
 
-    console.log(arrIP);
+        switch(true) {
+            case(zonaH < 3)  :  stepH = 100;  break;
+            case(zonaH < 6) :   stepH = 50;   break;
+            case(zonaH < 10) :  stepH = 30;   break;
+            case(zonaH < 15) :  stepH = 20;   break;
+            case(zonaH < 25) :  stepH = 15;   break;
+            default: alert('ошибка ввода');   break;
+        }
 
-        //функция анализа координат и размеров ИП и коорд. точки X
-        let canvasWidth = 600;
-        let canvasHeight = 300;
+        let _stage = drawCanvas(zonaW * stepW + 100, zonaH * stepH + 50); //добавляем canvas
 
+        if(minX>0) _stage._x = -10; else _stage._x = minX-10;
+        if(minY>0) _stage._y = -10; else _stage._y = minY-10;
+        if(stepW > stepH) _stage.step = stepH; else _stage.step = stepW;
 
-
-
-
-
-
-        let _stage = drawCanvas(canvasWidth, canvasHeight); //добавляем canvas
-
-        //drawIP(_stage, ip);
-        //drawLine(_stage);
+        drawLine(_stage); //рисуем сетку и оси
+        
+        //drawIP(_stage, ip); // рисуем ИП
+        
 
 
          //создать кнопку следующее направление (очистка arrIP = []; либо строим снова кадр 4?)
