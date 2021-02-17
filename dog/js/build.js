@@ -214,8 +214,8 @@ function build_kadr_4(){
                     bt_sh.id = 'bt_sh';
             
             //координаты точки Х делаем как свойства массива arrIP
-            arrIP.x = inputX_x;
-            arrIP.y = inputX_y;
+            arrIP.ix = inputX_x;
+            arrIP.iy = inputX_y;
 
         createIP();  //создаем строку ИП
 }////////////////////////////////// 4
@@ -308,62 +308,60 @@ let div_canvas = cr(_stage4,'div','row justify-content-center');
     return stage;
 }
 
+//рисуем сетку и координатные оси
 function drawLine (stage){
-    //w,h - размеры канвас, потом координаты сетки и осей
-    let _w = x + _x; 
-    let _h = y + _y;
-    let xx = (stage.w - _w)/2;
-    let yy = (stage.h - _h)/2;
-
-    console.log('_w, _h, xx, yy = '+_w +', '+ _h +', '+  xx +', '+ yy);
-    console.log('stage.w = '+ stage.w);
-
-    //рисуем сетку
-
-
     //рисуем координатные оси
+    
     let line = new createjs.Shape();
     stage.addChild(line);
     line.graphics.setStrokeStyle(1).beginStroke("#000");
 
-    line.graphics.moveTo(xx+_x, yy);
-    line.graphics.lineTo(xx+_x, stage.h-yy);
+    line.graphics.moveTo(stage.xn, 0);
+    line.graphics.lineTo(stage.xn, stage.h);
 
-    line.graphics.moveTo(xx, yy+y);
-    line.graphics.lineTo(stage.w-xx, yy+y);    
+    line.graphics.moveTo(0, stage.yn);
+    line.graphics.lineTo(stage.w, stage.yn);    
 
     line.graphics.endStroke();
-    stage.update();  
+    stage.update(); 
 
-}
-
-/*
-function drawIP(stage, num, w, h, r, x, y) {
-
-	let _border = new createjs.Shape();
-	_border.graphics.beginStroke("red").drawRect(0, 0, 100, 100);
-	_border.x = 100;
-	_border.y = 100;
-    stage.addChild(_border);
+    console.log('stage.xn: ' + stage.xn);
+    console.log('stage.yn: ' + stage.yn);
+    console.log('stage.step: '+ stage.step);
     
-	let ip = new createjs.Shape();
-	ip.graphics.beginFill("#e0e0e0").drawRect(0, 0, 100, 100);
-	ip.x = 100;
-	ip.y = 100;
-	stage.addChild(ip);
-	
-	let pointX = new createjs.Shape();
-	pointX.graphics.beginFill("Red").drawCircle(0, 0, 2);
-	pointX.x = 150;
-	pointX.y = 150;
-	stage.addChild(pointX);
-	
-	let text = new createjs.Text("ИП №1", "9x Arial", "#004DFF");
-	text.x = 120;
-	text.y = 120;
-	//text.textBaseline = "alphabetic";
-	stage.addChild(text);
-	
-	stage.update();
+    //рисуем шкалу  и обозначаем оси
+
 }
-*/
+
+function drawIP(stage) {
+    console.log(arrIP);
+
+    arrIP.forEach((ip, i)=>{
+        let rectIP = new createjs.Shape();
+        rectIP.graphics.beginStroke("red").beginFill("#e0e0e0").drawRect(0, 0, ip.w*stage.step, ip.h*stage.step);
+        rectIP.x = stage.xn + ip.x*stage.step;
+        rectIP.y = stage.yn - ip.y*stage.step - ip.h*stage.step;
+        stage.addChild(rectIP);
+
+        //подпись
+        let name = 'ИП №'+ +(i+1);
+        console.log(name);
+        let text = new createjs.Text(name, "9x Arial", "#004DFF");
+        text.x = rectIP.x + 10;
+        text.y = rectIP.y + 10;
+        //text.textBaseline = "alphabetic";
+        stage.addChild(text);
+        
+    });
+
+    //рисуем точку X
+    let pointX = new createjs.Shape();
+	pointX.graphics.beginFill("Red").drawCircle(0, 0, 5);
+	pointX.x = stage.xn + arrIP.x*stage.step;
+	pointX.y = stage.yn - arrIP.y*stage.step;
+	stage.addChild(pointX);  
+
+    stage.update();
+
+}
+
