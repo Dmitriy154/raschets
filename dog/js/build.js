@@ -188,11 +188,11 @@ function build_kadr_4(){
             let divcol22 = cr(divrow2, 'div', 'col-3');  
                 divcol22.innerHTML += `
                 <div>
-                    <select class="form-control" id="exampleFormControlSelect1">
-                        <option value='1'>Древесина</option>
-                        <option value='2'>Пластик</option>
-                        <option value='3'>Лакокрасочное покрытие</option>
-                        <option value='4'>Рулонная кровля</option>
+                    <select class="form-control" id="selectPP">
+                        <option value='13900'>Древесина</option>
+                        <option value='15400'>Пластик</option>
+                        <option value='17500'>Лакокрасочное покрытие</option>
+                        <option value='17400'>Рулонная кровля</option>
                     </select>
                 </div>
             `;
@@ -203,11 +203,12 @@ function build_kadr_4(){
                 divcol41.innerHTML += `<h6>Точка Х: </h6>`;
             let divcol42 = cr(divrow4, 'div', 'col-sm-1 m-1 p-0'); 
                 let inputX_x = cr(divcol42, 'input', 'form-control');
-                    inputX_x.setAttribute('placeholder', 'x');  
+                    inputX_x.setAttribute('placeholder', 'x');
+                    inputX_x.type = 'number';
             let divcol43 = cr(divrow4, 'div', 'col-sm-1 m-1 p-0'); 
-                    let inputX_y = cr(divcol43, 'input', 'form-control');
-                        inputX_y.setAttribute('placeholder', 'y');
-
+                let inputX_y = cr(divcol43, 'input', 'form-control');
+                    inputX_y.setAttribute('placeholder', 'y');
+                    inputX_y.type = 'number';
             let divcol44 = cr(divrow4, 'div', 'col-sm-3 justify-content-center ml-3 pt-1');
                 let bt_sh = cr(divcol44, 'button', 'btn btn-outline-info', 'Схема ИП');
                     bt_sh.type = 'button';
@@ -217,9 +218,11 @@ function build_kadr_4(){
             arrIP.ix = inputX_x;
             arrIP.iy = inputX_y;
 
-        createIP();  //создаем строку ИП
+        createIP();  //создаем строку ИЗЛУЧАЮЩАЯ ПОВЕРХНОСТЬ
 }////////////////////////////////// 4
 
+
+//СТРОКА ИЗЛУЧАЮЩАЯ ПОВЕРХНОСТЬ
 function createIP(){
     
     let divrow3 = cr(_stage4, 'div', 'row pt-1');
@@ -292,8 +295,10 @@ function createIP(){
         });
 } // createIP() kadr 4
 
+
 function drawCanvas(w, h){
-let div_canvas = cr(_stage4,'div','row justify-content-center');
+    let div_canvas = cr(_stage4,'div','row justify-content-center');
+
     let canvas = cr(div_canvas,'canvas');
         canvas.setAttribute('width', w);
         canvas.setAttribute('height', h);
@@ -324,17 +329,14 @@ function drawLine (stage){
 
     line.graphics.endStroke();
     stage.update(); 
-
-    console.log('stage.xn: ' + stage.xn);
-    console.log('stage.yn: ' + stage.yn);
-    console.log('stage.step: '+ stage.step);
     
     //рисуем шкалу  и обозначаем оси
-
 }
 
+//рисуем ИП и рассчитываем коэффициента угловой облученности
 function drawIP(stage) {
-    console.log(arrIP);
+    //определяем общий коэффициент облученности для сцены
+    stage.phi = 0;
 
     arrIP.forEach((ip, i)=>{
         let rectIP = new createjs.Shape();
@@ -344,24 +346,76 @@ function drawIP(stage) {
         stage.addChild(rectIP);
 
         //подпись
-        let name = 'ИП №'+ +(i+1);
-        console.log(name);
+
+        //расположение ИП (подпись), определяем свойство phi для ip
+        let rasp = "под углом " + ip.a; //(парал., перп., под углом ...)
+        if (ip.a == '0') rasp = "паралл.";
+        if (ip.a == '90') rasp = "перп.";
+
+        //расчет коэффициента облученности для данной ИП!!!
+        //??????????????????? ПРОПИСАТЬ УСЛОВИЯ ЕСЛИ ПОЛЯ ЗАПОЛЕНЫ!!!!!!!!!!
+        ip.phi = +rectXY(ip.x, ip.x+ip.w, arrIP.x, ip.y, ip.y + ip.h, arrIP.y, ip.r, ip.a).toFixed(3);
+
+        console.log(ip.phi);
+
+        stage.phi += ip.phi;
+
+        let name = 'ИП №'+ +(i+1) + ' ' + rasp;
         let text = new createjs.Text(name, "9x Arial", "#004DFF");
-        text.x = rectIP.x + 10;
-        text.y = rectIP.y + 10;
-        //text.textBaseline = "alphabetic";
+        text.x = rectIP.x + 7;
+        text.y = rectIP.y + 7;
         stage.addChild(text);
+
+        let phi = 'φ = ' + ip.phi;
+        let text2 = new createjs.Text(phi, "9x Arial", "#004DFF");
+        text2.x = rectIP.x + 7;
+        text2.y = rectIP.y + 18;
+        stage.addChild(text2);
         
     });
 
     //рисуем точку X
     let pointX = new createjs.Shape();
-	pointX.graphics.beginFill("Red").drawCircle(0, 0, 5);
-	pointX.x = stage.xn + arrIP.x*stage.step;
-	pointX.y = stage.yn - arrIP.y*stage.step;
-	stage.addChild(pointX);  
+    pointX.graphics.beginFill("Red").drawCircle(0, 0, 5);
+    pointX.x = stage.xn + arrIP.x*stage.step;
+    pointX.y = stage.yn - arrIP.y*stage.step;
+    stage.addChild(pointX);
+
 
     stage.update();
 
 }
 
+
+//расчет углового коэфф. и интенсивности облучения, помещение данных в канвас
+function calcQ (stage){
+    /*
+        код расчета ф и q
+        расчет ф для каждой ИП, затем суммровать и высчитать интенсивность теплового потока
+        switch(true) {
+            case(zonaH < 3)  :  stepH = 100;  break;
+            default: alert('ошибка ввода');  break;
+        }
+    */
+
+    
+    
+    let phi = 'φ = ';
+    let q = 'q = ';
+
+    //let result = phi_a(5,2,5,35);
+    //console.log(result);
+
+    let text1 = new createjs.Text(phi, "10x Arial", "#000");
+    text1.x = 4;
+    text1.y = 5;
+    stage.addChild(text1);
+
+    let text2 = new createjs.Text(q, "10x Arial", "#000");
+    text2.x = 4;
+    text2.y = 20;
+    stage.addChild(text2);
+
+    stage.update();
+
+}
