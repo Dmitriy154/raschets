@@ -107,7 +107,7 @@
 				</tbody>
 			</table>
 		</div>
-	</div>
+	</div> <!-- /// Талица -->
 
 
 	<div class="row m-2">
