@@ -7,7 +7,7 @@ function build_kadr_1(){
         let row1 = cr(divForm, 'div', 'row'); 
             
             //населенный пункт расчета
-            let div_city = cr(row1, 'div', 'col-sm-2 m-1 p-0');
+            let div_city = cr(row1, 'div', 'col-sm-4 m-1 p-0');
                 let _city = cr(div_city, 'input', 'form-control');
                 _city.setAttribute('placeholder', 'Населенный пункт');          
         
@@ -17,26 +17,13 @@ function build_kadr_1(){
                 _address.setAttribute('placeholder', 'адрес (улица)');
 
             //Дата расчета
-            let div_date = cr(row1, 'div', 'col-sm-2 m-1 p-0');
+            let div_date = cr(row1, 'div', 'col-sm-3 m-1 p-0');
                 let _date = cr(div_date, 'input', 'form-control');
                     _date.type = 'date';
-            
-            //расстояние до ПАСЧ
-            let div_rast = cr(row1, 'div', 'col-sm-2 m-1 p-0');
-                let _rast = cr(div_rast, 'input', 'form-control');
-                    _rast.setAttribute('placeholder', 'Расст. до ПАСЧ, км');
-            
-            //чек в городе
-            let _divNP = cr(row1, 'div', 'col mt-2 p-1');
-                let _divNP2 = cr(_divNP, 'div', 'custom-control custom-radio');
-                    _divNP2.innerHTML = `
-                        <input type="radio" id="customRadio1" name="customRadio" class="custom-control-input">
-                        <label class="custom-control-label" for="customRadio1">в городе</label>
-                    `;
-       
+                  
         let row2 = cr(divForm, 'div', 'row');
             //Примечание
-            let div_note = cr(row2, 'div', 'form-group w-100 mt-1 mb-2');
+            let div_note = cr(row2, 'div', 'form-group w-100 m-1');
                 let _note = cr(div_note, 'textarea', 'form-control');
                 _note.setAttribute('rows', '1');
                 _note.setAttribute('placeholder', 'Примечание для расчета (наличие забора, защита элементов)');
@@ -197,7 +184,7 @@ function build_kadr_4(){
                 </div>
             `;
 
-        //Точка Х и КНОПКА СХЕМА
+        //Точка Х,чек для перп. или угловой поверхн-ти (вертикальная или гориз. площадка) и КНОПКА СХЕМА
         let divrow4 = cr(_stage4, 'div', 'row row_bt_sh p-1');
             let divcol41 = cr(divrow4, 'div', 'col-2 mt-auto');
                 divcol41.innerHTML += `<h6>Точка Х: </h6>`;
@@ -209,6 +196,11 @@ function build_kadr_4(){
                 let inputX_y = cr(divcol43, 'input', 'form-control');
                     inputX_y.setAttribute('placeholder', 'y');
                     inputX_y.type = 'number';
+            let divcheck = cr(divrow4, 'div', 'col-sm-3 form-check m-2 pl-3');
+                divcheck.innerHTML = `
+                    <input type="checkbox" class="form-check-input" id="check_pov">
+                    <label class="form-check-label" for="check_pov">Горизонтально (для угловой ПП)</label>              
+                `;
             let divcol44 = cr(divrow4, 'div', 'col-sm-3 justify-content-center ml-3 pt-1');
                 let bt_sh = cr(divcol44, 'button', 'btn btn-outline-info', 'Схема ИП');
                     bt_sh.type = 'button';
@@ -222,7 +214,7 @@ function build_kadr_4(){
 }////////////////////////////////// 4
 
 
-//СТРОКА ИЗЛУЧАЮЩАЯ ПОВЕРХНОСТЬ
+//СТРОКА ИЗЛУЧАЮЩАЯ ПОВЕРХНОСТЬ --- добавляем ИП --- создаем объект ip
 function createIP(){
     
     let divrow3 = cr(_stage4, 'div', 'row pt-1');
@@ -281,7 +273,7 @@ function createIP(){
             ip.i_а = input_а;
             arrIP.push(ip);
              
-
+        //Добавить ИП
         bt_ip.addEventListener('click', ()=>{
             bt_ip.remove();
             bt_close.style.display = 'block';
@@ -338,7 +330,7 @@ function drawIP(stage) {
     //определяем общий коэффициент облученности для сцены
     stage.phi = 0;
 
-    arrIP.forEach((ip, i)=>{
+    arrIP.forEach((ip, i, arr)=>{
         let rectIP = new createjs.Shape();
         rectIP.graphics.beginStroke("red").beginFill("#e0e0e0").drawRect(0, 0, ip.w*stage.step, ip.h*stage.step);
         rectIP.x = stage.xn + ip.x*stage.step;
@@ -354,10 +346,10 @@ function drawIP(stage) {
 
         //расчет коэффициента облученности для данной ИП!!!
         //??????????????????? ПРОПИСАТЬ УСЛОВИЯ ЕСЛИ ПОЛЯ ЗАПОЛЕНЫ!!!!!!!!!!
-        ip.phi = +rectXY(ip.x, ip.x+ip.w, arrIP.x, ip.y, ip.y + ip.h, arrIP.y, ip.r, ip.a).toFixed(3);
 
-        console.log(ip.phi);
-
+       // ip.phi = +rectXY(ip.x, ip.x + ip.w, arr.x, ip.y, ip.y + ip.h, arr.y, ip.r, ip.a).toFixed(3);
+       ip.phi = +rectXY(ip.x, ip.x + ip.w, arr.x, ip.y, ip.y + ip.h, arr.y, ip.r, ip.a).toFixed(3);
+       
         stage.phi += ip.phi;
 
         let name = 'ИП №'+ +(i+1) + ' ' + rasp;
@@ -397,8 +389,6 @@ function calcQ (stage){
             default: alert('ошибка ввода');  break;
         }
     */
-
-    
     
     let phi = 'φ = ';
     let q = 'q = ';

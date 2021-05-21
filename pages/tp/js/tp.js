@@ -134,12 +134,14 @@ function kadr4(){
     build_kadr_4();
 
     //функция анализа координат и размеров ИП и коорд. точки X
-    let minX, minY; // минимальные значения x  и y  после перебора
-    let maxXW, maxYH; //максимальные значения после перебора
-    let zonaW, zonaH; //размеры рабочей зоны
+    let minX, minY; // минимальные значения x  и y  после перебора всех ИП и точки Х
+    let maxX, maxY; //максимальные значения после перебора (либо точка Х, либо крайняя правая сторона ИП для х)
+    let zonaW, zonaH; //размеры рабочей зоны zonaW = maxX - minX;
     let step, stepW, stepH; // масштаб
 
-    //кнопка схема ИП
+    
+    
+    //кнопка СХЕМА ИП - рисуем чертеж, считаем угл.коэфф. и интенсивность общую и для каждой ип
     bt_sh.addEventListener('click', ()=>{
         //если есть canvas то обновить (удалить)
        if (stage.querySelector("canvas")) stage.querySelector("canvas").parentNode.remove();
@@ -149,8 +151,10 @@ function kadr4(){
         arrIP.y = +arrIP.iy.value;
 
         arrIP.forEach((ip, i)=>{
-            ip.num = i+1;
+            ip.num = i+1; //добавляем свойство объекту ip - номер ИП
+            
             //???? перевести во вторичную координатную систему
+
             ip.w = +ip.i_w.value;
             ip.h = +ip.i_h.value;
             ip.r = +ip.i_r.value;
@@ -161,18 +165,18 @@ function kadr4(){
             if (i==0){
                 if (arrIP.x > ip.x) minX = ip.x; else minX = arrIP.x;
                 if (arrIP.y > ip.y) minY = ip.y; else minY = arrIP.y;
-                if (arrIP.x > (ip.x + ip.w)) maxXW = arrIP.x; else maxXW = (ip.x + ip.w);
-                if (arrIP.y > (ip.y + ip.h)) maxYH = arrIP.y; else maxYH = (ip.y + ip.h);
+                if (arrIP.x > (ip.x + ip.w)) maxX = arrIP.x; else maxX = (ip.x + ip.w);
+                if (arrIP.y > (ip.y + ip.h)) maxY = arrIP.y; else maxY = (ip.y + ip.h);
             } else {
                 if(ip.x < minX) minX = ip.x;
                 if(ip.y < minY) minY = ip.y;
-                if(maxXW < (ip.x + ip.w)) maxXW = ip.x + ip.w;
-                if(maxYH < (ip.y + ip.h)) maxYH = ip.y + ip.h;
+                if(maxX < (ip.x + ip.w)) maxX = ip.x + ip.w;
+                if(maxY < (ip.y + ip.h)) maxY = ip.y + ip.h;
             }
          });//перебор объектов
 
-         zonaW = maxXW - minX;
-         zonaH = maxYH - minY;
+         zonaW = maxX - minX;
+         zonaH = maxY - minY;
           
          switch(true) {
             case(zonaW < 5)  :  stepW = 100;  break;
@@ -203,14 +207,13 @@ function kadr4(){
 
         drawLine(_stage); //рисуем оси если есть
         drawIP(_stage); // рисуем ИП
-
-        //рассчитываем φ и q, вносим запись в канвас
+        calcQ(_stage); // подсчитываем угловой коэфф. и q, размещаем информацию в канвасе
+        
         /*
         данные для расчета: 
         размеры ИП                        arrIP
         точка Х                           arrIP.x 
         принимающая поверхность         +selectPP.value
-        
         */
   
 
@@ -218,7 +221,7 @@ function kadr4(){
 
 
 
-        calcQ(_stage); // подсчитываем угловой коэфф. и q, размещаем информацию в канвасе
+        
     })//кнопка схема расчета
    
 
