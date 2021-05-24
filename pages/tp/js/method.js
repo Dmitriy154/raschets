@@ -46,32 +46,28 @@ function phi_a (w,h,r,angle){
 
 //расчет коэфф. для одной ИП!
 function rectXY (x1, x2, x3, y1, y2, y3, r, a) {
-
     let w1, w2, w3, w4, h1, h2, h3, h4;
+    // Зоны (сверху -вниз): 765 812 934
 
-    /*
-    Зоны:
-    765
-    812
-    934
-    */
-
-    //в ИП, в т.ч. на границах и в углу (ТОЛЬКО ДЛЯ ПАРАЛЛЕЛЬНОГО РАСПОЛОЖЕНИЯ!)
+    //в ИП, в т.ч. на границах и в углу (ТОЛЬКО ДЛЯ ПАРАЛЛЕЛЬНОГО РАСПОЛОЖЕНИЯ!), для других - только на сторонах, но не внутри
     if (!(x3<x1 || x3>x2 || y3<y1 || y3>y2)) {
         console.log('зона 1');
+
         if (a == '0') {
             w1 = w3 = x3-x1; w2 = w4 = x2-x3;  h1 = h2 = y2-y3; h3 = h4 = y3-y1;
-            //return phi_0(w1, h1,r) + phi_0(w2, h2,r) + phi_0(w3, h3,r) + phi_0(w4, h4,r);
-        } 
+            return phi_0(w1, h1,r) + phi_0(w2, h2,r) + phi_0(w3, h3,r) + phi_0(w4, h4,r);
+        }
     }
 
+
     //Для остальных случаев
-    if(x3>x2 && y3<y2 && y3>y1) {
+    if(x3>=x2 && y3<y2 && y3>y1) {
         console.log('зона 2');
 
         w13 = w24 = x3-x1; w3 = w4 = x3-x2; h13 = h3 = y2-y3; h24 = h4 = y3-y1;
         if (a == '0') return phi_0(w13, h13,r) + phi_0(w24, h24,r) - phi_0(w3, h3,r) - phi_0(w4, h4,r);
-        //if (a == '90') return phi_90(h1, w1+w3,r) + phi_90(h2, w2+w4,r) - phi_90(h3, w3,r) - phi_90(h4, w4,r);
+
+        if (a == '90') return phi_90(h1, w1+w3,r) + phi_90(h2, w2+w4,r) - phi_90(h3, w3,r) - phi_90(h4, w4,r);
         //if (!(a=='0' || a=='90')) return phi_a(h1, w1+w3, r, a) + phi_a(h2, w2+w4, r, a) - phi_a(h3, w3, r, a) - phi_a(h4, w4, r, a);
     }
 

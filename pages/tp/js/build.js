@@ -170,9 +170,9 @@ function build_kadr_4(){
 
         //ПРИНИМАЮЩАЯ ПОВЕРХНОСТЬ
         let divrow2 = cr(_stage4, 'div', 'row');
-            let divcol21 = cr(divrow2, 'div', 'col-3 mt-auto');
+            let divcol21 = cr(divrow2, 'div', 'col-sm-3 mt-auto');
                 divcol21.innerHTML += `<h6>Принимающая поверхность:</h6>`;
-            let divcol22 = cr(divrow2, 'div', 'col-3');  
+            let divcol22 = cr(divrow2, 'div', 'col-sm-3');  
                 divcol22.innerHTML += `
                 <div>
                     <select class="form-control" id="selectPP">
@@ -186,7 +186,7 @@ function build_kadr_4(){
 
         //Точка Х,чек для перп. или угловой поверхн-ти (вертикальная или гориз. площадка) и КНОПКА СХЕМА
         let divrow4 = cr(_stage4, 'div', 'row row_bt_sh p-1');
-            let divcol41 = cr(divrow4, 'div', 'col-2 mt-auto');
+            let divcol41 = cr(divrow4, 'div', 'col-sm-2 mt-auto');
                 divcol41.innerHTML += `<h6>Точка Х: </h6>`;
             let divcol42 = cr(divrow4, 'div', 'col-sm-1 m-1 p-0'); 
                 let inputX_x = cr(divcol42, 'input', 'form-control');
@@ -196,11 +196,13 @@ function build_kadr_4(){
                 let inputX_y = cr(divcol43, 'input', 'form-control');
                     inputX_y.setAttribute('placeholder', 'y');
                     inputX_y.type = 'number';
-            let divcheck = cr(divrow4, 'div', 'col-sm-3 form-check m-2 pl-3');
-                divcheck.innerHTML = `
-                    <input type="checkbox" class="form-check-input" id="check_pov">
-                    <label class="form-check-label" for="check_pov">Горизонтально (для угловой ПП)</label>              
-                `;
+
+            //плоскость точки Х (для угловых), например крыша
+            let div_gorizont = cr(divrow4, 'div', 'form-check form-check-inlin col-sm-2 m-2 зд-3').innerHTML =`
+                <input class="form-check-input" type="checkbox" id="gorizontX" value="0">
+                <label class="form-check-label" for="gorizontX">гориз. плоскость</label>
+            `;
+
             let divcol44 = cr(divrow4, 'div', 'col-sm-3 justify-content-center ml-3 pt-1');
                 let bt_sh = cr(divcol44, 'button', 'btn btn-outline-info', 'Схема ИП');
                     bt_sh.type = 'button';
@@ -209,6 +211,7 @@ function build_kadr_4(){
             //координаты точки Х делаем как свойства массива arrIP
             arrIP.ix = inputX_x;
             arrIP.iy = inputX_y;
+            arrIP.iz = gorizontX;
 
         createIP();  //создаем строку ИЗЛУЧАЮЩАЯ ПОВЕРХНОСТЬ
 }////////////////////////////////// 4
@@ -248,7 +251,7 @@ function createIP(){
         let div_a = cr(divrow3, 'div', 'col-sm-1 m-1 p-0');
             let input_а = cr(div_a, 'input', 'form-control');
                 input_а.setAttribute('placeholder', 'angle');
-                input_а.setAttribute('title', '0 - параллельно, 90 - перпендикулярно, 45 - под углом 45 град');
+                input_а.setAttribute('title', '0 - параллельно; 90 - перпендикулярно, 45 - под углом 45 град (не более 180)');
                 input_а.type = 'number';
 
         //копка добавить ИП       
