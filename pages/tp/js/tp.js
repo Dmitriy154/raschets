@@ -150,7 +150,7 @@ function kadr4(){
         arrIP.x = +arrIP.ix.value;
         arrIP.y = +arrIP.iy.value;
         arrIP.z = +arrIP.iz.checked; //булевое значение - по умолчанию 0
-        console.log(arrIP.z);
+
 
         arrIP.forEach((ip, i)=>{
             ip.num = i+1; //добавляем свойство объекту ip - номер ИП
@@ -234,7 +234,7 @@ function kadr4(){
 }//кадр 4
 
 
-//очистка массива arrIP?
+//очистка массива arrIP? да наверное, обнулить arrIP.z
 
 
 

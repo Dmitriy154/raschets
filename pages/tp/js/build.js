@@ -186,7 +186,7 @@ function build_kadr_4(){
 
         //Точка Х,чек для перп. или угловой поверхн-ти (вертикальная или гориз. площадка) и КНОПКА СХЕМА
         let divrow4 = cr(_stage4, 'div', 'row row_bt_sh p-1');
-            let divcol41 = cr(divrow4, 'div', 'col-sm-2 mt-auto');
+            let divcol41 = cr(divrow4, 'div', 'col-sm-2 mt-2');
                 divcol41.innerHTML += `<h6>Точка Х: </h6>`;
             let divcol42 = cr(divrow4, 'div', 'col-sm-1 m-1 p-0'); 
                 let inputX_x = cr(divcol42, 'input', 'form-control');
@@ -200,7 +200,7 @@ function build_kadr_4(){
             //плоскость точки Х (для угловых), например крыша
             let div_gorizont = cr(divrow4, 'div', 'form-check form-check-inlin col-sm-2 m-2 зд-3').innerHTML =`
                 <input class="form-check-input" type="checkbox" id="gorizontX" value="0">
-                <label class="form-check-label" for="gorizontX">гориз. плоскость</label>
+                <label class="form-check-label small" for="gorizontX">гориз. пл. (облуч. сверху)</label>
             `;
 
             let divcol44 = cr(divrow4, 'div', 'col-sm-3 justify-content-center ml-3 pt-1');
@@ -370,6 +370,7 @@ function drawIP(stage) {
     });
 
     //рисуем точку X
+    // &&&&&&&&&&  для перпендикуляра (а==90 и arrIP.z (гор.плоскость) прорисовать вместо точки можно |)
     let pointX = new createjs.Shape();
     pointX.graphics.beginFill("Red").drawCircle(0, 0, 5);
     pointX.x = stage.xn + arrIP.x*stage.step;
