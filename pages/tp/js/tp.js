@@ -174,7 +174,7 @@ function kadr4(){
                 if(maxX < (ip.x + ip.w)) maxX = ip.x + ip.w;
                 if(maxY < (ip.y + ip.h)) maxY = ip.y + ip.h;
             }
-         });//перебор объектов
+         });//перебор объектов arrIP
 
          zonaW = maxX - minX;
          zonaH = maxY - minY;
@@ -206,10 +206,9 @@ function kadr4(){
         _stage.xn = step*(0.5*zonaW - minX); //координаты 0,0 (!!!)      
         _stage.yn = step*(1.5*zonaH + minY);
 
-
         //методы приведены в build.js
         drawLine(_stage); //рисуем оси если есть
-        drawIP(_stage); // рисуем ИП - считаем
+        drawIP(_stage); // рисуем ИП - считаем / метод в build
         calcQ(_stage); // подсчитываем угловой коэфф. и q, размещаем информацию в канвасе
         
         /*

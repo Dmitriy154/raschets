@@ -48,19 +48,19 @@ constructor(num, _stage) {
 
                 let row_zd_2 = cr(col_zd, 'div', 'row form-group row m-0 p-0 justify-content-center');
                     //высота здания
-                    let divH = cr(row_zd_2, 'div', 'col-sm-1 p-1');
+                    let divH = cr(row_zd_2, 'div', 'col-sm-2 p-1');
                         let _H = cr(divH, 'input', 'form-control');
                         _H.setAttribute('placeholder', 'h здания');
                             this.h = _H;                   
                     
                     //высота крыши здания
-                    let divHk = cr(row_zd_2, 'div', 'col-sm-1 p-1');
+                    let divHk = cr(row_zd_2, 'div', 'col-sm-2 p-1');
                         let _Hk = cr(divHk, 'input', 'form-control');
                         _Hk.setAttribute('placeholder', 'h крыши');
                             this.hk = _Hk;   
                     
                     //Причечание для здания
-                    let divInf = cr(row_zd_2, 'div', 'col-sm-10 p-1');
+                    let divInf = cr(row_zd_2, 'div', 'col-sm-8 p-1');
                         let _Inf = cr(divInf, 'input', 'form-control');
                         _Inf.setAttribute('placeholder', 'Примечание для здания');
                             this.info = _Inf;

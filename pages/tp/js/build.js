@@ -359,25 +359,24 @@ function drawIP(stage) {
         let text = new createjs.Text(name, "9x Arial", "#004DFF");
         text.x = rectIP.x + 7;
         text.y = rectIP.y + 7;
-        stage.addChild(text);
+        ip.text = text;
+        stage.addChild(ip.text);
 
         let phi = 'φ = ' + ip.phi;
         let text2 = new createjs.Text(phi, "9x Arial", "#004DFF");
         text2.x = rectIP.x + 7;
         text2.y = rectIP.y + 18;
-        stage.addChild(text2);
+        ip.text2 = text2;
+        stage.addChild(ip.text2);
         
-    });
+    }); //перебор всех ИП
 
     //рисуем точку X
-    // &&&&&&&&&&  для перпендикуляра (а==90 и arrIP.z (гор.плоскость) прорисовать вместо точки можно |)
     let pointX = new createjs.Shape();
     pointX.graphics.beginFill("Red").drawCircle(0, 0, 5);
     pointX.x = stage.xn + arrIP.x*stage.step;
     pointX.y = stage.yn - arrIP.y*stage.step;
     stage.addChild(pointX);
-
-
     stage.update();
 
 }
@@ -385,16 +384,18 @@ function drawIP(stage) {
 
 //расчет углового коэфф. и интенсивности облучения, помещение данных в канвас
 function calcQ (stage){
+    let Q; //интенсивность теплового излучения
+    console.log(selectPP.value); //13900
     /*
         код расчета ф и q
         расчет ф для каждой ИП, затем суммровать и высчитать интенсивность теплового потока
-        switch(true) {
-            case(zonaH < 3)  :  stepH = 100;  break;
-            default: alert('ошибка ввода');  break;
-        }
+
+
+
+
     */
     
-    let phi = 'φ = ';
+    let phi = 'φ = ' + stage.phi;
     let q = 'q = ';
 
     //let result = phi_a(5,2,5,35);
