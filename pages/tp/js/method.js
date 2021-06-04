@@ -58,7 +58,7 @@ function rectXY (x1, x2, x3, y1, y2, y3, r, a) {
 
     //в ИП, в т.ч. на границах и в углу (ТОЛЬКО ДЛЯ ПАРАЛЛЕЛЬНОГО РАСПОЛОЖЕНИЯ!), для других - только на сторонах, но не внутри
     if (!(x3<x1 || x3>x2 || y3<y1 || y3>y2)) {
-        console.log('зона 1');
+        //console.log('зона 1');
 
         if (a == '0') {
             w1 = w3 = x3-x1; w2 = w4 = x2-x3;  h1 = h2 = y2-y3; h3 = h4 = y3-y1;
@@ -69,7 +69,7 @@ function rectXY (x1, x2, x3, y1, y2, y3, r, a) {
 
     //Для остальных случаев
     if(x3>=x2 && y3<y2 && y3>y1) {
-        console.log('зона 2');
+        //console.log('зона 2');
         w13 = w24 = x3-x1; w3 = w4 = x3-x2; h13 = h3 = y2-y3; h24 = h4 = y3-y1;
         if (a == '0') return phi_0(w13, h13,r) + phi_0(w24, h24,r) - phi_0(w3, h3,r) - phi_0(w4, h4,r);
         if (a == '90' && !arrIP.z) return phi_90(w13, h13,r) + phi_90(w24, h24,r) - phi_90(w3, h3,r) - phi_90(w4, h4,r);
@@ -79,7 +79,7 @@ function rectXY (x1, x2, x3, y1, y2, y3, r, a) {
     }
 
     if (x3>x1 && x3<x2 && y3<=y1) {
-        console.log('зона 3');
+        //console.log('зона 3');
         w13 = w3 = x3-x1; w24 = w4 = x2-x3; h13 = h24 = y2-y3; h3 = h4 = y1 - y3;
         if (a == '0') return phi_0(w13, h13,r) + phi_0(w24, h24,r) - phi_0(w3, h3,r) - phi_0(w4, h4,r);
         if (!arrIP.z) return alert('Ошибка, программа не учитывает сторону облучения (слева, справа). Выберите горизонтальную плоскость или измените данные точки Х или ИП');
@@ -89,7 +89,7 @@ function rectXY (x1, x2, x3, y1, y2, y3, r, a) {
     }
 
     if (x3>=x2 && y3<=y1){
-        console.log('зона 4');    
+       //console.log('зона 4');    
         w1234 = w34 = x3 - x1; w24 = w4 = x3 - x2; h1234 = h24 = y2 - y3; h34 = h4 = y1 - y3;
         if (a == '0') return phi_0(w1234, h1234,r) - phi_0(w34, h34,r) - phi_0(w24, h24,r) + phi_0(w4, h4,r);
         if (a == '90' && !arrIP.z) return phi_90(w1234, h1234,r) - phi_90(w34, h34,r) - phi_90(w24, h24,r) + phi_90(w4, h4,r);
@@ -99,7 +99,7 @@ function rectXY (x1, x2, x3, y1, y2, y3, r, a) {
     }
 
     if (x3>=x2 && y3>=y2){
-        console.log('зона 5'); 
+        //console.log('зона 5'); 
         
         w1234 = w34 = x3 - x1; w24 = w4 = x3 - x2; h1234 = h24 = y3 - y1; h34 = h4 = y3 - y2;
         if (a == '0') return phi_0(w1234, h1234,r) - phi_0(w34, h34,r) - phi_0(w24, h24,r) + phi_0(w4, h4,r);
@@ -110,7 +110,7 @@ function rectXY (x1, x2, x3, y1, y2, y3, r, a) {
     }
 
     if (x3>x1 && x3<x2 && y3>=y2){
-        console.log('зона 6');
+        //console.log('зона 6');
 
         w13 = w3 = x3-x1; w24 = w4 = x2-x3; h13 = h24 = y3-y1; h3 = h4 = y3 - y2;
         if (a == '0') return phi_0(w13, h13,r) + phi_0(w24, h24,r) - phi_0(w3, h3,r) - phi_0(w4, h4,r); 
@@ -122,7 +122,7 @@ function rectXY (x1, x2, x3, y1, y2, y3, r, a) {
     }
 
     if (x3<=x1 && y3>=y2){
-        console.log('зона 7');
+        //console.log('зона 7');
 
         w1234 = w34 = x2 - x3; w24 = w4 = x1 - x3; h1234 = h24 = y3 - y1; h34 = h4 = y3 - y2;
         if (a == '0') return phi_0(w1234, h1234,r) - phi_0(w34, h34,r) - phi_0(w24, h24,r) + phi_0(w4, h4,r);
@@ -133,7 +133,7 @@ function rectXY (x1, x2, x3, y1, y2, y3, r, a) {
     }
 
     if (x3<=x1 && y3>y1 && y3<y2){
-        console.log('зона 8');
+        //console.log('зона 8');
 
         w13 = w24 = x2-x3; w3 = w4 = x1-x3; h13 = h3 = y3-y1; h24 = h4 = y2-y3;
         if (a == '0') return phi_0(w13, h13,r) + phi_0(w24, h24,r) - phi_0(w3, h3,r) - phi_0(w4, h4,r);
@@ -144,7 +144,7 @@ function rectXY (x1, x2, x3, y1, y2, y3, r, a) {
     }
 
     if (x3<=x1 && y3<=y1){
-        console.log('зона 9');
+        //console.log('зона 9');
 
         w1234 = w34 = x2 - x3; w24 = w4 = x1 - x3; h1234 = h24 = y2 - y3; h34 = h4 = y1 - y3;
         if (a == '0') return phi_0(w1234, h1234,r) - phi_0(w34, h34,r) - phi_0(w24, h24,r) + phi_0(w4, h4,r);

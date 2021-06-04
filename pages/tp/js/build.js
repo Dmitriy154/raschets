@@ -180,6 +180,7 @@ function build_kadr_4(){
                         <option value='15400'>Пластик</option>
                         <option value='17500'>Лакокрасочное покрытие</option>
                         <option value='17400'>Рулонная кровля</option>
+                        <option value='13900'>Оцинкованное листовое железо (отделка древесины)</option>
                     </select>
                 </div>
             `;
@@ -311,7 +312,6 @@ function drawCanvas(w, h){
 //рисуем сетку и координатные оси
 function drawLine (stage){
     //рисуем координатные оси
-    
     let line = new createjs.Shape();
     stage.addChild(line);
     line.graphics.setStrokeStyle(1).beginStroke("#000");
@@ -326,6 +326,11 @@ function drawLine (stage){
     stage.update(); 
     
     //рисуем шкалу  и обозначаем оси
+    console.log(stage);
+
+    console.log(zonaW);
+
+
 }
 
 //рисуем ИП и рассчитываем коэффициента угловой облученности
@@ -340,17 +345,11 @@ function drawIP(stage) {
         rectIP.y = stage.yn - ip.y*stage.step - ip.h*stage.step;
         stage.addChild(rectIP);
 
-        //подпись
-
         //расположение ИП (подпись), определяем свойство phi для ip
         let rasp = "под углом " + ip.a; //(парал., перп., под углом ...)
         if (ip.a == '0') rasp = "паралл.";
         if (ip.a == '90') rasp = "перп.";
 
-        //расчет коэффициента облученности для данной ИП!!!
-        //??????????????????? ПРОПИСАТЬ УСЛОВИЯ ЕСЛИ ПОЛЯ ЗАПОЛЕНЫ!!!!!!!!!!
-
-       // ip.phi = +rectXY(ip.x, ip.x + ip.w, arr.x, ip.y, ip.y + ip.h, arr.y, ip.r, ip.a).toFixed(3);
        ip.phi = +rectXY(ip.x, ip.x + ip.w, arr.x, ip.y, ip.y + ip.h, arr.y, ip.r, ip.a).toFixed(3);
        
         stage.phi += ip.phi;
@@ -378,39 +377,27 @@ function drawIP(stage) {
     pointX.y = stage.yn - arrIP.y*stage.step;
     stage.addChild(pointX);
     stage.update();
-
 }
 
 
 //расчет углового коэфф. и интенсивности облучения, помещение данных в канвас
 function calcQ (stage){
     let Q; //интенсивность теплового излучения
-    console.log(selectPP.value); //13900
-    /*
-        код расчета ф и q
-        расчет ф для каждой ИП, затем суммровать и высчитать интенсивность теплового потока
+    let ev = 0.9 // степень черноты облучаемого материала
+    if (selectPP.selectedIndex == 4) ev = 0.27; else ev = 0.9; //если выбрана оцинковка, то изменяем степень черноты
 
-
-
-
-    */
-    
+    Q = Math.round(5.7*Math.pow((1/0.7+1/ev-1),-1)*(Math.pow(12.73,4)-Math.pow(2.78,4))*stage.phi);
+   
     let phi = 'φ = ' + stage.phi;
-    let q = 'q = ';
-
-    //let result = phi_a(5,2,5,35);
-    //console.log(result);
+    let q = 'q = ' + Q;
 
     let text1 = new createjs.Text(phi, "10x Arial", "#000");
     text1.x = 4;
     text1.y = 5;
     stage.addChild(text1);
-
     let text2 = new createjs.Text(q, "10x Arial", "#000");
     text2.x = 4;
     text2.y = 20;
     stage.addChild(text2);
-
     stage.update();
-
 }
