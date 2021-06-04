@@ -288,6 +288,8 @@ function createIP(){
             let num = arrIP.indexOf(ip); //номер удаляемого объекта в массиве
             arrIP.splice(num, 1); // удаляем один объект в массиве
             bt_close.parentNode.remove();
+            let clickEvent = new Event('click'); // создаем событие клика
+            bt_sh.dispatchEvent(clickEvent); // имитируем клик на кнопку схема ИП для обновления данных
         });
 } // createIP() kadr 4
 
@@ -311,7 +313,6 @@ function drawCanvas(w, h){
 
 //рисуем сетку и координатные оси
 function drawLine (stage){
-    //рисуем координатные оси
     let line = new createjs.Shape();
     stage.addChild(line);
     line.graphics.setStrokeStyle(1).beginStroke("#000");
@@ -323,14 +324,6 @@ function drawLine (stage){
     line.graphics.lineTo(stage.w, stage.yn);    
 
     line.graphics.endStroke();
-    stage.update(); 
-    
-    //рисуем шкалу  и обозначаем оси
-    console.log(stage);
-
-    console.log(zonaW);
-
-
 }
 
 //рисуем ИП и рассчитываем коэффициента угловой облученности
@@ -376,7 +369,11 @@ function drawIP(stage) {
     pointX.x = stage.xn + arrIP.x*stage.step;
     pointX.y = stage.yn - arrIP.y*stage.step;
     stage.addChild(pointX);
-    stage.update();
+
+    //рисуем шкалу  и обозначаем оси
+
+
+
 }
 
 
@@ -391,13 +388,17 @@ function calcQ (stage){
     let phi = 'φ = ' + stage.phi;
     let q = 'q = ' + Q;
 
-    let text1 = new createjs.Text(phi, "10x Arial", "#000");
-    text1.x = 4;
-    text1.y = 5;
-    stage.addChild(text1);
-    let text2 = new createjs.Text(q, "10x Arial", "#000");
-    text2.x = 4;
-    text2.y = 20;
-    stage.addChild(text2);
+    addTextToCanvas(phi, 4, 5);
+    addTextToCanvas(q, 4, 20);
+
     stage.update();
 }
+
+//метод добавления текста в canvas
+function addTextToCanvas (text, x, y) {
+    let t = new createjs.Text(text, "10x Arial", "#000");
+    t.x = x;
+    t.y = y;
+    _stage.addChild(t);
+}
+

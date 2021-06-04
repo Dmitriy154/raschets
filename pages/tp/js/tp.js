@@ -2,6 +2,7 @@ let arrZd = []; // массив зданий
 let arr = []; //массив номеров зданий облучения [['2','3'],['1'],['1']]
 let napr = []; // двумерный массив [name1, name2, rasst]; для кадра 4
 let arrIP = []; // массив ИП, имеет свойства х и у, z (если горизонтальная плоскость (крыша), то z=1) - координаты точки Х 
+let _stage = null; // ссылка на canvas_stage в 4 кадре
 
 //для теста
 napr = [['adr11','adr22', 2],['adr11','adr33', 2],['adr22','adr44', 2],['adr33','adr44', 2]];
@@ -201,7 +202,7 @@ function kadr4(){
 
         if(stepW > stepH) step = stepH; else step = stepW; //масштаб
 
-        let _stage = drawCanvas(zonaW*step *2 , zonaH*step*2); //добавляем canvas, возвращаем stage (createjs)
+        _stage = drawCanvas(zonaW*step *2 , zonaH*step*2); //добавляем canvas, возвращаем stage (createjs)
         _stage.step = step;
         _stage.xn = step*(0.5*zonaW - minX); //координаты 0,0 (!!!)      
         _stage.yn = step*(1.5*zonaH + minY);
@@ -216,6 +217,7 @@ function kadr4(){
 
         */
        ////////////////////////
+       
 
 
 
@@ -225,7 +227,7 @@ function kadr4(){
 
 
         //методы приведены в build.js
-        drawLine(_stage); //рисуем оси если есть
+        drawLine(_stage); //рисуем оси если есть 
         drawIP(_stage); // рисуем ИП - считаем / метод в build
         calcQ(_stage); // подсчитываем угловой коэфф. и q, размещаем информацию в канвасе
         
