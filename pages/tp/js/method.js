@@ -156,7 +156,24 @@ function rectXY (x1, x2, x3, y1, y2, y3, r, a) {
 
     if (a !== '0') return alert('не размещайте точку Х в ИП, программа не учитывает сторону облучения');
 
+}
 
+//метод добавления текста в canvas
+function addTextToCanvas (text, x, y) {
+    let t = new createjs.Text(text, "10x Arial", "#000");
+    t.x = x;
+    t.y = y;
+    _stage.addChild(t);
+}
 
+//рисуем линии в канвасе
+function drawLine (x1, y1, x2, y2, width, color){
+    // width - толщина линии;  color - цвет #000
+    let line = new createjs.Shape();
+    _stage.addChild(line);
+    line.graphics.setStrokeStyle(width).beginStroke(color);
+    line.graphics.moveTo(x1, y1);
+    line.graphics.lineTo(x2, y2);
+    line.graphics.endStroke();
 }
 

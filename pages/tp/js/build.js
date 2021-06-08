@@ -223,9 +223,14 @@ function createIP(){
     
     let divrow3 = cr(_stage4, 'div', 'row pt-1');
 
+        //поместить нарисованный канвас после кнопи
+        if (typeof div_canvas !== 'undefined') _stage4.append (div_canvas);
+        //div_canvas.remove();
+        //div_canvas.before(stage.querySelector('div.row_bt_sh'));
+
         //поместить divrow3 до кнопки СХЕМА ИП
         divrow3.after(stage.querySelector('div.row_bt_sh'));
-
+        
         let div31 = cr(divrow3, 'div', 'col-2 mt-auto');
             div31.innerHTML += `<h6>Излучающая поверхность: </h6>`;
 
@@ -265,7 +270,7 @@ function createIP(){
                 bt_close.setAttribute('aria-label', 'Close');
                 bt_close.type = 'button';
                 bt_close.innerHTML = `<span class="center" aria-hidden="true">&times;</span>`;
-                bt_close.style.display = 'none';               
+               
                
         //ИЗЛУЧАЮЩАЯ ПОВЕРХНОСТЬ
         let ip = {};
@@ -279,15 +284,20 @@ function createIP(){
              
         //Добавить ИП
         bt_ip.addEventListener('click', ()=>{
-            bt_ip.remove();
-            bt_close.style.display = 'block';
+            bt_ip.style.display = 'none';
             createIP();
         }); 
 
+        //удаление ИП
         bt_close.addEventListener('click', ()=>{
+            if(arrIP.length == 1) return;
             let num = arrIP.indexOf(ip); //номер удаляемого объекта в массиве
             arrIP.splice(num, 1); // удаляем один объект в массиве
             bt_close.parentNode.remove();
+
+            /////получить последнюю ИП
+            console.log(arrIP);
+
             let clickEvent = new Event('click'); // создаем событие клика
             bt_sh.dispatchEvent(clickEvent); // имитируем клик на кнопку схема ИП для обновления данных
         });
@@ -296,6 +306,7 @@ function createIP(){
 
 function drawCanvas(w, h){
     let div_canvas = cr(_stage4,'div','row justify-content-center');
+        div_canvas.id = 'div_canvas';
 
     let canvas = cr(div_canvas,'canvas');
         canvas.setAttribute('width', w);
@@ -311,23 +322,12 @@ function drawCanvas(w, h){
     return stage;
 }
 
-//рисуем сетку и координатные оси
-function drawLine (stage){
-    let line = new createjs.Shape();
-    stage.addChild(line);
-    line.graphics.setStrokeStyle(1).beginStroke("#000");
-
-    line.graphics.moveTo(stage.xn, 0);
-    line.graphics.lineTo(stage.xn, stage.h);
-
-    line.graphics.moveTo(0, stage.yn);
-    line.graphics.lineTo(stage.w, stage.yn);    
-
-    line.graphics.endStroke();
-}
-
 //рисуем ИП и рассчитываем коэффициента угловой облученности
 function drawIP(stage) {
+    //рисуем координатные оси
+    drawLine(stage.xn, 0, stage.xn, stage.h, 1, '#0f1');
+    drawLine(0, stage.yn, stage.w, stage.yn, 1, '#0f1');
+
     //определяем общий коэффициент облученности для сцены
     stage.phi = 0;
 
@@ -344,8 +344,9 @@ function drawIP(stage) {
         if (ip.a == '90') rasp = "перп.";
 
        ip.phi = +rectXY(ip.x, ip.x + ip.w, arr.x, ip.y, ip.y + ip.h, arr.y, ip.r, ip.a).toFixed(3);
-       
+
         stage.phi += ip.phi;
+        stage.phi = Math.round(stage.phi*1000)/1000;
 
         let name = 'ИП №'+ +(i+1) + ' ' + rasp;
         let text = new createjs.Text(name, "9x Arial", "#004DFF");
@@ -360,8 +361,32 @@ function drawIP(stage) {
         text2.y = rectIP.y + 18;
         ip.text2 = text2;
         stage.addChild(ip.text2);
+
         
+        //подпись ИП (первая точка) и риска. Проверка на перекрытие!!!!
+        // по Х (условие if чтобы не дублировать 0)
+        if (rectIP.x !== 0) {
+            addTextToCanvas(ip.x, rectIP.x, stage.yn-12); 
+            drawLine(rectIP.x, stage.yn+3, rectIP.x, stage.yn-3, 1, '#090');
+        }
+        if ((ip.x+ip.w) !== 0){
+            addTextToCanvas(ip.x+ip.w, rectIP.x + ip.w*stage.step, stage.yn-12); 
+            drawLine(rectIP.x + ip.w*stage.step, stage.yn+3, rectIP.x + ip.w*stage.step, stage.yn-3, 1, '#090');
+        }
+
+        //по Y
+        if (ip.y !== 0){
+            addTextToCanvas(ip.y, stage.xn+3, stage.yn - ip.y*stage.step-5); 
+            drawLine(stage.xn-3, stage.yn - ip.y*stage.step, stage.xn+3, stage.yn - ip.y*stage.step, 1, '#090');
+        }
+
+        if ((ip.y+ip.h) !== 0){
+            addTextToCanvas(ip.y+ip.h, stage.xn+3, rectIP.y -5);
+            drawLine(stage.xn-3, rectIP.y, stage.xn+3, rectIP.y, 1, '#090');   
+        }
     }); //перебор всех ИП
+
+    addTextToCanvas('0', stage.xn + 2, stage.yn-12); //ноль
 
     //рисуем точку X
     let pointX = new createjs.Shape();
@@ -371,11 +396,8 @@ function drawIP(stage) {
     stage.addChild(pointX);
 
     //рисуем шкалу  и обозначаем оси
-
-
-
+    
 }
-
 
 //расчет углового коэфф. и интенсивности облучения, помещение данных в канвас
 function calcQ (stage){
@@ -394,11 +416,5 @@ function calcQ (stage){
     stage.update();
 }
 
-//метод добавления текста в canvas
-function addTextToCanvas (text, x, y) {
-    let t = new createjs.Text(text, "10x Arial", "#000");
-    t.x = x;
-    t.y = y;
-    _stage.addChild(t);
-}
+
 

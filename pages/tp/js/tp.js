@@ -145,6 +145,7 @@ function kadr4(){
     bt_sh.addEventListener('click', ()=>{
         //если есть canvas то обновить (удалить)
        if (stage.querySelector("canvas")) stage.querySelector("canvas").parentNode.remove();
+       _stage = null;
 
         //получение координат точки Х
         arrIP.x = +arrIP.ix.value;
@@ -154,8 +155,6 @@ function kadr4(){
 
         arrIP.forEach((ip, i)=>{
             ip.num = i+1; //добавляем свойство объекту ip - номер ИП
-            
-            //???? перевести во вторичную координатную систему
 
             ip.w = +ip.i_w.value;
             ip.h = +ip.i_h.value;
@@ -163,6 +162,11 @@ function kadr4(){
             ip.x = +ip.i_x.value;
             ip.y = +ip.i_y.value;
             ip.a = +ip.i_а.value;
+
+            //если есть пустые w, h, r - то return
+            if (!(ip.w && ip.h && ip.r)) {
+                alert ('Заполните данные излучающей поверхности');
+            }
             
             if (i==0){
                 if (arrIP.x > ip.x) minX = ip.x; else minX = arrIP.x;
@@ -202,41 +206,15 @@ function kadr4(){
 
         if(stepW > stepH) step = stepH; else step = stepW; //масштаб
 
-        _stage = drawCanvas(zonaW*step *2 , zonaH*step*2); //добавляем canvas, возвращаем stage (createjs)
+        let h_canvas = (zonaH*step*2 > step*(1.5*zonaH + minY)) ? zonaH*step*2 : step*(1.5*zonaH + minY) + 10; //чтобы была видна нижняя ось Х
+        _stage = drawCanvas(zonaW*step *2, h_canvas); //добавляем canvas, возвращаем stage (createjs)
         _stage.step = step;
         _stage.xn = step*(0.5*zonaW - minX); //координаты 0,0 (!!!)      
         _stage.yn = step*(1.5*zonaH + minY);
 
-        //присваиваем свойства для stage,  чтобы отрисовть
-        /*
-            //функция анализа координат и размеров ИП и коорд. точки X
-            let minX, minY; // минимальные значения x  и y  после перебора всех ИП и точки Х
-            let maxX, maxY; //максимальные значения после перебора (либо точка Х, либо крайняя правая сторона ИП для х)
-            let zonaW, zonaH; //размеры рабочей зоны zonaW = maxX - minX;
-            let step, stepW, stepH; // масштаб
-
-        */
-       ////////////////////////
-       
-
-
-
-
-
-
-
-
         //методы приведены в build.js
-        drawLine(_stage); //рисуем оси если есть 
-        drawIP(_stage); // рисуем ИП - считаем / метод в build
+        drawIP(_stage); // рисуем оси, рисуем ИП - считаем / метод в build
         calcQ(_stage); // подсчитываем угловой коэфф. и q, размещаем информацию в канвасе
-        
-        /*
-        данные для расчета: 
-        размеры ИП                        arrIP
-        точка Х                           arrIP.x 
-        принимающая поверхность         +selectPP.value
-        */
         
     })//кнопка схема расчета
    
