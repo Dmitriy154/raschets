@@ -143,10 +143,11 @@ function kadr4(){
     
     //кнопка СХЕМА ИП - рисуем чертеж, считаем угл.коэфф. и интенсивность общую и для каждой ип
     bt_sh.addEventListener('click', ()=>{
+        let error = false; //если есть незаполненные поля
+
         //если есть canvas то обновить (удалить)
        if (stage.querySelector("canvas")) stage.querySelector("canvas").parentNode.remove();
        _stage = null;
-
         //получение координат точки Х
         arrIP.x = +arrIP.ix.value;
         arrIP.y = +arrIP.iy.value;
@@ -165,9 +166,9 @@ function kadr4(){
 
             //если есть пустые w, h, r - то return
             if (!(ip.w && ip.h && ip.r)) {
-                alert ('Заполните данные излучающей поверхности');
+                error = true;
             }
-            
+
             if (i==0){
                 if (arrIP.x > ip.x) minX = ip.x; else minX = arrIP.x;
                 if (arrIP.y > ip.y) minY = ip.y; else minY = arrIP.y;
@@ -181,6 +182,11 @@ function kadr4(){
             }
          });//перебор объектов arrIP
 
+         if (error) {
+             alert ('Заполните все поля');
+             return;
+         }
+         
          zonaW = maxX - minX;
          zonaH = maxY - minY;
           
@@ -224,20 +230,8 @@ function kadr4(){
 }//кадр 4
 
 
-//очистка массива arrIP? да наверное, обнулить arrIP.z
-
-
-
-
-
-
-
-
-
-
-
 /*
+очистка массива arrIP? да наверное, обнулить arrIP.z
 1. проверка заполнения всех полей перед переходом к следующему кадру
 2. в конце обнулить arrZd = [];
-
 */
