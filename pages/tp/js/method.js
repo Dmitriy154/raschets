@@ -159,8 +159,14 @@ function rectXY (x1, x2, x3, y1, y2, y3, r, a) {
 }
 
 //метод добавления текста в canvas
-function addTextToCanvas (text, x, y) {
-    let t = new createjs.Text(text, "10x Arial", "#000");
+function addTextToCanvas (text, x, y, style, color) {
+    let t;
+    if (style && color ) {
+        t = new createjs.Text(text, style, color);
+    } else {
+        //стиль по умолчанию
+        t = new createjs.Text(text, "13x Arial", "#000");
+    }
     t.x = x;
     t.y = y;
     _stage.addChild(t);
@@ -176,7 +182,6 @@ function drawLine (x1, y1, x2, y2, width, color){
     line.graphics.lineTo(x2, y2);
     line.graphics.endStroke();
 }
-
 
 //СТРОКА ИЗЛУЧАЮЩАЯ ПОВЕРХНОСТЬ --- добавляем ИП --- создаем объект ip
 function createIP(){
@@ -284,9 +289,6 @@ function drawCanvas(w, h){
 
 //рисуем ИП и рассчитываем коэффициента угловой облученности
 function drawIP(stage) {
-    //рисуем координатные оси
-    drawLine(stage.xn, 0, stage.xn, stage.h, 1, '#0f1');
-    drawLine(0, stage.yn, stage.w, stage.yn, 1, '#0f1');
 
     //определяем общий коэффициент облученности для сцены
     stage.phi = 0;
@@ -346,14 +348,20 @@ function drawIP(stage) {
         }
     }); //перебор всех ИП
 
-    addTextToCanvas('0', stage.xn + 2, stage.yn-12); //ноль
+    //рисуем координатные оси
+    drawLine(stage.xn, 0, stage.xn, stage.h, 1, '#0f1');
+    drawLine(0, stage.yn, stage.w, stage.yn, 1, '#0f1');
+
+    addTextToCanvas('0', stage.xn - 8, stage.yn + 4); //ноль
 
     //рисуем точку X
     let pointX = new createjs.Shape();
-    pointX.graphics.beginFill("Red").drawCircle(0, 0, 5);
+    pointX.graphics.beginFill("Red").drawCircle(0, 0, 4);
     pointX.x = stage.xn + arrIP.x*stage.step;
     pointX.y = stage.yn - arrIP.y*stage.step;
     stage.addChild(pointX);
+    //точка Х
+    addTextToCanvas("Х", pointX.x + 6, pointX.y - 9, "bold 18px Arial", "#f00")
 
     //рисуем шкалу  и обозначаем оси
     
@@ -376,3 +384,39 @@ function calcQ (stage){
     stage.update();
 }
 
+//максимальное значение X (проходим по клеткам и символом подсвечиваем место, где будем максимальное значение коэффициента облучения)
+function searchMaxX(minX, maxX, minY, maxY) {
+    
+    //находим центр зоны расчета и определяем шаг (50%)
+    let cx = (maxX-minX)/2;
+    let cy = (maxY-minY)/2;
+    let step = (maxX-cx)*0.25; //процент 25%, постепенно уменьшается
+
+    //делаем измерение в 5 точках и сравниваем результаты
+    //phi = searchPhi(cx, cy); //центр
+
+    let p0 = {x: cx, y: cy};
+    let p1 = {x: cx + step, y: cy};
+    let p2 = {x: cx, y: cy - step};
+    let p3 = {x: cx - step, y: cy + step};
+    let p4 = {x: cx, y: cy};
+    
+    searchPoint (cx, cy, step); //запускаем рукурсивную функцию с поиском нужной точки с максимальным phi
+
+}
+
+//вспомогательная функция, параметры точки для которой делается расчет
+function searchPhi (x, y){
+    let phi = 0;
+    arrIP.forEach((ip, i, arr)=>{
+        ip.phi = +rectXY(ip.x, ip.x + ip.w, x, ip.y, ip.y + ip.h, y, ip.r, ip.a).toFixed(3);
+        phi += ip.phi;
+        phi = Math.round(phi*1000)/1000;
+    });
+    return phi;
+}
+
+function searchPoint (x, y, step) {
+    
+
+}
