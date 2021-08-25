@@ -393,16 +393,7 @@ function searchMaxX(minX, maxX, minY, maxY) {
     let step = (maxX-cx)*0.25; //процент 25%, постепенно уменьшается
 
     //делаем измерение в 5 точках и сравниваем результаты
-    //phi = searchPhi(cx, cy); //центр
-
-    let p0 = {x: cx, y: cy};
-    let p1 = {x: cx + step, y: cy};
-    let p2 = {x: cx, y: cy - step};
-    let p3 = {x: cx - step, y: cy + step};
-    let p4 = {x: cx, y: cy};
-    
     searchPoint (cx, cy, step); //запускаем рукурсивную функцию с поиском нужной точки с максимальным phi
-
 }
 
 //вспомогательная функция, параметры точки для которой делается расчет
@@ -416,7 +407,27 @@ function searchPhi (x, y){
     return phi;
 }
 
-function searchPoint (x, y, step) {
+function searchPoint (x, y, st) {
+    let px = x; 
+    let py = y;
+    let step = st;
     
-
+    if (searchPhi(px + step,py) > searchPhi(px, py)) {
+        //точка 1 больше
+        px +=step;
+    } else if (searchPhi(px,py + step) > searchPhi(px, py)){
+        //точка 2 больше
+        py +=step;
+    } else if (searchPhi(px - step,py) > searchPhi(px, py)){
+        //точка 3 больше
+        py -=step;
+    } else if (searchPhi(px,py - step) > searchPhi(px, py)){
+        //точка 4 больше
+        py +=step;
+    } else {
+        //точка 0 больше крайних значений
+        step *= 0.75;
+        if (step < 0.5) return searchPhi (x,y,step);
+    }
+    searchPoint (px, py, step);
 }
