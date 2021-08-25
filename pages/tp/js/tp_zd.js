@@ -34,15 +34,16 @@ constructor(num, _stage) {
                             this.tip = _tip;
                
                     //адрес
-                    let divAdr = cr(row_zd_1, 'div', 'col-sm-5 m-1 p-0');
+                    let divAdr = cr(row_zd_1, 'div', 'col-sm-4 m-1 p-0');
                         let _adr = cr(divAdr, 'input', 'form-control');
                         _adr.setAttribute('placeholder', 'Адрес здания (без названия нас. пункта)');
                             this.address = _adr;
 
                     //материал стен
-                    let divMat = cr(row_zd_1, 'div', 'col-sm-3 m-1 p-0');
+                    let divMat = cr(row_zd_1, 'div', 'col-sm-4 m-1 p-0');
                         let _mat = cr(divMat, 'input', 'form-control');
-                        _mat.setAttribute('placeholder', 'Материал стен (отделка)');
+                        _mat.setAttribute('placeholder', 'Материал стен (отделка) - буква');
+                        _mat.title = "д - деревянные, к - кирпич, б - блочные, м - металлические, с - сайдинг (полиэтилен)";
                             this.walls = _mat;                           
 
 
@@ -68,4 +69,6 @@ constructor(num, _stage) {
 
 
 }//конструктор
+
+
 }//class

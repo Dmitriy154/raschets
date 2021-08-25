@@ -8,8 +8,8 @@ function build_kadr_1(){
             
             //населенный пункт расчета
             let div_city = cr(row1, 'div', 'col-sm-4 m-1 p-0');
-                let _city = cr(div_city, 'input', 'form-control');
-                _city.setAttribute('placeholder', 'Населенный пункт');          
+                city = cr(div_city, 'input', 'form-control');
+                city.setAttribute('placeholder', 'Населенный пункт');          
         
             //адрес расчета
             let div_address = cr(row1, 'div', 'col-sm-4 m-1 p-0');
@@ -18,15 +18,15 @@ function build_kadr_1(){
 
             //Дата расчета
             let div_date = cr(row1, 'div', 'col-sm-3 m-1 p-0');
-                let _date = cr(div_date, 'input', 'form-control');
-                    _date.type = 'date';
+                dateTP = cr(div_date, 'input', 'form-control');
+                    dateTP.type = 'date';
                   
         let row2 = cr(divForm, 'div', 'row');
             //Примечание
             let div_note = cr(row2, 'div', 'form-group w-100 m-1');
                 let _note = cr(div_note, 'textarea', 'form-control');
                 _note.setAttribute('rows', '1');
-                _note.setAttribute('placeholder', 'Примечание для расчета (наличие забора, защита элементов)');
+                _note.setAttribute('placeholder', 'Примечание для расчета (наличие забора, защита элементов, пож. отсек)');
         
 
         //блок для зданий
@@ -158,6 +158,7 @@ function build_kadr_4(){
 
     let _stage4 = cr(stage,'div', 'container-xl mt-2');
         _stage4.id = '_stage4';
+
 
         //НАПРАВЛЕНИЕ РАСЧЕТА И РАССТОЯНИЕ
         let divrow1 = cr(_stage4, 'div', 'row');
