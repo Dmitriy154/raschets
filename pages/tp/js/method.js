@@ -183,90 +183,7 @@ function drawLine (x1, y1, x2, y2, width, color){
     line.graphics.endStroke();
 }
 
-//СТРОКА ИЗЛУЧАЮЩАЯ ПОВЕРХНОСТЬ --- добавляем ИП --- создаем объект ip
-function createIP(){
-    
-    let divrow3 = cr(_stage4, 'div', 'row pt-1');
 
-        //поместить нарисованный канвас после кнопи
-        if (typeof div_canvas !== 'undefined') _stage4.append (div_canvas);
-        //div_canvas.remove();
-        //div_canvas.before(stage.querySelector('div.row_bt_sh'));
-
-        //поместить divrow3 до кнопки СХЕМА ИП
-        divrow3.after(stage.querySelector('div.row_bt_sh'));
-        
-        let div31 = cr(divrow3, 'div', 'col-2 mt-auto');
-            div31.innerHTML += `<h6>Излучающая поверхность: </h6>`;
-
-        let div_w = cr(divrow3, 'div', 'col-sm-1 m-1 p-0');
-            let input_w = cr(div_w, 'input', 'form-control');
-                input_w.setAttribute('placeholder', 'w');  
-                input_w.type = 'number';
-        let div_h = cr(divrow3, 'div', 'col-sm-1 m-1 p-0');
-            let input_h = cr(div_h, 'input', 'form-control');
-                input_h.setAttribute('placeholder', 'h');
-                input_h.type = 'number';
-        let div_r = cr(divrow3, 'div', 'col-sm-1 m-1 p-0');
-            let input_r = cr(div_r, 'input', 'form-control');
-                input_r.setAttribute('placeholder', 'r');
-                input_r.type = 'number';
-        let div_x = cr(divrow3, 'div', 'col-sm-1 m-1 p-0');
-            let input_x = cr(div_x, 'input', 'form-control');
-                input_x.setAttribute('placeholder', 'x');
-                input_x.type = 'number';
-        let div_y = cr(divrow3, 'div', 'col-sm-1 m-1 p-0');
-            let input_y = cr(div_y, 'input', 'form-control');
-                input_y.setAttribute('placeholder', 'y');
-                input_y.type = 'number';
-        let div_a = cr(divrow3, 'div', 'col-sm-1 m-1 p-0');
-            let input_а = cr(div_a, 'input', 'form-control');
-                input_а.setAttribute('placeholder', 'angle');
-                input_а.setAttribute('title', '0 - параллельно; 90 - перпендикулярно, 45 - под углом 45 град (не более 180)');
-                input_а.type = 'number';
-
-        //копка добавить ИП       
-        let div_bt = cr(divrow3, 'div', 'col-sm-1 m-1 p-0');
-            let bt_ip = cr(div_bt, 'button', 'btn btn-info btn-sm mt-1 w-75', '+ИП');
-                bt_ip.type = 'button';
-
-        //крестик удаление 
-            let bt_close = cr(divrow3, 'button', 'close');
-                bt_close.setAttribute('aria-label', 'Close');
-                bt_close.type = 'button';
-                bt_close.innerHTML = `<span class="center" aria-hidden="true">&times;</span>`;
-               
-               
-        //ИЗЛУЧАЮЩАЯ ПОВЕРХНОСТЬ
-        let ip = {};
-            ip.i_w = input_w;
-            ip.i_h = input_h;
-            ip.i_r = input_r;
-            ip.i_x = input_x;
-            ip.i_y = input_y;
-            ip.i_а = input_а;
-            arrIP.push(ip);
-             
-        //Добавить ИП
-        bt_ip.addEventListener('click', (e)=>{
-            e.currentTarget.hidden = true;
-            createIP();
-        }); 
-
-        //удаление ИП
-        bt_close.addEventListener('click', (e)=>{
-            if(arrIP.length == 1) return;
-            let num = arrIP.indexOf(ip); //номер удаляемого объекта в массиве
-            arrIP.splice(num, 1); // удаляем один объект в массиве
-            
-            /////если удаляется последняя добавленная ИП, то ищем предыдущую
-            if (!bt_close.previousSibling.firstChild.hidden) bt_close.parentNode.previousSibling.querySelector('button.btn-info').hidden = false;
-
-            bt_close.parentNode.remove();
-            let clickEvent = new Event('click'); // создаем событие клика
-            bt_sh.dispatchEvent(clickEvent); // имитируем клик на кнопку схема ИП для обновления данных
-        });
-} // createIP() kadr 4
 
 
 function drawCanvas(w, h){
@@ -403,36 +320,56 @@ function searchPoint (x, y, st) {
     let px = x; 
     let py = y;
     let step = st;
+
+    console.log('x: ' + x);
+    console.log('y: ' + y);
+    console.log('step: ' + step);
     
-    
+
     if (searchPhi(px + step,py) > searchPhi(px, py)) {
         //точка 1 больше
+        console.log('точка 1');
         px +=step;
-    } else if (searchPhi(px,py + step) > searchPhi(px, py)){
+    } else if (searchPhi(px,py - step) > searchPhi(px, py)){
         //точка 2 больше
-        py +=step;
+        console.log('точка 2');
+        console.log(searchPhi(px,py - step) > searchPhi(px, py));
+        py -=step;
     } else if (searchPhi(px - step,py) > searchPhi(px, py)){
         //точка 3 больше
-        py -=step;
-    } else if (searchPhi(px,py - step) > searchPhi(px, py)){
+        console.log('точка 3');
+        px -=step;
+    } else if (searchPhi(px,py + step) > searchPhi(px, py)){
         //точка 4 больше
+        console.log('точка 4');
         py +=step;
     } else {
         //точка 0 больше крайних значений
+        console.log('точка 5');
+        console.log(searchPhi(px,py - step) > searchPhi(px, py));
         step *= 0.5;
-        if (step < 0.4) {
+        if (step < 0.2) {
+
+            console.log('точка 6');
+            console.log('step: ' + step);
+
             pointMaxX.x = px;
             pointMaxX.y = py;
             pointMaxX.phi = searchPhi (px,py,step);
             return; 
         }
     }
+
     searchPoint (px, py, step);
+
 }
 
 //вспомогательная функция, параметры точки для которой делается расчет
 function searchPhi (x, y){
     let phi = 0;
+    
+   // console.dir(arrIP);
+
     arrIP.forEach((ip, i, arr)=>{
         ip.phi = +rectXY(ip.x, ip.x + ip.w, x, ip.y, ip.y + ip.h, y, ip.r, ip.a).toFixed(3);
         phi += ip.phi;
