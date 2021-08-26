@@ -287,7 +287,7 @@ function drawCanvas(w, h){
     return stage;
 }
 
-//рисуем ИП и рассчитываем коэффициента угловой облученности
+//рисуем ИП, точку Х и рассчитываем коэффициента угловой облученности
 function drawIP(stage) {
 
     //определяем общий коэффициент облученности для сцены
@@ -363,8 +363,23 @@ function drawIP(stage) {
     //точка Х
     addTextToCanvas("Х", pointX.x + 6, pointX.y - 9, "bold 18px Arial", "#f00")
 
-    //рисуем шкалу  и обозначаем оси
+    //ищем точку с максимальным угловым коэффициентом
+    //находим центр зоны расчета и определяем шаг (50%)
+    let cx = stage.zonaW/2;
+    let cy = stage.zonaH/2;
+    let step = (stage.maxX-cx)*0.25; //процент 25%, постепенно уменьшается
+    //делаем измерение в 5 точках и сравниваем результаты и движемся к нужной точке. И рисуем точку
+    searchPoint (cx, cy, step); //запускаем рукурсивную функцию с поиском нужной точки с максимальным phi
     
+    //рисуем точку с максм. значением Х
+    let pmax = new createjs.Shape();
+    pmax.graphics.beginFill("#ff0").drawCircle(0, 0, 2);
+    pmax.x = stage.xn + pointMaxX.x*stage.step;
+    pmax.y = stage.yn - pointMaxX.y*stage.step;
+    stage.addChild(pmax);
+    //точка maxХ
+    //addTextToCanvas(pointMaxX.phi, pmax.x + 6, pmax.y - 9, "8px Arial", "#f85");
+    console.log(pointMaxX); 
 }
 
 //расчет углового коэфф. и интенсивности облучения, помещение данных в канвас
@@ -384,33 +399,11 @@ function calcQ (stage){
     stage.update();
 }
 
-//максимальное значение X (проходим по клеткам и символом подсвечиваем место, где будем максимальное значение коэффициента облучения)
-function searchMaxX(minX, maxX, minY, maxY) {
-    
-    //находим центр зоны расчета и определяем шаг (50%)
-    let cx = (maxX-minX)/2;
-    let cy = (maxY-minY)/2;
-    let step = (maxX-cx)*0.25; //процент 25%, постепенно уменьшается
-
-    //делаем измерение в 5 точках и сравниваем результаты
-    searchPoint (cx, cy, step); //запускаем рукурсивную функцию с поиском нужной точки с максимальным phi
-}
-
-//вспомогательная функция, параметры точки для которой делается расчет
-function searchPhi (x, y){
-    let phi = 0;
-    arrIP.forEach((ip, i, arr)=>{
-        ip.phi = +rectXY(ip.x, ip.x + ip.w, x, ip.y, ip.y + ip.h, y, ip.r, ip.a).toFixed(3);
-        phi += ip.phi;
-        phi = Math.round(phi*1000)/1000;
-    });
-    return phi;
-}
-
 function searchPoint (x, y, st) {
     let px = x; 
     let py = y;
     let step = st;
+    
     
     if (searchPhi(px + step,py) > searchPhi(px, py)) {
         //точка 1 больше
@@ -426,8 +419,25 @@ function searchPoint (x, y, st) {
         py +=step;
     } else {
         //точка 0 больше крайних значений
-        step *= 0.75;
-        if (step < 0.5) return searchPhi (x,y,step);
+        step *= 0.5;
+        if (step < 0.4) {
+            pointMaxX.x = px;
+            pointMaxX.y = py;
+            pointMaxX.phi = searchPhi (px,py,step);
+            return; 
+        }
     }
     searchPoint (px, py, step);
 }
+
+//вспомогательная функция, параметры точки для которой делается расчет
+function searchPhi (x, y){
+    let phi = 0;
+    arrIP.forEach((ip, i, arr)=>{
+        ip.phi = +rectXY(ip.x, ip.x + ip.w, x, ip.y, ip.y + ip.h, y, ip.r, ip.a).toFixed(3);
+        phi += ip.phi;
+        phi = Math.round(phi*1000)/1000;
+    });
+    return phi;
+}
+
