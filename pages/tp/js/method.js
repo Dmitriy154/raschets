@@ -18,7 +18,7 @@ function phi_0 (w,h,r) {
     let a = h/r;
     let b = w/r;
     let phi =  1/(2*Math.PI)*(a/Math.sqrt(1+a*a)*Math.atan(b/Math.sqrt(1+a*a)) + b/Math.sqrt(1+b*b)*Math.atan(a/Math.sqrt(1+b*b)));
-    return +phi.toFixed(3);
+    return +phi.toFixed(4);
 }
 
 //ПЕРПЕНДИКУЛЯРНО
@@ -26,7 +26,7 @@ function phi_90 (w,h,r){
     let a = h/r;
     let b = w/r;
     let phi =  1/(2*Math.PI)*(Math.atan(a) - 1/Math.sqrt(1+b*b)*Math.atan(a/Math.sqrt(1+b*b)));
-    return +phi.toFixed(3); 
+    return +phi.toFixed(4); 
 }
 
 //ПОД УГЛОМ
@@ -43,7 +43,7 @@ function phi_a (w,h,r,angle){
 
     let phi =  1/(2*Math.PI)*(Math.atan(a) - (1-b*cos)/bbcos*Math.atan(a/bbcos) + a*cos/asin*(Math.atan((b-cos)/asin) + Math.atan(cos/asin)));
  
-    return +phi.toFixed(3); 
+    return +phi.toFixed(4); 
 }
 
 //расчет коэфф. для одной ИП!
@@ -321,10 +321,12 @@ function searchPoint (x, y, st) {
     let py = y;
     let step = st;
 
-    console.log('x: ' + x);
-    console.log('y: ' + y);
-    console.log('step: ' + step);
-    
+    console.log('0) x: ' + x + '; y: ' + y + ' step: ' + step + '; px: ' + px + '; py: ' + py);
+    console.log('(px, py): ' + searchPhi(px, py));
+    console.log('1 -- (px + step,py): ' + searchPhi(px + step,py));
+    console.log('2 -- (px,py - step) :' + searchPhi(px,py - step));
+    console.log('3 -- (px - step,py): ' + searchPhi(px - step,py));
+    console.log('4 -- (px,py + step) :' + searchPhi(px,py + step));
 
     if (searchPhi(px + step,py) > searchPhi(px, py)) {
         //точка 1 больше
@@ -333,8 +335,9 @@ function searchPoint (x, y, st) {
     } else if (searchPhi(px,py - step) > searchPhi(px, py)){
         //точка 2 больше
         console.log('точка 2');
-        console.log(searchPhi(px,py - step) > searchPhi(px, py));
-        py -=step;
+        console.log('1) y: ' + py + ' step: ' + step);
+        py -= step;
+        console.log('2) y: ' + py + ' step: ' + step);
     } else if (searchPhi(px - step,py) > searchPhi(px, py)){
         //точка 3 больше
         console.log('точка 3');
@@ -346,7 +349,6 @@ function searchPoint (x, y, st) {
     } else {
         //точка 0 больше крайних значений
         console.log('точка 5');
-        console.log(searchPhi(px,py - step) > searchPhi(px, py));
         step *= 0.5;
         if (step < 0.2) {
 
@@ -371,10 +373,11 @@ function searchPhi (x, y){
    // console.dir(arrIP);
 
     arrIP.forEach((ip, i, arr)=>{
-        ip.phi = +rectXY(ip.x, ip.x + ip.w, x, ip.y, ip.y + ip.h, y, ip.r, ip.a).toFixed(3);
+        ip.phi = +rectXY(ip.x, ip.x + ip.w, x, ip.y, ip.y + ip.h, y, ip.r, ip.a).toFixed(5);
         phi += ip.phi;
-        phi = Math.round(phi*1000)/1000;
+        phi = Math.round(phi*100000)/100000;
     });
+
     return phi;
 }
 
