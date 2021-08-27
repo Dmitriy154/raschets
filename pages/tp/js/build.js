@@ -131,7 +131,7 @@ function build_kadr_3(){
 
     let btn_next1 = cr(row_btns, 'button', 'btn btn-success btn-sm m-2', 'Продолжить расчет');
         btn_next1.type = 'button';
-        btn_next1.id = 'btn_next1';   
+        btn_next1.id = 'btn_next1'; 
 }////////////////////////////////// 3 
 
 //cоздаем строку и заполняем адреса
