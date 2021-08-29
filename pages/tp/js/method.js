@@ -321,12 +321,12 @@ function searchPoint (x, y, st) {
     let py = y;
     let step = st;
 
-    console.log('0) x: ' + x + '; y: ' + y + ' step: ' + step + '; px: ' + px + '; py: ' + py);
-    console.log('(px, py): ' + searchPhi(px, py));
-    console.log('1 -- (px + step,py): ' + searchPhi(px + step,py));
-    console.log('2 -- (px,py - step) :' + searchPhi(px,py - step));
-    console.log('3 -- (px - step,py): ' + searchPhi(px - step,py));
-    console.log('4 -- (px,py + step) :' + searchPhi(px,py + step));
+    // console.log('0) x: ' + x + '; y: ' + y + ' step: ' + step + '; px: ' + px + '; py: ' + py);
+    // console.log('(px, py): ' + searchPhi(px, py));
+    // console.log('1 -- (px + step,py): ' + searchPhi(px + step,py));
+    // console.log('2 -- (px,py - step) :' + searchPhi(px,py - step));
+    // console.log('3 -- (px - step,py): ' + searchPhi(px - step,py));
+    // console.log('4 -- (px,py + step) :' + searchPhi(px,py + step));
 
     if (searchPhi(px + step,py) > searchPhi(px, py)) {
         //точка 1 больше
