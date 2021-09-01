@@ -7,6 +7,7 @@ function cr (_parent, _tagName, _class, _textContent) {
     return elem; 
 }
 
+
 //номер кадра
 function chK(num){
     myTitle.textContent = 'Кадр № ' + num;
@@ -18,7 +19,7 @@ function phi_0 (w,h,r) {
     let a = h/r;
     let b = w/r;
     let phi =  1/(2*Math.PI)*(a/Math.sqrt(1+a*a)*Math.atan(b/Math.sqrt(1+a*a)) + b/Math.sqrt(1+b*b)*Math.atan(a/Math.sqrt(1+b*b)));
-    return +phi.toFixed(4);
+    return +phi.toFixed(5);
 }
 
 //ПЕРПЕНДИКУЛЯРНО
@@ -26,7 +27,7 @@ function phi_90 (w,h,r){
     let a = h/r;
     let b = w/r;
     let phi =  1/(2*Math.PI)*(Math.atan(a) - 1/Math.sqrt(1+b*b)*Math.atan(a/Math.sqrt(1+b*b)));
-    return +phi.toFixed(4); 
+    return +phi.toFixed(5); 
 }
 
 //ПОД УГЛОМ
@@ -43,7 +44,7 @@ function phi_a (w,h,r,angle){
 
     let phi =  1/(2*Math.PI)*(Math.atan(a) - (1-b*cos)/bbcos*Math.atan(a/bbcos) + a*cos/asin*(Math.atan((b-cos)/asin) + Math.atan(cos/asin)));
  
-    return +phi.toFixed(4); 
+    return +phi.toFixed(5); 
 }
 
 //расчет коэфф. для одной ИП!
@@ -183,11 +184,12 @@ function drawLine (x1, y1, x2, y2, width, color){
     line.graphics.endStroke();
 }
 
-
-
-
 function drawCanvas(w, h){
-    let div_canvas = cr(_stage4,'div','row justify-content-center');
+    w<150 ? w=150 : w=w;
+    h<150 ? h=150 : h=h;
+
+
+    let div_canvas = cr(divrow5,'div','row justify-content-center');
         div_canvas.id = 'div_canvas';
 
     let canvas = cr(div_canvas,'canvas');
@@ -204,7 +206,7 @@ function drawCanvas(w, h){
     return stage;
 }
 
-//рисуем ИП, точку Х и рассчитываем коэффициента угловой облученности
+//рисуем ИП, оси, точку Х и рассчитываем коэффициента угловой облученности, точку с макс. излучением
 function drawIP(stage) {
 
     //определяем общий коэффициент облученности для сцены
@@ -222,7 +224,7 @@ function drawIP(stage) {
         if (ip.a == '0') rasp = "паралл.";
         if (ip.a == '90') rasp = "перп.";
 
-       ip.phi = +rectXY(ip.x, ip.x + ip.w, arr.x, ip.y, ip.y + ip.h, arr.y, ip.r, ip.a).toFixed(3);
+        ip.phi = +rectXY(ip.x, ip.x + ip.w, arr.x, ip.y, ip.y + ip.h, arr.y, ip.r, ip.a).toFixed(3);
 
         stage.phi += ip.phi;
         stage.phi = Math.round(stage.phi*1000)/1000;
@@ -294,9 +296,8 @@ function drawIP(stage) {
     pmax.x = stage.xn + pointMaxX.x*stage.step;
     pmax.y = stage.yn - pointMaxX.y*stage.step;
     stage.addChild(pmax);
-    //точка maxХ
     //addTextToCanvas(pointMaxX.phi, pmax.x + 6, pmax.y - 9, "8px Arial", "#f85");
-    console.log(pointMaxX); 
+    console.log(pointMaxX);  
 }
 
 //расчет углового коэфф. и интенсивности облучения, помещение данных в канвас
@@ -321,49 +322,30 @@ function searchPoint (x, y, st) {
     let py = y;
     let step = st;
 
-    // console.log('0) x: ' + x + '; y: ' + y + ' step: ' + step + '; px: ' + px + '; py: ' + py);
-    // console.log('(px, py): ' + searchPhi(px, py));
-    // console.log('1 -- (px + step,py): ' + searchPhi(px + step,py));
-    // console.log('2 -- (px,py - step) :' + searchPhi(px,py - step));
-    // console.log('3 -- (px - step,py): ' + searchPhi(px - step,py));
-    // console.log('4 -- (px,py + step) :' + searchPhi(px,py + step));
 
     if (searchPhi(px + step,py) > searchPhi(px, py)) {
         //точка 1 больше
-        console.log('точка 1');
         px +=step;
     } else if (searchPhi(px,py - step) > searchPhi(px, py)){
         //точка 2 больше
-        console.log('точка 2');
-        console.log('1) y: ' + py + ' step: ' + step);
         py -= step;
-        console.log('2) y: ' + py + ' step: ' + step);
     } else if (searchPhi(px - step,py) > searchPhi(px, py)){
         //точка 3 больше
-        console.log('точка 3');
         px -=step;
     } else if (searchPhi(px,py + step) > searchPhi(px, py)){
         //точка 4 больше
-        console.log('точка 4');
         py +=step;
     } else {
         //точка 0 больше крайних значений
-        console.log('точка 5');
         step *= 0.5;
-        if (step < 0.2) {
-
-            console.log('точка 6');
-            console.log('step: ' + step);
-
+        if (step < 0.1) {
             pointMaxX.x = px;
             pointMaxX.y = py;
             pointMaxX.phi = searchPhi (px,py,step);
             return; 
         }
     }
-
     searchPoint (px, py, step);
-
 }
 
 //вспомогательная функция, параметры точки для которой делается расчет
