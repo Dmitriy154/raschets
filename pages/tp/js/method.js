@@ -322,21 +322,33 @@ function searchPoint (x, y, st) {
     let py = y;
     let step = st;
 
+   // console.log('px = ' + px + '; py = ' + py + '; step = ' + step);
+    let phiNum = [searchPhi(px, py), searchPhi(px + step,py), searchPhi(px,py - step), searchPhi(px - step,py), searchPhi(px,py + step)];
+    let way = phiNum.indexOf(Math.max(...phiNum)); // путь 1 - направо, 2 - вниз, 3 - влево, 4 - вверх, 5 - центр
+
+    /////ТУТ
+
+
 
     if (searchPhi(px + step,py) > searchPhi(px, py)) {
         //точка 1 больше
+        console.log('т.1 - вправо');
         px +=step;
     } else if (searchPhi(px,py - step) > searchPhi(px, py)){
         //точка 2 больше
+        console.log('т.2 - вниз');
         py -= step;
     } else if (searchPhi(px - step,py) > searchPhi(px, py)){
         //точка 3 больше
+        console.log('т.3 - влево');
         px -=step;
     } else if (searchPhi(px,py + step) > searchPhi(px, py)){
         //точка 4 больше
+        console.log('т.4 - вверх');
         py +=step;
     } else {
         //точка 0 больше крайних значений
+        console.log('т.0 - центр');
         step *= 0.5;
         if (step < 0.1) {
             pointMaxX.x = px;
@@ -345,7 +357,7 @@ function searchPoint (x, y, st) {
             return; 
         }
     }
-    searchPoint (px, py, step);
+   // searchPoint (px, py, step);
 }
 
 //вспомогательная функция, параметры точки для которой делается расчет

@@ -224,8 +224,8 @@ function kadr4(){
         let h_canvas = (zonaH*step*2 > step*(1.5*zonaH + minY)) ? zonaH*step*2 : step*(1.5*zonaH + minY) + 10; //чтобы была видна нижняя ось Х
         _stage = drawCanvas(zonaW*step *2, h_canvas); //добавляем canvas, возвращаем stage (createjs)
         _stage.step = step;
-        _stage.xn = step*(0.5*zonaW - minX); //координаты 0,0 (!!!)      
-        _stage.yn = step*(1.5*zonaH + minY);
+        _stage.xn = (step*(0.5*zonaW - minX) < 0.1) ? 50 : step*(0.5*zonaW - minX); //координаты 0,0 (!!!)    -- добавил 50 без теста , чтобы видна была ось Y  
+        _stage.yn = step*(1.5*zonaH + minY) - 10;
         _stage.minX = minX;
         _stage.minY = minY;
         _stage.maxX = maxX;
