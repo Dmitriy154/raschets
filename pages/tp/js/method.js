@@ -185,9 +185,12 @@ function drawLine (x1, y1, x2, y2, width, color){
 }
 
 function drawCanvas(w, h){
+    console.log('w: ' + w + '; h: ' + h);
+
     w<150 ? w=150 : w=w;
     h<150 ? h=150 : h=h;
 
+    console.log('w: ' + w + '; h: ' + h);
 
     let div_canvas = cr(divrow5,'div','row justify-content-center');
         div_canvas.id = 'div_canvas';
@@ -286,7 +289,7 @@ function drawIP(stage) {
     //находим центр зоны расчета и определяем шаг (50%)
     let cx = stage.zonaW/2;
     let cy = stage.zonaH/2;
-    let step = (stage.maxX-cx)*0.25; //процент 25%, постепенно уменьшается
+    let step = (stage.maxX-cx)*0.3; //процент 30%, постепенно уменьшается
     //делаем измерение в 5 точках и сравниваем результаты и движемся к нужной точке. И рисуем точку
     searchPoint (cx, cy, step); //запускаем рукурсивную функцию с поиском нужной точки с максимальным phi
     
@@ -318,47 +321,65 @@ function calcQ (stage){
 }
 
 function searchPoint (x, y, st) {
+    
     let px = x; 
     let py = y;
     let step = st;
 
-   // console.log('px = ' + px + '; py = ' + py + '; step = ' + step);
-    let phiNum = [searchPhi(px, py), searchPhi(px + step,py), searchPhi(px,py - step), searchPhi(px - step,py), searchPhi(px,py + step)];
-    let way = phiNum.indexOf(Math.max(...phiNum)); // путь 1 - направо, 2 - вниз, 3 - влево, 4 - вверх, 5 - центр
+    if (searchPoint.count > 0) {
 
-    /////ТУТ
+        if (searchPhi(px + step,py) > searchPhi(px, py)) {
+            //точка 1 больше
+            px +=step;
+        } else if (searchPhi(px,py - step) > searchPhi(px, py)){
+            //точка 2 больше
+            py -= step;
+        } else if (searchPhi(px - step,py) > searchPhi(px, py)){
+            //точка 3 больше
+            px -=step;
+        } else if (searchPhi(px,py + step) > searchPhi(px, py)){
+            //точка 4 больше
+            py +=step;
+        } else {
+            //точка 0 больше крайних значений
+            console.log('т.0 - центр');
+            step *= 0.5;
+            if (step < 0.1) {
+                pointMaxX.x = px;
+                pointMaxX.y = py;
+                pointMaxX.phi = searchPhi (px,py,step);
+                return; 
+            }
+        }
 
-
-
-    if (searchPhi(px + step,py) > searchPhi(px, py)) {
-        //точка 1 больше
-        console.log('т.1 - вправо');
-        px +=step;
-    } else if (searchPhi(px,py - step) > searchPhi(px, py)){
-        //точка 2 больше
-        console.log('т.2 - вниз');
-        py -= step;
-    } else if (searchPhi(px - step,py) > searchPhi(px, py)){
-        //точка 3 больше
-        console.log('т.3 - влево');
-        px -=step;
-    } else if (searchPhi(px,py + step) > searchPhi(px, py)){
-        //точка 4 больше
-        console.log('т.4 - вверх');
-        py +=step;
     } else {
-        //точка 0 больше крайних значений
-        console.log('т.0 - центр');
-        step *= 0.5;
-        if (step < 0.1) {
-            pointMaxX.x = px;
-            pointMaxX.y = py;
-            pointMaxX.phi = searchPhi (px,py,step);
-            return; 
+        //определяем основное направление движения точки
+        console.log('определение пути');
+        // console.log('px = ' + px + '; py = ' + py + '; step = ' + step);
+        let phiNum = [searchPhi(px, py), searchPhi(px + step,py), searchPhi(px,py - step), searchPhi(px - step,py), searchPhi(px,py + step)];
+
+        let way = phiNum.indexOf(Math.max(...phiNum)); // путь 1 - направо, 2 - вниз, 3 - влево, 4 - вверх, 5 - центр
+
+        if (way == 1) px +=step;
+        if (way == 2) py -= step;
+        if (way == 3) px -=step;
+        if (way == 4) py +=step;
+        if (way == 5) {
+            step *= 0.6;
+            if (step < 0.25) {
+                pointMaxX.x = px;
+                pointMaxX.y = py;
+                pointMaxX.phi = searchPhi (px,py,step);
+                return; 
+            }    
         }
     }
-   // searchPoint (px, py, step);
+
+    searchPoint.count ++;
+    searchPoint (px, py, step);
 }
+searchPoint.count = 0; //начальное значение свойства функции, определяем сколько раз функция вызвана
+
 
 //вспомогательная функция, параметры точки для которой делается расчет
 function searchPhi (x, y){

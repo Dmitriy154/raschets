@@ -230,7 +230,7 @@ function build_kadr_4(){
             let btn_nextN = cr(divrow6, 'button', 'btn btn-success btn-sm m-2', 'Следующее направление');
                 btn_nextN.type = 'button';
                 btn_nextN.id = 'btn_nextN';
-                //btn_nextN.style.display = 'none'; //скрываем элемент
+                btn_nextN.style.display = 'none'; //скрываем элемент
 
 
 

@@ -153,6 +153,9 @@ function kadr4(){
     bt_sh.addEventListener('click', ()=>{
         let error = false; //если есть незаполненные поля
 
+        //сброс счетчика функции для определения максимального Х
+        searchPoint.count = 0;
+
         //если есть canvas то обновить (удалить)
        if (stage.querySelector("canvas")) stage.querySelector("canvas").parentNode.remove();
        _stage = null;
@@ -193,6 +196,7 @@ function kadr4(){
 
          if (error) {
              alert ('Заполните все поля');
+             btn_nextN.style.display = 'none'; // кнопка следующее направление исчезает
              return;
          }
          
@@ -221,8 +225,11 @@ function kadr4(){
 
         if(stepW > stepH) step = stepH; else step = stepW; //масштаб
 
+        console.log(zonaW);
+        console.log(zonaH);
+
         let h_canvas = (zonaH*step*2 > step*(1.5*zonaH + minY)) ? zonaH*step*2 : step*(1.5*zonaH + minY) + 10; //чтобы была видна нижняя ось Х
-        _stage = drawCanvas(zonaW*step *2, h_canvas); //добавляем canvas, возвращаем stage (createjs)
+        _stage = drawCanvas(zonaW*step*3, h_canvas); //добавляем canvas, возвращаем stage (createjs)
         _stage.step = step;
         _stage.xn = (step*(0.5*zonaW - minX) < 0.1) ? 50 : step*(0.5*zonaW - minX); //координаты 0,0 (!!!)    -- добавил 50 без теста , чтобы видна была ось Y  
         _stage.yn = step*(1.5*zonaH + minY) - 10;
@@ -238,26 +245,23 @@ function kadr4(){
         calcQ(_stage); // подсчитываем угловой коэфф. и q, размещаем информацию в канвасе
 
         //кнопка "Следующее направление" (перемещаем после канвас и делаем видимой)
-        
-        btn_nextN.style.display = '';
+        btn_nextN.style.display = ''; //делаем видимой
 
 
-/*
-        bt_sh.addEventListener('click', ()=>{
+        bt_nextN.addEventListener('click', ()=>{
             console.log('hello');
-        });
-*/
-        //ЕСЛИ НАРИСОВАН КАНВАС И НАЖАТЬ СНОВА И СНОВА СХЕМА ИП, ТО ОБРАБОТЧИКОВ УВЕЛИЧИВАЕТСЯ HELLO!!!!!!!
-
 
         //отслеживаем последнее направление и выводим "Далее"
 
-    })//кнопка схема расчета
-   
 
-    
+        });
+
+        
+
+    })//кнопка схема расчета
 
 }//кадр 4
+
 
 
 /*
