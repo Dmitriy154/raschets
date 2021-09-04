@@ -185,12 +185,8 @@ function drawLine (x1, y1, x2, y2, width, color){
 }
 
 function drawCanvas(w, h){
-    console.log('w: ' + w + '; h: ' + h);
-
     w<150 ? w=150 : w=w;
     h<150 ? h=150 : h=h;
-
-    console.log('w: ' + w + '; h: ' + h);
 
     let div_canvas = cr(divrow5,'div','row justify-content-center');
         div_canvas.id = 'div_canvas';
@@ -198,7 +194,7 @@ function drawCanvas(w, h){
     let canvas = cr(div_canvas,'canvas');
         canvas.setAttribute('width', w);
         canvas.setAttribute('height', h);
-        canvas.style = "border:1px solid #ccc;";
+        canvas.style = "border:1px solid #ccc; background: #fff";
         canvas.id = 'canvas';
 
     let stage = new createjs.Stage("canvas");
@@ -342,7 +338,6 @@ function searchPoint (x, y, st) {
             py +=step;
         } else {
             //точка 0 больше крайних значений
-            console.log('т.0 - центр');
             step *= 0.5;
             if (step < 0.1) {
                 pointMaxX.x = px;
@@ -354,8 +349,6 @@ function searchPoint (x, y, st) {
 
     } else {
         //определяем основное направление движения точки
-        console.log('определение пути');
-        // console.log('px = ' + px + '; py = ' + py + '; step = ' + step);
         let phiNum = [searchPhi(px, py), searchPhi(px + step,py), searchPhi(px,py - step), searchPhi(px - step,py), searchPhi(px,py + step)];
 
         let way = phiNum.indexOf(Math.max(...phiNum)); // путь 1 - направо, 2 - вниз, 3 - влево, 4 - вверх, 5 - центр

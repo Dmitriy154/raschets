@@ -8,7 +8,7 @@ let _stage = null; // ссылка на canvas_stage в 4 кадре
 let pointMaxX = {x:0, y:0, phi:0}; //точка с максимальным коэффициентом облученности
 
 //для теста
-napr = [['adr11','adr22', 2],['adr11','adr33', 2],['adr22','adr44', 2],['adr33','adr44', 2]];
+napr = [['adr11','adr22', 2],['adr11','adr33', 3],['adr22','adr44', 4],['adr33','adr44', 5]];
 //kadr1();
 kadr4();
 
@@ -140,6 +140,7 @@ function kadr3() {
 //КАДР 4 - расчет каждого направления
 function kadr4(){
     build_kadr_4();
+    let naprCurrent = 0; // текущее направление
 
 
     //функция анализа координат и размеров ИП и коорд. точки X
@@ -225,9 +226,6 @@ function kadr4(){
 
         if(stepW > stepH) step = stepH; else step = stepW; //масштаб
 
-        console.log(zonaW);
-        console.log(zonaH);
-
         let h_canvas = (zonaH*step*2 > step*(1.5*zonaH + minY)) ? zonaH*step*2 : step*(1.5*zonaH + minY) + 10; //чтобы была видна нижняя ось Х
         _stage = drawCanvas(zonaW*step*3, h_canvas); //добавляем canvas, возвращаем stage (createjs)
         _stage.step = step;
@@ -240,30 +238,36 @@ function kadr4(){
         _stage.zonaH = zonaH;
         _stage.zonaW = zonaW;
 
-
         drawIP(_stage); // рисуем оси, рисуем ИП - считаем / метод в build - рисуем точку Х и точку с макс. значением угл. коэфф.
         calcQ(_stage); // подсчитываем угловой коэфф. и q, размещаем информацию в канвасе
 
         //кнопка "Следующее направление" (перемещаем после канвас и делаем видимой)
-        btn_nextN.style.display = ''; //делаем видимой
-
-
-        bt_nextN.addEventListener('click', ()=>{
-            console.log('hello');
-
-        //отслеживаем последнее направление и выводим "Далее"
-
-
-        });
-
-        
-
+        bt_nextN.style.display = ''; //делаем видимой      
     })//кнопка схема расчета
+
+    bt_nextN.addEventListener('click', ()=>{
+      
+        divNapr.innerHTML = `<h6>Направление расчета: 
+        <span class="text-danger">${napr[naprCurrent+1][0]}</span> &#8594   <span class="text-primary">${napr[naprCurrent+1][1]}</span>. &nbsp
+        Расстояние: <span class="text-info">${napr[naprCurrent+1][2]} м</span>
+        </h6>`;
+
+        //сохраняем данные: направление, ИП, ПП, т.Х и картинку канвас
+        napr[naprCurrent].pp = '';
+        napr[naprCurrent].ip = '';
+        napr[naprCurrent].phi = '';
+        napr[naprCurrent].q = '';
+
+        //canvas???
+
+        console.log(napr);
+        //отслеживаем последнее направление и выводим "Далее"
+        naprCurrent ++;
+    });
 
 }//кадр 4
 
-
-
 /*
+канвас белый фон
 в конце обнулить arrZd = [] обнулить все переменные и массивы
 */

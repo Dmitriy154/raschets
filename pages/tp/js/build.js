@@ -161,7 +161,7 @@ function build_kadr_4(){
         //НАПРАВЛЕНИЕ РАСЧЕТА И РАССТОЯНИЕ
         let divrow1 = cr(_stage4, 'div', 'row');
             let divcol11 = cr(divrow1, 'div', 'col');
-            let namerow = '';
+            divcol11.id = 'divNapr';
             divcol11.innerHTML += `<h6>Направление расчета: 
             <span class="text-danger">${napr[0][0]}</span> &#8594   <span class="text-primary">${napr[0][1]}</span>. &nbsp
             Расстояние: <span class="text-info">${napr[0][2]} м</span>
@@ -229,10 +229,10 @@ function build_kadr_4(){
             //кнопка "следующее направление и продолжить" (скрыта)
             let btn_nextN = cr(divrow6, 'button', 'btn btn-success btn-sm m-2', 'Следующее направление');
                 btn_nextN.type = 'button';
-                btn_nextN.id = 'btn_nextN';
+                btn_nextN.id = 'bt_nextN';
                 btn_nextN.style.display = 'none'; //скрываем элемент
 
-
+     
 
         //СТРОКА ИЗЛУЧАЮЩАЯ ПОВЕРХНОСТЬ --- добавляем ИП --- создаем объект ip
         function createIP(row3){
