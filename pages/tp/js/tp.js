@@ -243,7 +243,7 @@ function kadr4(){
 
         //кнопка "Следующее направление" (перемещаем после канвас и делаем видимой)
         bt_nextN.style.display = ''; //делаем видимой      
-    })//кнопка схема расчета
+    }); //кнопка схема расчета
 
     bt_nextN.addEventListener('click', ()=>{
       
@@ -252,15 +252,59 @@ function kadr4(){
         Расстояние: <span class="text-info">${napr[naprCurrent+1][2]} м</span>
         </h6>`;
 
+        console.log(arrIP);
+
+        //очищаем arrIP
+        arrIP = [];
+        console.log(arrIP);
+
         //сохраняем данные: направление, ИП, ПП, т.Х и картинку канвас
         napr[naprCurrent].pp = '';
         napr[naprCurrent].ip = '';
         napr[naprCurrent].phi = '';
         napr[naprCurrent].q = '';
 
+
         //canvas???
 
-        console.log(napr);
+        /*
+        getImageData()  context.getImageData(x, y, width, height);
+
+var c = document.getElementById('myCanvas')
+var ctx = c.getContext('2d')
+ctx.fillStyle = 'red'
+ctx.fillRect(10, 10, 50, 50)
+
+function copy() {
+  var imgData = ctx.getImageData(10, 10, 50, 50)
+  ctx.putImageData(imgData, 10, 70)
+
+
+или
+
+var c = document.getElementById('myCanvas')
+var ctx = c.getContext('2d')
+var img = document.getElementById('scream')
+ctx.drawImage(img, 0, 0)
+var imgData = ctx.getImageData(0, 0, c.width, c.height)
+
+// инвертироват цвета
+for (var i = 0; i < imgData.data.length; i += 4) {
+  imgData.data[i] = 255 - imgData.data[i]
+  imgData.data[i + 1] = 255 - imgData.data[i + 1]
+  imgData.data[i + 2] = 255 - imgData.data[i + 2]
+  imgData.data[i + 3] = 255
+}
+
+ctx.putImageData(imgData, 0, 0)
+
+
+}
+
+
+        */
+
+        //console.log(napr);
         //отслеживаем последнее направление и выводим "Далее"
         naprCurrent ++;
     });
