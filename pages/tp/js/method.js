@@ -306,9 +306,11 @@ function calcQ (stage){
     if (selectPP.selectedIndex == 4) ev = 0.27; else ev = 0.9; //если выбрана оцинковка, то изменяем степень черноты
 
     Q = Math.round(5.7*Math.pow((1/0.7+1/ev-1),-1)*(Math.pow(12.73,4)-Math.pow(2.78,4))*stage.phi);
-   
+    
     let phi = 'φ = ' + stage.phi;
     let q = 'q = ' + Q;
+
+    stage.q = Q;
 
     addTextToCanvas(phi, 4, 5);
     addTextToCanvas(q, 4, 20);

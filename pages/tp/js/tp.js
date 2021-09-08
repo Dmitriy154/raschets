@@ -2,7 +2,7 @@ let city; //населенный пункт
 let dateTP; // дата расчета
 let arrZd = []; // массив зданий
 let arr = []; //массив номеров зданий облучения [['2','3'],['1'],['1']]
-let napr = []; // двумерный массив [name1, name2, rasst, phi, q]; для кадра 4
+let napr = []; // двумерный массив [name1, name2, rasst, phi, q]; для кадра 4 и общего вывода
 let arrIP = []; // массив ИП, имеет свойства х и у, z (если горизонтальная плоскость (крыша), то z=1) - координаты точки Х 
 let _stage = null; // ссылка на canvas_stage в 4 кадре
 let pointMaxX = {x:0, y:0, phi:0}; //точка с максимальным коэффициентом облученности
@@ -252,62 +252,28 @@ function kadr4(){
         Расстояние: <span class="text-info">${napr[naprCurrent+1][2]} м</span>
         </h6>`;
 
-        console.log(arrIP);
-
-        //очищаем arrIP
-        arrIP = [];
-        console.log(arrIP);
-
         //сохраняем данные: направление, ИП, ПП, т.Х и картинку канвас
-        napr[naprCurrent].pp = '';
-        napr[naprCurrent].ip = '';
-        napr[naprCurrent].phi = '';
-        napr[naprCurrent].q = '';
+        napr[naprCurrent].pp = selectPP.value; //13900
+        napr[naprCurrent].ip = arrIP;
+        napr[naprCurrent].phi = _stage.phi;
+        napr[naprCurrent].q = _stage.q;
+        napr[naprCurrent].imgData = canvas.getContext('2d').getImageData(0, 0, canvas.width, canvas.height);
 
+        //canvas.getContext('2d').putImageData(imgData, x, y)
 
+        console.log(canvas);
+        console.log(napr);
+        
+        arrIP = [];     //очищаем arrIP
+        _stage = null;  //обнуляем со всеми свойствами
         //canvas???
 
-        /*
-        getImageData()  context.getImageData(x, y, width, height);
 
-var c = document.getElementById('myCanvas')
-var ctx = c.getContext('2d')
-ctx.fillStyle = 'red'
-ctx.fillRect(10, 10, 50, 50)
-
-function copy() {
-  var imgData = ctx.getImageData(10, 10, 50, 50)
-  ctx.putImageData(imgData, 10, 70)
-
-
-или
-
-var c = document.getElementById('myCanvas')
-var ctx = c.getContext('2d')
-var img = document.getElementById('scream')
-ctx.drawImage(img, 0, 0)
-var imgData = ctx.getImageData(0, 0, c.width, c.height)
-
-// инвертироват цвета
-for (var i = 0; i < imgData.data.length; i += 4) {
-  imgData.data[i] = 255 - imgData.data[i]
-  imgData.data[i + 1] = 255 - imgData.data[i + 1]
-  imgData.data[i + 2] = 255 - imgData.data[i + 2]
-  imgData.data[i + 3] = 255
-}
-
-ctx.putImageData(imgData, 0, 0)
-
-
-}
-
-
-        */
-
-        //console.log(napr);
         //отслеживаем последнее направление и выводим "Далее"
+
+
         naprCurrent ++;
-    });
+    }); //кнопка СЛЕДУЮЩЕЕ НАПРАВЛЕНИЕ
 
 }//кадр 4
 
