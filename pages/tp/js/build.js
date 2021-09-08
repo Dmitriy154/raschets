@@ -152,19 +152,27 @@ function rasst_stroka(_address1, _address2){
 } 
 
 
-function build_kadr_4(){
+function build_kadr_4(naprCurrent){
     chK(4);
+
+    arrIP = [];     //очищаем arrIP от предыдущих значений, если были
+    _stage = null;  //обнуляем со всеми свойствами, убираем phi, q и др.
+
+    console.log(stage);//проверить наличие и удалить _stage4 /////////////////////////////////////////////////
 
     let _stage4 = cr(stage,'div', 'container-xl mt-2');
         _stage4.id = '_stage4';
+
+        console.log(naprCurrent);
+        console.log(napr[naprCurrent][0]);
 
         //НАПРАВЛЕНИЕ РАСЧЕТА И РАССТОЯНИЕ
         let divrow1 = cr(_stage4, 'div', 'row');
             let divcol11 = cr(divrow1, 'div', 'col');
             divcol11.id = 'divNapr';
             divcol11.innerHTML += `<h6>Направление расчета: 
-            <span class="text-danger">${napr[0][0]}</span> &#8594   <span class="text-primary">${napr[0][1]}</span>. &nbsp
-            Расстояние: <span class="text-info">${napr[0][2]} м</span>
+            <span class="text-danger">${napr[naprCurrent][0]}</span> &#8594   <span class="text-primary">${napr[naprCurrent][1]}</span>. &nbsp
+            Расстояние: <span class="text-info">${napr[naprCurrent][2]} м</span>
             </h6>`;
 
         //ПРИНИМАЮЩАЯ ПОВЕРХНОСТЬ
@@ -197,10 +205,12 @@ function build_kadr_4(){
                 let inputX_x = cr(divcol42, 'input', 'form-control');
                     inputX_x.setAttribute('placeholder', 'x');
                     inputX_x.type = 'number';
+                    inputX_x.id = 'inputX_x';
             let divcol43 = cr(divrow4, 'div', 'col-sm-1 m-1 p-0'); 
                 let inputX_y = cr(divcol43, 'input', 'form-control');
                     inputX_y.setAttribute('placeholder', 'y');
                     inputX_y.type = 'number';
+                    inputX_y.id = 'inputX_y';
 
             //плоскость точки Х (для угловых), например крыша
             let div_gorizont = cr(divrow4, 'div', 'form-check form-check-inlin col-sm-2 m-2 зд-3').innerHTML =`
@@ -213,10 +223,6 @@ function build_kadr_4(){
                     bt_sh.type = 'button';
                     bt_sh.id = 'bt_sh';
             
-            //координаты точки Х делаем как свойства массива arrIP
-            arrIP.ix = inputX_x;
-            arrIP.iy = inputX_y;
-            arrIP.iz = gorizontX;
 
             //создаем строку для помещения canvas
             let divrow5 = cr(_stage4, 'div', 'row justify-content-center');

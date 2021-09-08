@@ -139,9 +139,9 @@ function kadr3() {
 
 //КАДР 4 - расчет каждого направления
 function kadr4(){
-    build_kadr_4();
+    
     let naprCurrent = 0; // текущее направление
-
+    build_kadr_4(naprCurrent);
 
     //функция анализа координат и размеров ИП и коорд. точки X
     let minX, minY; // минимальные значения x  и y  после перебора всех ИП и точки Х
@@ -161,10 +161,11 @@ function kadr4(){
        if (stage.querySelector("canvas")) stage.querySelector("canvas").parentNode.remove();
        _stage = null;
        
+
         //получение координат точки Х
-        arrIP.x = +arrIP.ix.value;
-        arrIP.y = +arrIP.iy.value;
-        arrIP.z = +arrIP.iz.checked; //булевое значение - по умолчанию 0
+        arrIP.x = +inputX_x.value;
+        arrIP.y = +inputX_y.value;
+        arrIP.z = +gorizontX.checked; //булевое значение - по умолчанию 0
 
 
         arrIP.forEach((ip, i)=>{
@@ -227,7 +228,7 @@ function kadr4(){
         if(stepW > stepH) step = stepH; else step = stepW; //масштаб
 
         let h_canvas = (zonaH*step*2 > step*(1.5*zonaH + minY)) ? zonaH*step*2 : step*(1.5*zonaH + minY) + 10; //чтобы была видна нижняя ось Х
-        _stage = drawCanvas(zonaW*step*3, h_canvas); //добавляем canvas, возвращаем stage (createjs)
+        _stage = drawCanvas(zonaW*step*2, h_canvas); //добавляем canvas, возвращаем stage (createjs)
         _stage.step = step;
         _stage.xn = (step*(0.5*zonaW - minX) < 0.1) ? 50 : step*(0.5*zonaW - minX); //координаты 0,0 (!!!)    -- добавил 50 без теста , чтобы видна была ось Y  
         _stage.yn = step*(1.5*zonaH + minY) - 10;
@@ -246,11 +247,8 @@ function kadr4(){
     }); //кнопка схема расчета
 
     bt_nextN.addEventListener('click', ()=>{
-      
-        divNapr.innerHTML = `<h6>Направление расчета: 
-        <span class="text-danger">${napr[naprCurrent+1][0]}</span> &#8594   <span class="text-primary">${napr[naprCurrent+1][1]}</span>. &nbsp
-        Расстояние: <span class="text-info">${napr[naprCurrent+1][2]} м</span>
-        </h6>`;
+
+        naprCurrent ++;
 
         //сохраняем данные: направление, ИП, ПП, т.Х и картинку канвас
         napr[naprCurrent].pp = selectPP.value; //13900
@@ -259,20 +257,19 @@ function kadr4(){
         napr[naprCurrent].q = _stage.q;
         napr[naprCurrent].imgData = canvas.getContext('2d').getImageData(0, 0, canvas.width, canvas.height);
 
+        build_kadr_4(naprCurrent);
+
         //canvas.getContext('2d').putImageData(imgData, x, y)
-
-        console.log(canvas);
+        //console.log(canvas);
         console.log(napr);
-        
-        arrIP = [];     //очищаем arrIP
-        _stage = null;  //обнуляем со всеми свойствами
-        //canvas???
 
+
+        console.log('текущее направление ' + naprCurrent);
 
         //отслеживаем последнее направление и выводим "Далее"
+        if (naprCurrent == napr.length) console.log('последнее');
 
-
-        naprCurrent ++;
+        
     }); //кнопка СЛЕДУЮЩЕЕ НАПРАВЛЕНИЕ
 
 }//кадр 4
