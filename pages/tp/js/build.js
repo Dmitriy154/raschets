@@ -134,6 +134,7 @@ function build_kadr_3(){
         btn_next1.id = 'btn_next1'; 
 }////////////////////////////////// 3 
 
+
 //cоздаем строку и заполняем адреса
 function rasst_stroka(_address1, _address2){
     let _tr = cr(_tbody,'tr');
@@ -152,27 +153,19 @@ function rasst_stroka(_address1, _address2){
 } 
 
 
-function build_kadr_4(naprCurrent){
+function build_kadr_4(){
     chK(4);
-
-    arrIP = [];     //очищаем arrIP от предыдущих значений, если были
-    _stage = null;  //обнуляем со всеми свойствами, убираем phi, q и др.
-
-    console.log(stage);//проверить наличие и удалить _stage4 /////////////////////////////////////////////////
 
     let _stage4 = cr(stage,'div', 'container-xl mt-2');
         _stage4.id = '_stage4';
-
-        console.log(naprCurrent);
-        console.log(napr[naprCurrent][0]);
 
         //НАПРАВЛЕНИЕ РАСЧЕТА И РАССТОЯНИЕ
         let divrow1 = cr(_stage4, 'div', 'row');
             let divcol11 = cr(divrow1, 'div', 'col');
             divcol11.id = 'divNapr';
             divcol11.innerHTML += `<h6>Направление расчета: 
-            <span class="text-danger">${napr[naprCurrent][0]}</span> &#8594   <span class="text-primary">${napr[naprCurrent][1]}</span>. &nbsp
-            Расстояние: <span class="text-info">${napr[naprCurrent][2]} м</span>
+            <span class="text-danger">${napr[0][0]}</span> &#8594   <span class="text-primary">${napr[0][1]}</span>. &nbsp
+            Расстояние: <span class="text-info">${napr[0][2]} м</span>
             </h6>`;
 
         //ПРИНИМАЮЩАЯ ПОВЕРХНОСТЬ
@@ -194,6 +187,7 @@ function build_kadr_4(naprCurrent){
 
         //создаем строку ИЗЛУЧАЮЩИЕ ПОВЕРХНОСТИ
         let divrow3 = cr(_stage4, 'div', 'row');
+        divrow3.id = 'divForIp';
 
         createIP(divrow3);  //создаем строку ИЗЛУЧАЮЩАЯ ПОВЕРХНОСТЬ, передаем строку, в которую будем помещать
 
@@ -314,9 +308,9 @@ function build_kadr_4(naprCurrent){
                 let clickEvent = new Event('click'); // создаем событие клика
                 bt_sh.dispatchEvent(clickEvent); // имитируем клик на кнопку схема ИП для обновления данных
             });
-        } // createIP() kadr 4  
+        } // createIP() kadr 4    
 
-        
+        create_ip = createIP; //копируем функцию
 
 }////////////////////////////////// 4
 

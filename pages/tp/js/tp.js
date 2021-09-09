@@ -6,6 +6,8 @@ let napr = []; // двумерный массив [name1, name2, rasst, phi, q];
 let arrIP = []; // массив ИП, имеет свойства х и у, z (если горизонтальная плоскость (крыша), то z=1) - координаты точки Х 
 let _stage = null; // ссылка на canvas_stage в 4 кадре
 let pointMaxX = {x:0, y:0, phi:0}; //точка с максимальным коэффициентом облученности
+let create_ip; // в переменную скопируем функцию, т.к. функция внутри другой
+
 
 //для теста
 napr = [['adr11','adr22', 2],['adr11','adr33', 3],['adr22','adr44', 4],['adr33','adr44', 5]];
@@ -248,8 +250,6 @@ function kadr4(){
 
     bt_nextN.addEventListener('click', ()=>{
 
-        naprCurrent ++;
-
         //сохраняем данные: направление, ИП, ПП, т.Х и картинку канвас
         napr[naprCurrent].pp = selectPP.value; //13900
         napr[naprCurrent].ip = arrIP;
@@ -257,24 +257,41 @@ function kadr4(){
         napr[naprCurrent].q = _stage.q;
         napr[naprCurrent].imgData = canvas.getContext('2d').getImageData(0, 0, canvas.width, canvas.height);
 
-        build_kadr_4(naprCurrent);
+        //подписываем следующее направление
+        naprCurrent ++;
 
+        divNapr.innerHTML = `<h6>Направление расчета: 
+        <span class="text-danger">${napr[naprCurrent][0]}</span> &#8594   <span class="text-primary">${napr[naprCurrent][1]}</span>. &nbsp
+        Расстояние: <span class="text-info">${napr[naprCurrent][2]} м</span>
+        </h6>`;
+        
+        //очищаем все поля и убираем лишние ИП
+        
+        //ПП
+        selectPP.selectedIndex = 0;  //выбираем древесина по умолчанию
+        
+        divForIp.innerHTML = ""; //удаляем в row для ип все ип
+        create_ip (divForIp); //делаем первую ип
+        
+        //обнуляем точку Х и флажок
+        inputX_x.value = '';
+        inputX_y.value = '';
+        gorizontX.value = '0'
+ 
+        arrIP = [];     //очищаем arrIP от предыдущих значений, если были
         //canvas.getContext('2d').putImageData(imgData, x, y)
         //console.log(canvas);
         console.log(napr);
-
 
         console.log('текущее направление ' + naprCurrent);
 
         //отслеживаем последнее направление и выводим "Далее"
         if (naprCurrent == napr.length) console.log('последнее');
 
-        
+         //_stage4.remove();
+         //kadr5();
     }); //кнопка СЛЕДУЮЩЕЕ НАПРАВЛЕНИЕ
 
 }//кадр 4
 
-/*
-канвас белый фон
-в конце обнулить arrZd = [] обнулить все переменные и массивы
-*/
+
