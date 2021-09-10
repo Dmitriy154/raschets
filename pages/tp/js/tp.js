@@ -148,27 +148,23 @@ function kadr4(){
     //функция анализа координат и размеров ИП и коорд. точки X
     let minX, minY; // минимальные значения x  и y  после перебора всех ИП и точки Х
     let maxX, maxY; //максимальные значения после перебора (либо точка Х, либо крайняя правая сторона ИП для х)
-    let zonaW, zonaH; //размеры рабочей зоны zonaW = maxX - minX;
     let step, stepW, stepH; // масштаб
     
     
     //кнопка СХЕМА ИП - рисуем чертеж, считаем угл.коэфф. и интенсивность общую и для каждой ип
     bt_sh.addEventListener('click', ()=>{
-        let error = false; //если есть незаполненные поля
-
-        //сброс счетчика функции для определения максимального Х
-        searchPoint.count = 0;
+        let error = false;          //если есть незаполненные поля
+        searchPoint.count = 0;      //сброс счетчика функции для определения максимального Х
 
         //если есть canvas то обновить (удалить)
        if (stage.querySelector("canvas")) stage.querySelector("canvas").parentNode.remove();
+       console.log(_stage);
        _stage = null;
-       
 
         //получение координат точки Х
         arrIP.x = +inputX_x.value;
         arrIP.y = +inputX_y.value;
         arrIP.z = +gorizontX.checked; //булевое значение - по умолчанию 0
-
 
         arrIP.forEach((ip, i)=>{
             ip.num = i+1; //добавляем свойство объекту ip - номер ИП
@@ -204,16 +200,43 @@ function kadr4(){
              return;
          }
          
-         zonaW = maxX - minX;
-         zonaH = maxY - minY;
-          
+         let zonaW = maxX - minX;
+         let zonaH = maxY - minY;
+         let zonaWW; //zona W с учетом оси y
+         let zonaHH;
+         let otstup = 50; //в пикселях
+         let x0, y0; //координаты (0;0) - в пикселях
+
+         let w_canvas = zonaW*step*2; ////////////////////////////////////////////////СТОП ТУТ
+         let h_canvas = 300;
+ 
+         //x0 - 3 варианта/ w_canvas в пикселях
+         if (minX >= 0) {
+            x0 = otstup;
+            zonaWW = maxX; //в единицах оси
+         }
+         if (minX < 0 && maxX > 0) {
+            x0 = otstup - minX*step;
+            zonaWW = zonaW;
+         }
+         if (maxX <= 0) {
+            x0 = w_canvas - otstup;
+            zonaWW = zonaW - minX;
+        }
+
+        console.log(zonaWW);
+ 
+         //y0 - 3 варианта/ w_canvas в пикселях
+         if (minY >= 0) y0 = h_canvas - otstup;
+         if (minY < 0 && maxY > 0) y0 = otstup + maxY*step;
+         if (maxY <= 0) y0 = otstup;
+
          switch(true) {
             case(zonaW < 5)  :  stepW = 100;  break;
-            case(zonaW < 10) :  stepW = 50;   break;
-            case(zonaW < 15) :  stepW = 30;   break;
-            case(zonaW < 20) :  stepW = 25;   break;
-            case(zonaW < 60) :  stepW = 10;   break;
-            case(zonaW < 200) :  stepW = 5;   break;
+            case(zonaW < 10) :  stepW = 70;   break;
+            case(zonaW < 15) :  stepW = 50;   break;
+            case(zonaW < 20) :  stepW = 40;   break;
+            case(zonaW < 60) :  stepW = 20;   break;
             default: alert('ошибка ввода');   break;
         }
 
@@ -229,11 +252,12 @@ function kadr4(){
 
         if(stepW > stepH) step = stepH; else step = stepW; //масштаб
 
-        let h_canvas = (zonaH*step*2 > step*(1.5*zonaH + minY)) ? zonaH*step*2 : step*(1.5*zonaH + minY) + 10; //чтобы была видна нижняя ось Х
-        _stage = drawCanvas(zonaW*step*2, h_canvas); //добавляем canvas, возвращаем stage (createjs)
+        console.log('step = '+ step);
+
+        _stage = drawCanvas(w_canvas, h_canvas); //добавляем canvas, возвращаем stage (createjs)
+        _stage.xn = x0;
+        _stage.yn = y0;
         _stage.step = step;
-        _stage.xn = (step*(0.5*zonaW - minX) < 0.1) ? 50 : step*(0.5*zonaW - minX); //координаты 0,0 (!!!)    -- добавил 50 без теста , чтобы видна была ось Y  
-        _stage.yn = step*(1.5*zonaH + minY) - 10;
         _stage.minX = minX;
         _stage.minY = minY;
         _stage.maxX = maxX;
