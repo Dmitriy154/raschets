@@ -148,7 +148,7 @@ function kadr4(){
     //функция анализа координат и размеров ИП и коорд. точки X
     let minX, minY; // минимальные значения x  и y  после перебора всех ИП и точки Х
     let maxX, maxY; //максимальные значения после перебора (либо точка Х, либо крайняя правая сторона ИП для х)
-    let step, stepW, stepH; // масштаб
+    let step = 20; // масштаб
     
     
     //кнопка СХЕМА ИП - рисуем чертеж, считаем угл.коэфф. и интенсивность общую и для каждой ип
@@ -158,7 +158,6 @@ function kadr4(){
 
         //если есть canvas то обновить (удалить)
        if (stage.querySelector("canvas")) stage.querySelector("canvas").parentNode.remove();
-       console.log(_stage);
        _stage = null;
 
         //получение координат точки Х
@@ -200,63 +199,79 @@ function kadr4(){
              return;
          }
          
-         let zonaW = maxX - minX;
+         let zonaW = maxX - minX; // в единицах
          let zonaH = maxY - minY;
-         let zonaWW; //zona W с учетом оси y
-         let zonaHH;
-         let otstup = 50; //в пикселях
-         let x0, y0; //координаты (0;0) - в пикселях
 
-         let w_canvas = zonaW*step*2; ////////////////////////////////////////////////СТОП ТУТ
-         let h_canvas = 300;
- 
-         //x0 - 3 варианта/ w_canvas в пикселях
+         let zonaWW; //zona W с учетом оси X в единицах оси
+         let zonaHH;
+
+         let otstup = 1; //в единицах
+         let x0, y0; //координаты (0;0) - в ед.
+
+         //поиск x0, y0, zonaWW, zonaHH
          if (minX >= 0) {
+            console.log('1x');
             x0 = otstup;
             zonaWW = maxX; //в единицах оси
          }
          if (minX < 0 && maxX > 0) {
-            x0 = otstup - minX*step;
+            console.log('2x');
+            x0 = otstup - minX;
             zonaWW = zonaW;
          }
          if (maxX <= 0) {
-            x0 = w_canvas - otstup;
-            zonaWW = zonaW - minX;
+            console.log('3x');
+            x0 = otstup - minX; 
+            zonaWW = zonaW - maxX;
         }
-
-        console.log(zonaWW);
  
-         //y0 - 3 варианта/ w_canvas в пикселях
-         if (minY >= 0) y0 = h_canvas - otstup;
-         if (minY < 0 && maxY > 0) y0 = otstup + maxY*step;
-         if (maxY <= 0) y0 = otstup;
+         if (minY >= 0) {
+            console.log('1y');
+            y0 = otstup + maxY;
+            zonaHH = maxY;
+         }
+         if (minY < 0 && maxY > 0) {
+            console.log('2y');
+            y0 = otstup + maxY;
+            zonaHH = zonaH;
+         }
+         if (maxY <= 0) {
+            console.log('3y');
+            y0 = otstup;
+            zonaHH = zonaH - maxY;
+         }
 
-         switch(true) {
-            case(zonaW < 5)  :  stepW = 100;  break;
-            case(zonaW < 10) :  stepW = 70;   break;
-            case(zonaW < 15) :  stepW = 50;   break;
-            case(zonaW < 20) :  stepW = 40;   break;
-            case(zonaW < 60) :  stepW = 20;   break;
-            default: alert('ошибка ввода');   break;
-        }
 
-        switch(true) {
-            case(zonaH < 3)  :  stepH = 100;  break;
-            case(zonaH < 6) :   stepH = 50;   break;
-            case(zonaH < 10) :  stepH = 30;   break;
-            case(zonaH < 15) :  stepH = 20;   break;
-            case(zonaH < 25) :  stepH = 15;   break;
-            case(zonaH < 100) :  stepH = 5;   break;
-            default: alert('ошибка ввода');  break;
-        }
+         /*
+         Линейная интерполяция: step = 20 + (100-20)*(zonaWW - 1) / (1 - 60)
+         */
 
-        if(stepW > stepH) step = stepH; else step = stepW; //масштаб
+         /*
+            switch(true) {
+                case(zonaW < 5)  :  stepW = 100;  break;
+                case(zonaW < 10) :  stepW = 70;   break;
+                case(zonaW < 15) :  stepW = 50;   break;
+                case(zonaW < 20) :  stepW = 40;   break;
+                case(zonaW < 60) :  stepW = 20;   break;
+                default: alert('ошибка ввода');   break;
+            }
+         */
 
-        console.log('step = '+ step);
+         //диапазоны в единиццах zonaWW 1-60 zonaHH 1-30. размеры canvas W x H (300-900) x (200-600)
+
+        let w_canvas = (zonaWW + 2*otstup)*step; 
+        let h_canvas = (zonaHH + 2*otstup)*step;
+  
+        console.log('zonaWW = ' + zonaWW);
+        console.log('zonaHH = ' + zonaHH);
+        console.log('w_canvas = ' + w_canvas);
+        console.log('zonaHH = ' + zonaHH);
+        console.log('x0 = ' + x0);
+        console.log('y0 = ' + y0);
 
         _stage = drawCanvas(w_canvas, h_canvas); //добавляем canvas, возвращаем stage (createjs)
-        _stage.xn = x0;
-        _stage.yn = y0;
+        _stage.xn = x0*step;
+        _stage.yn = y0*step;
         _stage.step = step;
         _stage.minX = minX;
         _stage.minY = minY;
@@ -319,3 +334,5 @@ function kadr4(){
 }//кадр 4
 
 
+
+// console.log(pointMaxX);                          //ВКЛЮЧИТЬ ПОСЛЕ ВСЕХ ТЕСТОВ!!!! методы 299

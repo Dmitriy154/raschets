@@ -296,7 +296,7 @@ function drawIP(stage) {
     pmax.y = stage.yn - pointMaxX.y*stage.step;
     stage.addChild(pmax);
     //addTextToCanvas(pointMaxX.phi, pmax.x + 6, pmax.y - 9, "8px Arial", "#f85");
-    console.log(pointMaxX);  
+    // console.log(pointMaxX);                          //ВКЛЮЧИТЬ ПОСЛЕ ВСЕХ ТЕСТОВ!!!! методы 299
 }
 
 //расчет углового коэфф. и интенсивности облучения, помещение данных в канвас
