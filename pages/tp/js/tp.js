@@ -148,7 +148,7 @@ function kadr4(){
     //функция анализа координат и размеров ИП и коорд. точки X
     let minX, minY; // минимальные значения x  и y  после перебора всех ИП и точки Х
     let maxX, maxY; //максимальные значения после перебора (либо точка Х, либо крайняя правая сторона ИП для х)
-    let step = 20; // масштаб
+    let step; // масштаб
     
     
     //кнопка СХЕМА ИП - рисуем чертеж, считаем угл.коэфф. и интенсивность общую и для каждой ип
@@ -225,7 +225,7 @@ function kadr4(){
             zonaWW = zonaW - maxX;
         }
  
-         if (minY >= 0) {
+        if (minY >= 0) {
             console.log('1y');
             y0 = otstup + maxY;
             zonaHH = maxY;
@@ -241,23 +241,9 @@ function kadr4(){
             zonaHH = zonaH - maxY;
          }
 
-
-         /*
-         Линейная интерполяция: step = 20 + (100-20)*(zonaWW - 1) / (1 - 60)
-         */
-
-         /*
-            switch(true) {
-                case(zonaW < 5)  :  stepW = 100;  break;
-                case(zonaW < 10) :  stepW = 70;   break;
-                case(zonaW < 15) :  stepW = 50;   break;
-                case(zonaW < 20) :  stepW = 40;   break;
-                case(zonaW < 60) :  stepW = 20;   break;
-                default: alert('ошибка ввода');   break;
-            }
-         */
-
-         //диапазоны в единиццах zonaWW 1-60 zonaHH 1-30. размеры canvas W x H (300-900) x (200-600)
+        //Линейная интерполяция: step = 20 + (100-20)*(zonaWW - 1) / (1 - 60)
+        //step меняется от 20 до 100, в зависимости от ширины (высоты) от 1 до 60
+        step = 20 + (100-20)*((zonaWW > zonaHH ? zonaWW : zonaHH) - 1)/(1 - 60);
 
         let w_canvas = (zonaWW + 2*otstup)*step; 
         let h_canvas = (zonaHH + 2*otstup)*step;
@@ -265,9 +251,10 @@ function kadr4(){
         console.log('zonaWW = ' + zonaWW);
         console.log('zonaHH = ' + zonaHH);
         console.log('w_canvas = ' + w_canvas);
-        console.log('zonaHH = ' + zonaHH);
+        console.log('h_canvas = ' + h_canvas);
         console.log('x0 = ' + x0);
         console.log('y0 = ' + y0);
+        console.log('step = ' + step);
 
         _stage = drawCanvas(w_canvas, h_canvas); //добавляем canvas, возвращаем stage (createjs)
         _stage.xn = x0*step;
