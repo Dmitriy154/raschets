@@ -199,6 +199,7 @@ function kadr4(){
              return;
          }
          
+         //ОПРЕДЕЛЯЕМ РАЗМЕРЫ КАНВАСА И ОСЕЙ
          let zonaW = maxX - minX; // в единицах
          let zonaH = maxY - minY;
 
@@ -208,46 +209,34 @@ function kadr4(){
          let otstup = 1; //в единицах
          let x0, y0; //координаты (0;0) - в ед.
 
-         //поиск x0, y0, zonaWW, zonaHH
-         if (minX >= 0) {
-            console.log('1x');
-            x0 = otstup;
-            zonaWW = maxX; //в единицах оси
-         }
-         if (minX < 0 && maxX > 0) {
-            console.log('2x');
-            x0 = otstup - minX;
-            zonaWW = zonaW;
-         }
-         if (maxX <= 0) {
-            console.log('3x');
-            x0 = otstup - minX; 
-            zonaWW = zonaW - maxX;
-        }
- 
-        if (minY >= 0) {
-            console.log('1y');
-            y0 = otstup + maxY;
-            zonaHH = maxY;
-         }
-         if (minY < 0 && maxY > 0) {
-            console.log('2y');
-            y0 = otstup + maxY;
-            zonaHH = zonaH;
-         }
-         if (maxY <= 0) {
-            console.log('3y');
-            y0 = otstup;
-            zonaHH = zonaH - maxY;
-         }
+        //поиск zonaWW, zonaHH
+        if (minX >= 0)             zonaWW = maxX; //в единицах оси
+        if (minX < 0 && maxX > 0)  zonaWW = zonaW;
+        if (maxX <= 0)             zonaWW = zonaW - maxX;
 
-        //Линейная интерполяция: step = 20 + (100-20)*(zonaWW - 1) / (1 - 60)
-        //step меняется от 20 до 100, в зависимости от ширины (высоты) от 1 до 60
-        step = 20 + (100-20)*((zonaWW > zonaHH ? zonaWW : zonaHH) - 1)/(1 - 60);
+        if (minY >= 0)              zonaHH = maxY;
+        if (minY < 0 && maxY > 0)   zonaHH = zonaH;
+        if (maxY <= 0)              zonaHH = zonaH - maxY;
 
-        let w_canvas = (zonaWW + 2*otstup)*step; 
-        let h_canvas = (zonaHH + 2*otstup)*step;
-  
+        //Линейная интерполяция: 
+        //step меняется от 5 до 80, в зависимости от ширины (высоты) от 0.5 до 50
+        step = 80 + (5-80)*(0.5 - (zonaWW > zonaHH ? zonaWW : zonaHH))/(0.5 - 60);
+
+        let w_canvas = (zonaWW + 2*otstup)*step > 800 ? 800 : (zonaWW + 2*otstup)*step;
+        let h_canvas = (zonaHH + 2*otstup)*step > 800 ? 800 : (zonaHH + 2*otstup)*step;
+
+        if (w_canvas == 800) step = 800/(zonaWW + 2*otstup);
+        if (h_canvas == 800) step = 800/(zonaHH + 2*otstup);
+
+        //находим x0, y0 с учетом размеров канваса
+        if (minX >= 0)              x0 = otstup;
+        if (minX < 0 && maxX > 0)   x0 = otstup - minX;
+        if (maxX <= 0)              x0 = h_canvas/step - otstup;     
+
+        if (minY >= 0)              y0 = h_canvas/step - otstup;
+        if (minY < 0 && maxY > 0)   y0 = h_canvas/step - otstup + minY;
+        if (maxY <= 0)              y0 = otstup;
+
         console.log('zonaWW = ' + zonaWW);
         console.log('zonaHH = ' + zonaHH);
         console.log('w_canvas = ' + w_canvas);
