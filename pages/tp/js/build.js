@@ -22,13 +22,12 @@ function build_kadr_1(){
                     dateTP.type = 'date';
                   
         let row2 = cr(divForm, 'div', 'row');
-            //Примечание
+            //Условие выполнения расчета
             let div_note = cr(row2, 'div', 'form-group w-100 m-1');
                 let _note = cr(div_note, 'textarea', 'form-control');
                 _note.setAttribute('rows', '1');
-                _note.setAttribute('placeholder', 'Примечание для расчета (наличие забора, защита элементов, пож. отсек)');
+                _note.setAttribute('placeholder', 'Условия выполнения расчета (наличие забора, защита элементов, пож. отсек)');
         
-
         //блок для зданий
         let divZd = cr(_stage1, 'div', 'container-lg p-0 divZd');
         divZd.id = 'divZd';  
@@ -316,6 +315,10 @@ function build_kadr_4(){
 
 function build_kadr_5(){
     chK(5);
+
+    let _stage5 = cr(stage,'div', 'container-xl mt-2');
+        _stage5.id = '_stage5';
+
 
 }
 
