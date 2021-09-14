@@ -10,7 +10,7 @@ let create_ip; // в переменную скопируем функцию, т.
 
 
 //для теста
-napr = [['adr11','adr22', 2],['adr11','adr33', 3],['adr22','adr44', 4],['adr33','adr44', 5]];
+napr = [['adr11','adr22', 1],['adr11','adr33', 2],['adr22','adr33', 3]];
 //kadr1();
 kadr4();
 
@@ -167,7 +167,6 @@ function kadr4(){
 
         arrIP.forEach((ip, i)=>{
             ip.num = i+1; //добавляем свойство объекту ip - номер ИП
-
             ip.w = +ip.i_w.value;
             ip.h = +ip.i_h.value;
             ip.r = +ip.i_r.value;
@@ -231,19 +230,12 @@ function kadr4(){
         //находим x0, y0 с учетом размеров канваса
         if (minX >= 0)              x0 = otstup;
         if (minX < 0 && maxX > 0)   x0 = otstup - minX;
-        if (maxX <= 0)              x0 = h_canvas/step - otstup;     
+        if (maxX <= 0)              x0 = w_canvas/step - otstup;
+
 
         if (minY >= 0)              y0 = h_canvas/step - otstup;
         if (minY < 0 && maxY > 0)   y0 = h_canvas/step - otstup + minY;
         if (maxY <= 0)              y0 = otstup;
-
-        console.log('zonaWW = ' + zonaWW);
-        console.log('zonaHH = ' + zonaHH);
-        console.log('w_canvas = ' + w_canvas);
-        console.log('h_canvas = ' + h_canvas);
-        console.log('x0 = ' + x0);
-        console.log('y0 = ' + y0);
-        console.log('step = ' + step);
 
         _stage = drawCanvas(w_canvas, h_canvas); //добавляем canvas, возвращаем stage (createjs)
         _stage.xn = x0*step;
@@ -256,6 +248,15 @@ function kadr4(){
         _stage.zonaH = zonaH;
         _stage.zonaW = zonaW;
 
+        console.log('zonaWW = ' + zonaWW);
+        console.log('zonaHH = ' + zonaHH);
+        console.log('w_canvas = ' + w_canvas);
+        console.log('h_canvas = ' + h_canvas);
+        console.log('x0 = ' + x0);
+        console.log('y0 = ' + y0);
+        console.log('step = ' + step);
+
+
         drawIP(_stage); // рисуем оси, рисуем ИП - считаем / метод в build - рисуем точку Х и точку с макс. значением угл. коэфф.
         calcQ(_stage); // подсчитываем угловой коэфф. и q, размещаем информацию в канвасе
 
@@ -263,7 +264,15 @@ function kadr4(){
         bt_nextN.style.display = ''; //делаем видимой      
     }); //кнопка схема расчета
 
+
+    //кнопка СЛЕДУЮЩЕЕ НАПРАВЛЕНИЕ
     bt_nextN.addEventListener('click', ()=>{
+        //отслеживаем последнее направление и выводим "Далее"
+        if (naprCurrent == (napr.length - 1)) {
+            _stage4.remove();
+            kadr5();
+            return;
+        }
 
         //сохраняем данные: направление, ИП, ПП, т.Х и картинку канвас
         napr[naprCurrent].pp = selectPP.value; //13900
@@ -271,43 +280,42 @@ function kadr4(){
         napr[naprCurrent].phi = _stage.phi;
         napr[naprCurrent].q = _stage.q;
         napr[naprCurrent].imgData = canvas.getContext('2d').getImageData(0, 0, canvas.width, canvas.height);
-
+        
         //подписываем следующее направление
-        naprCurrent ++;
-
         divNapr.innerHTML = `<h6>Направление расчета: 
         <span class="text-danger">${napr[naprCurrent][0]}</span> &#8594   <span class="text-primary">${napr[naprCurrent][1]}</span>. &nbsp
-        Расстояние: <span class="text-info">${napr[naprCurrent][2]} м</span>
-        </h6>`;
-        
+        <span class="text-success"> (${naprCurrent+2} из ${napr.length})</span> &nbsp Расстояние: <span class="text-info">${napr[naprCurrent][2]} м. </span></h6>`;
+        naprCurrent ++;
+
         //очищаем все поля и убираем лишние ИП
-        
         //ПП
         selectPP.selectedIndex = 0;  //выбираем древесина по умолчанию
         
         divForIp.innerHTML = ""; //удаляем в row для ип все ип
+        arrIP = [];     //очищаем arrIP от предыдущих значений, если были. Разместить перед create_ip
         create_ip (divForIp); //делаем первую ип
         
         //обнуляем точку Х и флажок
         inputX_x.value = '';
         inputX_y.value = '';
         gorizontX.value = '0'
- 
-        arrIP = [];     //очищаем arrIP от предыдущих значений, если были
-        //canvas.getContext('2d').putImageData(imgData, x, y)
-        //console.log(canvas);
-        console.log(napr);
 
-        console.log('текущее направление ' + naprCurrent);
+        //если есть canvas то обновить (удалить)
+        if (stage.querySelector("canvas")) stage.querySelector("canvas").parentNode.remove();
+        _stage = null; 
+        
+        bt_nextN.style.display = 'none'; //скрываем элемент
 
-        //отслеживаем последнее направление и выводим "Далее"
-        if (naprCurrent == napr.length) console.log('последнее');
-
-         //_stage4.remove();
-         //kadr5();
-    }); //кнопка СЛЕДУЮЩЕЕ НАПРАВЛЕНИЕ
+    }); //кнопка СЛЕДУЮЩЕЕ НАПРАВЛЕНИЕ ("ПРОДОЛЖИТЬ")
 
 }//кадр 4
+
+//КАДР 5 - вывод
+function kadr5(){
+    build_kadr_5();
+    console.log(napr);
+    //canvas.getContext('2d').putImageData(imgData, x, y)
+} // кадр 5
 
 
 

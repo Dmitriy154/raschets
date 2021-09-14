@@ -165,8 +165,7 @@ function build_kadr_4(){
             divcol11.id = 'divNapr';
             divcol11.innerHTML += `<h6>Направление расчета: 
             <span class="text-danger">${napr[0][0]}</span> &#8594   <span class="text-primary">${napr[0][1]}</span>. &nbsp
-            Расстояние: <span class="text-info">${napr[0][2]} м</span>
-            </h6>`;
+            <span class="text-success"> (1 из ${napr.length})</span> &nbsp  Расстояние: <span class="text-info">${napr[0][2]} м. </span></h6>`;
 
         //ПРИНИМАЮЩАЯ ПОВЕРХНОСТЬ
         let divrow2 = cr(_stage4, 'div', 'row');
@@ -227,7 +226,7 @@ function build_kadr_4(){
             let divrow6 = cr(_stage4,'div','row justify-content-center');
 
             //кнопка "следующее направление и продолжить" (скрыта)
-            let btn_nextN = cr(divrow6, 'button', 'btn btn-success btn-sm m-2', 'Следующее направление');
+            let btn_nextN = cr(divrow6, 'button', 'btn btn-success btn-sm m-2', 'Продолжить');
                 btn_nextN.type = 'button';
                 btn_nextN.id = 'bt_nextN';
                 btn_nextN.style.display = 'none'; //скрываем элемент
@@ -315,5 +314,8 @@ function build_kadr_4(){
 }////////////////////////////////// 4
 
 
+function build_kadr_5(){
+    chK(5);
 
+}
 
