@@ -22,11 +22,11 @@ function build_kadr_1(){
                     dateTP.type = 'date';
                   
         let row2 = cr(divForm, 'div', 'row');
-            //Условие выполнения расчета
+            //Примечание
             let div_note = cr(row2, 'div', 'form-group w-100 m-1');
                 let _note = cr(div_note, 'textarea', 'form-control');
                 _note.setAttribute('rows', '1');
-                _note.setAttribute('placeholder', 'Условия выполнения расчета (наличие забора, защита элементов, пож. отсек)');
+                _note.setAttribute('placeholder', 'Примечание (наличие забора, защита элементов, пож. отсек)');
         
         //блок для зданий
         let divZd = cr(_stage1, 'div', 'container-lg p-0 divZd');
@@ -116,8 +116,8 @@ function build_kadr_3(){
             let _thead = cr(_table, 'thead', 'bg-light');
                 _thead.innerHTML = ` 
                     <tr class="mx-auto">
-                        <th class='align-middle text-center'>Здание пожара, адрес</th>
-                        <th class='align-middle text-center'>Облучаемое здание, адрес</th>
+                        <th class='align-middle text-center'>Здание №1</th>
+                        <th class='align-middle text-center'>Здание №2</th>
                         <th style="width: 20%" class='align-middle text-center'>Расстояние, м</th>                  
                     </tr>`
                 

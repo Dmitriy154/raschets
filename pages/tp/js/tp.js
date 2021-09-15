@@ -9,11 +9,12 @@ let pointMaxX = {x:0, y:0, phi:0}; //точка с максимальным ко
 let create_ip; // в переменную скопируем функцию, т.к. функция внутри другой
 
 
-/*для теста
+
+//для теста
 napr = [['adr11','adr22', 1],['adr11','adr33', 2],['adr22','adr33', 3]];
 kadr4();
-*/
-kadr1();
+
+//kadr1();
 
 // КАДР 1 - исходные данные ///////////////////////
 function kadr1() {
@@ -142,6 +143,19 @@ function kadr3() {
 
 //КАДР 4 - расчет каждого направления
 function kadr4(){
+    //добавляем в массив napr обратные направления
+    //console.log(napr);
+    //napr = [['adr11','adr22', 1],['adr11','adr33', 2],['adr22','adr33', 3]];
+
+    let arr = []; //временный массив, в который вносим обратные направления
+    let length = napr.length; // длина первоначального массива
+
+    for (let i = 0; i < length; i++) { 
+        arr.push(...napr[i*2]);
+        [arr[0], arr[1]] = [arr[1], arr[0]];
+        napr.splice(i*2, 0, arr);
+        arr = [];
+    }
     
     let naprCurrent = 0; // текущее направление
     build_kadr_4(naprCurrent);
@@ -324,3 +338,5 @@ function kadr5(){
 
 
 // console.log(pointMaxX);                          //ВКЛЮЧИТЬ ПОСЛЕ ВСЕХ ТЕСТОВ!!!! методы 299
+
+//157 - добавил в napr обратные направления
