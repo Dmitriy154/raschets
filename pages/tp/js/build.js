@@ -24,10 +24,11 @@ function build_kadr_1(){
         let row2 = cr(divForm, 'div', 'row');
             //Примечание
             let div_note = cr(row2, 'div', 'form-group w-100 m-1');
-                let _note = cr(div_note, 'textarea', 'form-control');
-                _note.setAttribute('rows', '1');
-                _note.setAttribute('placeholder', 'Примечание (наличие забора, защита элементов, пож. отсек)');
-        
+                let note = cr(div_note, 'textarea', 'form-control');
+                note.setAttribute('rows', '1');
+                note.setAttribute('placeholder', 'Примечание (наличие забора, защита элементов, пож. отсек)');
+                note.id = 'note';
+
         //блок для зданий
         let divZd = cr(_stage1, 'div', 'container-lg p-0 divZd');
         divZd.id = 'divZd';  
@@ -318,7 +319,61 @@ function build_kadr_5(){
 
     let _stage5 = cr(stage,'div', 'container-xl mt-2');
         _stage5.id = '_stage5';
+  
+        let divrow1 = cr(_stage5, 'div', 'row alert alert-primary justify-content-center');
+            let title = cr(divrow1, 'h5', '', 'Отчет по расчёту интенсивности теплового излучения при пожаре между зданиями');
+        
+        let divrow2 = cr(_stage5, 'div', 'row justify-content-center');
+            let title2 = cr(divrow2, 'h6', '', 'Исходные данные:');
 
+        //таблица с исходными данными. ЗАГОЛОВОК
+        let divrow3 = cr(_stage5, 'div', 'row justify-content-center');
+            let div_col_1 = cr(divrow3, 'div', 'col');
+            let divTable = cr(divrow3, 'div', 'col-md-10');
+                divTable.id = 'divTable';
+            let div_col_3 = cr(divrow3, 'div', 'col');
 
+            divTable.innerHTML = `
+                <div class="row bg-light">
+                    <div class="col-5 border text-center pt-3">
+                        <p class="font-weight-bold text-break small">Здание</p>
+                    </div>
+                    <div class="col-2 border text-center pt-3 align-middle">
+                        <p class="font-weight-bold small">Материал стен</p>
+                    </div>
+                    <div class="col-2 border text-center pt-2">
+                        <p class="font-weight-bold text-break small">Высота здания/крыши, м</p>
+                    </div>		
+                    <div class="col-3 border text-center pt-3">
+                        <p class="font-weight-bold text-break small">Доп. информация</p>
+                    </div>	
+                </div>         
+            `
+
+            // заполняем строки таблицы "Исходные данные"
+            arrZd.forEach((item, i)=> {
+                let _row = cr(divTable, 'div', 'row bg-white');
+                    let _div1 = cr(_row, 'div', 'col-5 border bg-white text-center', item.name);
+                    let _div2 = cr(_row, 'div', 'col-2 border bg-white text-center', item.walls.value);
+                    let _div3 = cr(_row, 'div', 'col-2 border bg-white text-center', item.h.value + ' / ' + item.hk.value);
+                    let _div4 = cr(_row, 'div', 'col-3 border bg-white text-center', item.info.value);
+
+                    let w = item.walls.value;
+                    w == 'д' ? w = 'дер.' : w == 'к' ? w = 'кирп.' : w == 'б' ? w = 'блочн.' : w == 'м' ? w = 'металл.' : w == 'c' ? w = 'сайдинг' : w = w;
+                    _div2.textContent = w;  
+            });
+
+            //если есть общее примечание, то вставляем
+            if(data.prim) {
+                let _row = cr(divTable, 'div', 'row mt-2', 'Примечание: ' + data.prim);
+            }
+
+            //РАСЧЕТ
+            let divrow4 = cr(_stage5, 'div', 'row justify-content-center');
+                let title4 = cr(divrow4, 'h6', '', 'Результаты расчета:');
+                
+            console.log(napr);
+
+            
 }
 

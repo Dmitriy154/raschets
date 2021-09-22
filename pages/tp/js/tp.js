@@ -1,5 +1,4 @@
-let city; //населенный пункт
-let dateTP; // дата расчета
+let data = {city:'', date:'', prim:''}; // объект с данными город, дата, примечание
 let arrZd = []; // массив зданий
 let arr = []; //массив номеров зданий облучения [['2','3'],['1'],['1']]
 let napr = []; // двумерный массив [name1, name2, rasst, phi, q]; для кадра 4 и общего вывода
@@ -9,12 +8,14 @@ let pointMaxX = {x:0, y:0, phi:0}; //точка с максимальным ко
 let create_ip; // в переменную скопируем функцию, т.к. функция внутри другой
 
 
+kadr1();
 
 //для теста
-napr = [['adr11','adr22', 1],['adr11','adr33', 2],['adr22','adr33', 3]];
-kadr4();
+//napr = [['adr11','adr22', 1],['adr11','adr33', 2]];
+//kadr4();
+//kadr5();
 
-//kadr1();
+
 
 // КАДР 1 - исходные данные ///////////////////////
 function kadr1() {
@@ -31,8 +32,9 @@ function kadr1() {
     //обработчик для кнопки продолжить расчет
     btn_next1.addEventListener('click', ()=> {
         //запоминаем населенный пункт и дату расчета
-        city = city.value;
-        dateTP = dateTP.value;
+        if (city.value) data.city = city.value;
+        if (dateTP.value) data.date = dateTP.value;
+        if (note.value) data.prim = note.value;
 
         //заполняем свойства name (краткое обозначение зданий)
         arrZd.forEach(element => {
@@ -153,7 +155,7 @@ function kadr4(){
     for (let i = 0; i < length; i++) { 
         arr.push(...napr[i*2]);
         [arr[0], arr[1]] = [arr[1], arr[0]];
-        napr.splice(i*2, 0, arr);
+        napr.splice(i*2+1, 0, arr);
         arr = [];
     }
     
@@ -262,15 +264,6 @@ function kadr4(){
         _stage.maxY = maxY;
         _stage.zonaH = zonaH;
         _stage.zonaW = zonaW;
-/*
-        console.log('zonaWW = ' + zonaWW);
-        console.log('zonaHH = ' + zonaHH);
-        console.log('w_canvas = ' + w_canvas);
-        console.log('h_canvas = ' + h_canvas);
-        console.log('x0 = ' + x0);
-        console.log('y0 = ' + y0);
-        console.log('step = ' + step);
-*/
 
         drawIP(_stage); // рисуем оси, рисуем ИП - считаем / метод в build - рисуем точку Х и точку с макс. значением угл. коэфф.
         calcQ(_stage); // подсчитываем угловой коэфф. и q, размещаем информацию в канвасе
@@ -295,7 +288,6 @@ function kadr4(){
             kadr5();
             return;
         }
-
         
         //подписываем следующее направление
         divNapr.innerHTML = `<h6>Направление расчета: 
@@ -330,13 +322,11 @@ function kadr4(){
 //КАДР 5 - вывод
 function kadr5(){
     build_kadr_5();
-    console.log(napr);
 
     //canvas.getContext('2d').putImageData(imgData, x, y)
 } // кадр 5
 
 
 
-// console.log(pointMaxX);                          //ВКЛЮЧИТЬ ПОСЛЕ ВСЕХ ТЕСТОВ!!!! методы 299
+// console.log(pointMaxX);  //ВКЛЮЧИТЬ ПОСЛЕ ВСЕХ ТЕСТОВ!!!! методы 299
 
-//157 - добавил в napr обратные направления
