@@ -17,8 +17,8 @@ constructor(num, _stage) {
         //поместить divZd до кнопок
        divZd.after(_stage.querySelector('div.row_btns_1'));
 
-        let row_zd = cr(divZd,'div','row m-0 p-0 justify-content-center border border-primary');
-            let col_zd = cr(row_zd, 'div', 'container m-0 p-0');
+        let row_zd = cr(divZd,'div','row m-2 p-1 justify-content-center border bg-light');
+            let col_zd = cr(row_zd, 'div', 'container m-1 p-0');
 
                 let row_zd_1 = cr(col_zd, 'div', 'row form-group row m-1 p-1 justify-content-center');
                     

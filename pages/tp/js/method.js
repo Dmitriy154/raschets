@@ -391,3 +391,20 @@ function searchPhi (x, y){
     return phi;
 }
 
+//принимаем массив данных, возвращает строку для build 5 кадр
+function strIP (arr) {
+    let rasp = 'параллельное';
+    let result = '';
+    
+    for (let i = 0; i < arr.length; i++) { 
+
+        if (arr[i].a == 0) rasp = 'параллельное';
+        if (arr[i].a == 90) rasp = 'перпендикулярное';
+        if (arr[i].a !== 0 && arr[i].a !== 90) rasp = 'под углом' + arr[i].a + ' град.';
+
+        result += `ИП № ${i+1}: расположение - ${rasp}, размеры ${arr[i].w} х  ${arr[i].h} м`;
+    }
+
+    console.log(result);
+    return result;
+}

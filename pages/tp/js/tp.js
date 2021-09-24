@@ -10,8 +10,7 @@ let create_ip; // в переменную скопируем функцию, т.
 
 kadr1();
 
-//для теста
-//napr = [['adr11','adr22', 1],['adr11','adr33', 2]];
+//napr = [['adr11','adr22', 1]];
 //kadr4();
 //kadr5();
 
@@ -307,7 +306,7 @@ function kadr4(){
         //обнуляем точку Х и флажок
         inputX_x.value = '';
         inputX_y.value = '';
-        gorizontX.value = '0'
+        gorizontX.checked = false;
 
         //если есть canvas то обновить (удалить)
         if (stage.querySelector("canvas")) stage.querySelector("canvas").parentNode.remove();
@@ -321,8 +320,28 @@ function kadr4(){
 
 //КАДР 5 - вывод
 function kadr5(){
+    
     build_kadr_5();
 
+    btn_new.addEventListener('click',() => {
+        //обнуляем
+        data = {city:'', date:'', prim:''}; // объект с данными город, дата, примечание
+        arrZd = []; // массив зданий
+        arr = []; //массив номеров зданий облучения [['2','3'],['1'],['1']]
+        napr = []; // двумерный массив [name1, name2, rasst, phi, q]; для кадра 4 и общего вывода
+        arrIP = []; // массив ИП, имеет свойства х и у, z (если горизонтальная плоскость (крыша), то z=1) - координаты точки Х 
+        _stage = null; // ссылка на canvas_stage в 4 кадре
+        _stage5.remove();
+        kadr1();
+    });
+
+
+    btn_word.addEventListener('click',() => {
+        alert('идет разработка');
+
+
+        console.log(data);
+    });
     //canvas.getContext('2d').putImageData(imgData, x, y)
 } // кадр 5
 

@@ -30,7 +30,7 @@ function build_kadr_1(){
                 note.id = 'note';
 
         //блок для зданий
-        let divZd = cr(_stage1, 'div', 'container-lg p-0 divZd');
+        let divZd = cr(_stage1, 'div', 'container-lg p-0 divZd mt-2');
         divZd.id = 'divZd';  
         
         //строка для кнопок "Добавить здание" и "Продолжить расчет"
@@ -77,6 +77,12 @@ function build_kadr_2(){
                         let _input = cr(_td3, 'input', 'form-control text-center');
                         _input.setAttribute('placeholder', 'ввод цифр через запятую');
                         
+                        //если только 2 здания, то сразу ставим цифры
+                        if (arrZd.length == 2) {
+                            if (i==0) _input.value = '2';
+                            if (i==1) _input.value = 1;
+                        }
+
                         //добавляем свойство классу Zd ссылка на inputNums - инпут с номерами зданий облучения
                         item.inputNums = _input;
                     
@@ -235,7 +241,7 @@ function build_kadr_4(){
 
         //СТРОКА ИЗЛУЧАЮЩАЯ ПОВЕРХНОСТЬ --- добавляем ИП --- создаем объект ip
         function createIP(row3){
-           let divrow3 = cr(row3, 'div', 'row m-0 p-0');
+           let divrow3 = cr(row3, 'div', 'row m-0 p-0 mt-2');
             
             let div31 = cr(divrow3, 'div', 'col-sm-3 mt-auto mr-2');
                 div31.innerHTML += `<h6>Излучающая поверхность: </h6>`;
@@ -320,31 +326,30 @@ function build_kadr_5(){
     let _stage5 = cr(stage,'div', 'container-xl mt-2');
         _stage5.id = '_stage5';
   
-        let divrow1 = cr(_stage5, 'div', 'row alert alert-primary justify-content-center');
-            let title = cr(divrow1, 'h5', '', 'Отчет по расчёту интенсивности теплового излучения при пожаре между зданиями');
+        let divrow1 = cr(_stage5, 'div', 'row');
+            let div_title = cr(divrow1, 'div', 'col-10 alert alert-primary justify-content-center');
+                let title = cr(div_title, 'h5', '', 'Отчет по расчёту интенсивности теплового излучения при пожаре между зданиями');
         
         let divrow2 = cr(_stage5, 'div', 'row justify-content-center');
             let title2 = cr(divrow2, 'h6', '', 'Исходные данные:');
 
         //таблица с исходными данными. ЗАГОЛОВОК
-        let divrow3 = cr(_stage5, 'div', 'row justify-content-center');
-            let div_col_1 = cr(divrow3, 'div', 'col');
-            let divTable = cr(divrow3, 'div', 'col-md-10');
+        let divrow3 = cr(_stage5, 'div', 'row');
+            let divTable = cr(divrow3, 'div', 'col');
                 divTable.id = 'divTable';
-            let div_col_3 = cr(divrow3, 'div', 'col');
 
             divTable.innerHTML = `
-                <div class="row bg-light">
-                    <div class="col-5 border text-center pt-3">
+                <div class="row">
+                    <div class="col-4 border text-center pt-3 bg-light">
                         <p class="font-weight-bold text-break small">Здание</p>
                     </div>
-                    <div class="col-2 border text-center pt-3 align-middle">
+                    <div class="col-2 border text-center pt-3 bg-light">
                         <p class="font-weight-bold small">Материал стен</p>
                     </div>
-                    <div class="col-2 border text-center pt-2">
-                        <p class="font-weight-bold text-break small">Высота здания/крыши, м</p>
+                    <div class="col-2 border text-center pt-2 bg-light">
+                        <p class="font-weight-bold text-break small">Высота здания/крыши</p>
                     </div>		
-                    <div class="col-3 border text-center pt-3">
+                    <div class="col-2 border text-center pt-2 bg-light">
                         <p class="font-weight-bold text-break small">Доп. информация</p>
                     </div>	
                 </div>         
@@ -352,15 +357,21 @@ function build_kadr_5(){
 
             // заполняем строки таблицы "Исходные данные"
             arrZd.forEach((item, i)=> {
-                let _row = cr(divTable, 'div', 'row bg-white');
-                    let _div1 = cr(_row, 'div', 'col-5 border bg-white text-center', item.name);
-                    let _div2 = cr(_row, 'div', 'col-2 border bg-white text-center', item.walls.value);
-                    let _div3 = cr(_row, 'div', 'col-2 border bg-white text-center', item.h.value + ' / ' + item.hk.value);
-                    let _div4 = cr(_row, 'div', 'col-3 border bg-white text-center', item.info.value);
+                let _row = cr(divTable, 'div', 'row');
+                    let _div1 = cr(_row, 'div', 'col-4 border bg-white text-center bg-white', item.name);
+                    
+                    //краткое обозначение в 1 кадре переводим в полное                       
+                    let ws = item.walls.value;
+                    ws == 'д'? ws='деревянные': 
+                    ws == 'к'? ws='кирпичные':
+                    ws == 'б'? ws='блочные':
+                    ws == 'м'? ws='металлические':
+                    ws == 'с'? ws='сайдинг (отделка)': ws=ws;
+                    item.walls.value = ws;
 
-                    let w = item.walls.value;
-                    w == 'д' ? w = 'дер.' : w == 'к' ? w = 'кирп.' : w == 'б' ? w = 'блочн.' : w == 'м' ? w = 'металл.' : w == 'c' ? w = 'сайдинг' : w = w;
-                    _div2.textContent = w;  
+                    let _div2 = cr(_row, 'div', 'col-2 border bg-white text-center bg-white', item.walls.value);
+                    let _div3 = cr(_row, 'div', 'col-2 border bg-white text-center bg-white', item.h.value + ' / ' + item.hk.value);
+                    let _div4 = cr(_row, 'div', 'col-2 border bg-white text-center bg-white', item.info.value); 
             });
 
             //если есть общее примечание, то вставляем
@@ -369,11 +380,82 @@ function build_kadr_5(){
             }
 
             //РАСЧЕТ
-            let divrow4 = cr(_stage5, 'div', 'row justify-content-center');
+            let divrow4 = cr(_stage5, 'div', 'row justify-content-center mt-2');
                 let title4 = cr(divrow4, 'h6', '', 'Результаты расчета:');
                 
-            console.log(napr);
 
+            let divrow5 = cr(_stage5, 'div', 'row justify-content-center');
+         
+            //выделяем направления
             
-}
+            napr.forEach((el, i)=>{
+                let _row1 = cr(divrow5, 'div', 'row container-fluid');
 
+                    let _col11 = cr(_row1, 'div', 'col-4 font-weight-bold', 'Здание пожара ---> облучаемое здание:')
+                    let _col12 = cr(_row1, 'div', 'col-6 border bg-white', el[0] + ' ---> ' + el[1]);
+
+                let _row2 = cr(divrow5, 'div', 'row container-fluid');
+                    let _col21 = cr(_row2, 'div', 'col-4 font-weight-bold', 'Расстояние между зданиями:')
+                    let _col22 = cr(_row2, 'div', 'col-2 border-left bg-white', el[2] + ' м');
+                    let _col23 = cr(_row2, 'div', 'col-4 border-right bg-white');
+                
+                let _row3 = cr(divrow5, 'div', 'row container-fluid');
+                    let _col31 = cr(_row3, 'div', 'col-4 font-weight-bold', 'Излучающ. поверхность(и): ');
+                    let _col32 = cr(_row3, 'div', 'col-6 border bg-white');
+
+                let _row4 = cr(divrow5, 'div', 'row container-fluid');
+                    let _col41 = cr(_row4, 'div', 'col-4 font-weight-bold', 'Принимающая поверхность (материал): ');
+                    let _col42 = cr(_row4, 'div', 'col-6 border bg-white');
+                
+                let _row6 = cr(divrow5, 'div', 'row container-fluid');
+                    let _col61 = cr(_row6, 'div', 'col-4 font-weight-bold', 'Интенсивность теплового излучения:');
+                    let _col62 = cr(_row6, 'div', 'col-2 border-left bg-white');
+                    let _col63 = cr(_row6, 'div', 'col-4 border-right bg-white');
+
+                let _row7 = cr(divrow5, 'div', 'row container-fluid');
+                    let _col71 = cr(_row7, 'div', 'col-4 font-weight-bold', 'Условие безопасности расстояния:');
+                    let _col72 = cr(_row7, 'div', 'col-6 border bg-white');
+
+                let _row8 = cr(divrow5, 'div', 'row container-fluid');
+                   _row8.innerHTML = `<hr>`;
+
+                //заполняем поле ИП
+                _col32.textContent = strIP(el.ip);
+                
+                //заполняем поля ПП
+                if (el.pp == 15400) _col42.textContent = 'Пластик';
+                if (el.pp == 17500) _col42.textContent = 'Лакокрасочное покрытие';
+                if (el.pp == 17400) _col42.textContent = 'Рулонная кровля';
+                if (el.pp == 13900) _col42.textContent = 'Оцинкованное железо (отделка древесины)';
+                
+                //заполняем поле интенсивность
+                _col62.innerHTML =`${el.q} Вт/м<sup>2</sup>`;
+
+                //условие безопасности
+                let sign = ' < '; //знак равенства
+                let proviso = 'соблюдается'; // условие безопасности
+
+                if (el.q > +el.pp) {
+                    sign = ' > ';
+                    proviso = 'не соблюдается';
+                } else if (el.q == +el.pp){
+                    sign = ' = ';
+                    proviso = 'не соблюдается';              
+                } else {
+                    sign = ' < ';
+                    proviso = 'соблюдается';   
+                }
+                
+                _col72.textContent = ` ${el.q} ${sign} ${+el.pp} - ${proviso}`;
+            }); //foreach   
+            
+            //кнопка - подробный отчет (word)
+            let divrow6 = cr(_stage5, 'div', 'row justify-content-center m-1');
+                let btn_new = cr(divrow6, 'button', 'btn btn-info', 'Новый расчет');
+                btn_new.id = 'btn_new';
+   
+            //кнопка - подробный отчет (word)
+            let divrow7 = cr(_stage5, 'div', 'row justify-content-center m-1');
+                let btn_word = cr(divrow7, 'button', 'btn btn-info', 'Подробный отчет (word)');
+                btn_word.id = 'btn_word';
+} //////////5
