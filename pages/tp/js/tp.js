@@ -323,6 +323,9 @@ function kadr5(){
     
     build_kadr_5();
 
+    data.arrZd = arrZd;
+    data.napr = napr;
+
     btn_new.addEventListener('click',() => {
         //обнуляем
         data = {city:'', date:'', prim:''}; // объект с данными город, дата, примечание
@@ -337,15 +340,27 @@ function kadr5(){
 
 
     btn_word.addEventListener('click',() => {
-        alert('идет разработка');
 
-
-        console.log(data);
+        
+        //отправляем данные методом POST
+        let response = await fetch('/dog/web_tp_word.php', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json;charset=utf-8'
+            },
+            body: JSON.stringify(user)
+          });
+          
+        //let result = await response.json();
+        //console.log(result.message);
+        //console.log(JSON.stringify(data));
     });
     //canvas.getContext('2d').putImageData(imgData, x, y)
 } // кадр 5
 
 
-
-// console.log(pointMaxX);  //ВКЛЮЧИТЬ ПОСЛЕ ВСЕХ ТЕСТОВ!!!! методы 299
-
+/*
+1. console.log(pointMaxX);  //ВКЛЮЧИТЬ ПОСЛЕ ВСЕХ ТЕСТОВ!!!! методы 299
+2. в полях высота здания и крыши "," и "." автозамена
+3. возможность краткой записи д - жилой дом, б-баня, г-гараж, с -сарай, х - хоз. постройка
+*/

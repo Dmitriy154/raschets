@@ -404,7 +404,5 @@ function strIP (arr) {
 
         result += `ИП № ${i+1}: расположение - ${rasp}, размеры ${arr[i].w} х  ${arr[i].h} м`;
     }
-
-    console.log(result);
     return result;
 }
