@@ -1,18 +1,29 @@
 <?php
 require_once 'vendor/autoload.php';
+$document = new \PhpOffice\PhpWord\TemplateProcessor('./files/template_tp.docx');
 
-$document = new \PhpOffice\PhpWord\TemplateProcessor('./files/template_dogfiz_tp.docx');
+//$postData = file_get_contents('php://input'); // строка в формате JSON - {"city":"Minsk","prim":"Примечание"}
+//$data = json_decode($postData, true); //массив данных -  $data['city']; //Minsk
+//var_dump($data);
+//echo $data['obj']['name']; //Dimon
+//echo '</br>';
 
+var_dump($_FILES); 
+echo '</br>';
+var_dump($_POST);
+
+// Загрузка файла и вывод сообщения
+/*
+if (!@copy($_FILES['canvas_field']['tmp_name'], $path . $_FILES['canvas_field']['name']))
+echo 'Что-то пошло не так';
+else
+echo 'Загрузка удачна <a href="' . $path . $_FILES['canvas_field']['name'] . '">Посмотреть</a> ' ;
+*/
+
+
+/*
 $document->setValue('nomerD', $_POST['nomerD']);
-$document->setValue('dateD', $_POST['dateD']);
-$document->setValue('name', $_POST['name']);
-$document->setValue('address1', $_POST['address1']);
-$document->setValue('address2', $_POST['address2']);
 $document->setValue('hours', $_POST['hours']);
-$document->setValue('passport1', $_POST['passport1']);
-$document->setValue('passport2', $_POST['passport2']);
-$document->setValue('passport3', $_POST['passport3']);
-$document->setValue('tel', $_POST['tel']);
 
 $hours = $_POST['hours'];
 $min = $hours*60;
@@ -58,6 +69,7 @@ readfile($downloadFile);
 
 //удаление файлов
 unlink($outputFile);
+*/
 
 
 

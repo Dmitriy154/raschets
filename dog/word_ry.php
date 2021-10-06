@@ -10,6 +10,7 @@ $document->setValue('name_r', $_POST['name_r']);
 $document->setValue('dolgn', $_POST['dolgn']);
 $document->setValue('dolgn_r', $_POST['dolgn_r']);
 $document->setValue('org', $_POST['org']);
+$document->setValue('org_r', $_POST['org_r']);
 $document->setValue('osnov', $_POST['osnov']);
 $document->setValue('usluga', $_POST['usluga']);
 $document->setValue('address', $_POST['address']);
@@ -18,7 +19,9 @@ $document->setValue('rekv', $_POST['rekv']);
 
 $hours = $_POST['hours'];
 $min = $hours*60;
-$sum = $hours*11.36;
+//$sum = $hours*11.36;
+$sum = number_format((float)$hours*11.36, 2, '.', '');
+
 $summa = 'summa';
 
 switch ($hours) {

@@ -16,7 +16,8 @@ $document->setValue('tel', $_POST['tel']);
 
 $hours = $_POST['hours'];
 $min = $hours*60;
-$sum = $hours*11.36;
+$sum = number_format((float)$hours*11.36, 2, '.', '');  //2 знака после запятой
+
 $summa = 'summa';
 
 switch ($hours) {

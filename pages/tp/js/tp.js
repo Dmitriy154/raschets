@@ -339,23 +339,27 @@ function kadr5(){
     });
 
 
-    btn_word.addEventListener('click',() => {
+    btn_word.addEventListener('click',async() => {
 
-        
-        //отправляем данные методом POST
-        let response = await fetch('/dog/web_tp_word.php', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json;charset=utf-8'
-            },
-            body: JSON.stringify(user)
-          });
+        let fd = new FormData();
+		//в переменную добавляем json, потом его декодируем и профит
+		fd.append('data', JSON.stringify(data));
+
+        //цикл по созданию блоб для всех канвас и добавляем в форму
+        for (let i=0; i < napr.length; i++) {
+            let blob = await ImageDataToBlob(napr[i].imgData);
+            let name = 'canvas' + i + '.png';
+            fd.append('canvas_field[]', blob, name);
+        }
+
+		let response = await fetch('https://raschets.ru/dog/web_tp_word.php', {
+		method: 'POST',
+		body: fd
+		});
           
         //let result = await response.json();
-        //console.log(result.message);
-        //console.log(JSON.stringify(data));
+        //console.log(result);
     });
-    //canvas.getContext('2d').putImageData(imgData, x, y)
 } // кадр 5
 
 

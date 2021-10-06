@@ -406,3 +406,15 @@ function strIP (arr) {
     }
     return result;
 }
+
+async function  ImageDataToBlob(imageData) {
+    let canvas = document.createElement("canvas");
+    canvas.width = imageData.width;
+    canvas.height = imageData.height;
+    let ctx = canvas.getContext("2d");
+    ctx.putImageData(imageData, 0, 0);        
+  
+    return new Promise((resolve) => {
+          canvas.toBlob(resolve, 'image/png'); 
+    });
+}
