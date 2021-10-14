@@ -32,6 +32,17 @@ constructor(num, _stage) {
                         let _tip = cr(divTip, 'input', 'form-control');
                         _tip.setAttribute('placeholder', 'вид здания');
                             this.tip = _tip;
+                        _tip.title = "д - жилой дом, с - сарай, г - гараж, х - хоз. постройка, б - баня";
+                        //обработчик - при вводе будквы - появляется слово (после потери фокуса)
+                        _tip.addEventListener('blur', (e) => {
+                            let v = e.target.value;
+                            v == 'д' ? v='жилой дом' :
+                            v == 'с' ? v='сарай' :
+                            v == 'г' ? v='гараж' :
+                            v == 'х' ? v='хоз. постройка' :
+                            v == 'б' ? v='баня' : v = v;
+                            e.target.value = v;
+                        });
                
                     //адрес
                     let divAdr = cr(row_zd_1, 'div', 'col-sm-4 m-1 p-0');
@@ -45,7 +56,16 @@ constructor(num, _stage) {
                         _mat.setAttribute('placeholder', 'Материал стен (отделка) - буква');
                         _mat.title = "д - деревянные, к - кирпич, б - блочные, м - металлические, с - сайдинг (полиэтилен)";
                             this.walls = _mat;                           
-
+                        //обработчик - при вводе будквы - появляется слово (после потери фокуса)
+                        _mat.addEventListener('blur', (e) => {
+                            let v = e.target.value;
+                            v == 'д' ? v='деревянные' :
+                            v == 'к' ? v='кирпичные' :
+                            v == 'б' ? v='блочные' :
+                            v == 'м' ? v='металлические' :
+                            v == 'с' ? v='сайдинг (отделка)' : v = v;
+                            e.target.value = v;
+                        });
 
                 let row_zd_2 = cr(col_zd, 'div', 'row form-group row m-0 p-0 justify-content-center');
                     //высота здания
@@ -53,13 +73,15 @@ constructor(num, _stage) {
                         let _H = cr(divH, 'input', 'form-control');
                         _H.setAttribute('placeholder', 'h здания');
                             this.h = _H;                   
-                    
+                        _H.type = 'number';
+
                     //высота крыши здания
                     let divHk = cr(row_zd_2, 'div', 'col-sm-2 p-1');
                         let _Hk = cr(divHk, 'input', 'form-control');
                         _Hk.setAttribute('placeholder', 'h крыши');
                             this.hk = _Hk;   
-                    
+                        _Hk.type = 'number';
+
                     //Причечание для здания
                     let divInf = cr(row_zd_2, 'div', 'col-sm-8 p-1');
                         let _Inf = cr(divInf, 'input', 'form-control');

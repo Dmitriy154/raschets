@@ -1,4 +1,4 @@
-let data = {city:'', date:'', prim:''}; // объект с данными город, дата, примечание
+let data = {city:'', prim:''}; // объект с данными город, дата, примечание
 let arrZd = []; // массив зданий
 let arr = []; //массив номеров зданий облучения [['2','3'],['1'],['1']]
 let napr = []; // двумерный массив [name1, name2, rasst, phi, q]; для кадра 4 и общего вывода
@@ -30,9 +30,8 @@ function kadr1() {
 
     //обработчик для кнопки продолжить расчет
     btn_next1.addEventListener('click', ()=> {
-        //запоминаем населенный пункт и дату расчета
+        //запоминаем населенный пункт и примечание
         if (city.value) data.city = city.value;
-        if (dateTP.value) data.date = dateTP.value;
         if (note.value) data.prim = note.value;
 
         //заполняем свойства name (краткое обозначение зданий)
@@ -145,7 +144,6 @@ function kadr3() {
 //КАДР 4 - расчет каждого направления
 function kadr4(){
     //добавляем в массив napr обратные направления
-    //console.log(napr);
     //napr = [['adr11','adr22', 1],['adr11','adr33', 2],['adr22','adr33', 3]];
 
     let arr = []; //временный массив, в который вносим обратные направления
@@ -275,11 +273,16 @@ function kadr4(){
     //кнопка СЛЕДУЮЩЕЕ НАПРАВЛЕНИЕ
     bt_nextN.addEventListener('click', ()=>{
         //сохраняем данные: направление, ИП, ПП, т.Х и картинку канвас
-        napr[naprCurrent].pp = selectPP.value; //13900
         napr[naprCurrent].ip = arrIP;
+        napr[naprCurrent][3] = arrIP;
         napr[naprCurrent].phi = _stage.phi;
+        napr[naprCurrent][4] = _stage.phi;
+        napr[naprCurrent].pp = selectPP.value; //13900
+        napr[naprCurrent][5] = selectPP.value; //13900
         napr[naprCurrent].q = _stage.q;
+        napr[naprCurrent][6] = _stage.q;
         napr[naprCurrent].imgData = canvas.getContext('2d').getImageData(0, 0, canvas.width, canvas.height);
+
 
         //отслеживаем последнее направление и выводим "Далее"
         if (naprCurrent == (napr.length - 1)) {
@@ -323,12 +326,9 @@ function kadr5(){
     
     build_kadr_5();
 
-    data.arrZd = arrZd;
-    data.napr = napr;
-
     btn_new.addEventListener('click',() => {
         //обнуляем
-        data = {city:'', date:'', prim:''}; // объект с данными город, дата, примечание
+        data = null; // объект с данными город, дата, примечание
         arrZd = []; // массив зданий
         arr = []; //массив номеров зданий облучения [['2','3'],['1'],['1']]
         napr = []; // двумерный массив [name1, name2, rasst, phi, q]; для кадра 4 и общего вывода
@@ -338,6 +338,22 @@ function kadr5(){
         kadr1();
     });
 
+    //ДВУМЕРНЫЙ МАССИВ h, hk, walls, prim для сервера
+    let arrZdPhp = [];
+
+    arrZd.forEach((zd, i) => {
+        arrZdPhp[i] = [];
+        arrZdPhp[i][0] = +arrZd[i].h.value;
+        arrZdPhp[i][1] = +arrZd[i].hk.value;
+        arrZdPhp[i][2] = arrZd[i].walls.value;
+        arrZdPhp[i][3] = arrZd[i].info.value;
+    });
+
+    data.arrZd = arrZd;
+    data.napr = napr;
+
+    console.log(napr);
+    console.log(arrZdPhp);
 
     btn_word.addEventListener('click',async() => {
 

@@ -4,26 +4,15 @@ function build_kadr_1(){
     _stage1.id = '_stage1';
  
     let divForm = cr(_stage1, 'div', 'container-xl');
-        let row1 = cr(divForm, 'div', 'row'); 
+        let row1 = cr(divForm, 'div', 'row mt-2'); 
             
             //населенный пункт расчета
-            let div_city = cr(row1, 'div', 'col-sm-4 m-1 p-0');
+            let div_city = cr(row1, 'div', 'col-2');
                 city = cr(div_city, 'input', 'form-control');
-                city.setAttribute('placeholder', 'Населенный пункт');          
+                city.setAttribute('placeholder', 'Населен. пункт');          
         
-            //адрес расчета
-            let div_address = cr(row1, 'div', 'col-sm-4 m-1 p-0');
-                let _address = cr(div_address, 'input', 'form-control');
-                _address.setAttribute('placeholder', 'адрес (улица)');
-
-            //Дата расчета
-            let div_date = cr(row1, 'div', 'col-sm-3 m-1 p-0');
-                dateTP = cr(div_date, 'input', 'form-control');
-                    dateTP.type = 'date';
-                  
-        let row2 = cr(divForm, 'div', 'row');
             //Примечание
-            let div_note = cr(row2, 'div', 'form-group w-100 m-1');
+            let div_note = cr(row1, 'div', 'col-10');
                 let note = cr(div_note, 'textarea', 'form-control');
                 note.setAttribute('rows', '1');
                 note.setAttribute('placeholder', 'Примечание (наличие забора, защита элементов, пож. отсек)');
@@ -77,9 +66,9 @@ function build_kadr_2(){
                         let _input = cr(_td3, 'input', 'form-control text-center');
                         _input.setAttribute('placeholder', 'ввод цифр через запятую');
                         
-                        //если только 2 здания, то сразу ставим цифры
+                        //если только 2 здания, то сразу ставим цифры и кликаем на продолжить расчет
                         if (arrZd.length == 2) {
-                            if (i==0) _input.value = '2';
+                            if (i==0) _input.value = 2;
                             if (i==1) _input.value = 1;
                         }
 
@@ -108,7 +97,7 @@ function build_kadr_2(){
 
     let btn_next1 = cr(row_btns, 'button', 'btn btn-success btn-sm m-2', 'Продолжить расчет');
         btn_next1.type = 'button'; 
-        btn_next1.id = 'btn_next1';    
+        btn_next1.id = 'btn_next1';
 }////////////////////////////////// 2 (номера облучаемых домов)
 
 
@@ -358,17 +347,7 @@ function build_kadr_5(){
             // заполняем строки таблицы "Исходные данные"
             arrZd.forEach((item, i)=> {
                 let _row = cr(divTable, 'div', 'row');
-                    let _div1 = cr(_row, 'div', 'col-4 border bg-white text-center bg-white', item.name);
-                    
-                    //краткое обозначение в 1 кадре переводим в полное                       
-                    let ws = item.walls.value;
-                    ws == 'д'? ws='деревянные': 
-                    ws == 'к'? ws='кирпичные':
-                    ws == 'б'? ws='блочные':
-                    ws == 'м'? ws='металлические':
-                    ws == 'с'? ws='сайдинг (отделка)': ws=ws;
-                    item.walls.value = ws;
-
+                    let _div1 = cr(_row, 'div', 'col-4 border bg-white text-center bg-white', item.name);                
                     let _div2 = cr(_row, 'div', 'col-2 border bg-white text-center bg-white', item.walls.value);
                     let _div3 = cr(_row, 'div', 'col-2 border bg-white text-center bg-white', item.h.value + ' / ' + item.hk.value);
                     let _div4 = cr(_row, 'div', 'col-2 border bg-white text-center bg-white', item.info.value); 
@@ -426,7 +405,7 @@ function build_kadr_5(){
                 if (el.pp == 15400) _col42.textContent = 'Пластик';
                 if (el.pp == 17500) _col42.textContent = 'Лакокрасочное покрытие';
                 if (el.pp == 17400) _col42.textContent = 'Рулонная кровля';
-                if (el.pp == 13900) _col42.textContent = 'Оцинкованное железо (отделка древесины)';
+                if (el.pp == 13900) _col42.textContent = 'Древесина';
                 
                 //заполняем поле интенсивность
                 _col62.innerHTML =`${el.q} Вт/м<sup>2</sup>`;
