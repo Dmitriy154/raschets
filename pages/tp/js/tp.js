@@ -188,6 +188,14 @@ function kadr4(){
             ip.y = +ip.i_y.value;
             ip.a = +ip.i_а.value;
 
+            //удаляем ненужные свойства
+            delete ip.i_w;
+            delete ip.i_h;
+            delete ip.i_r;
+            delete ip.i_x;
+            delete ip.i_y;
+            delete ip.i_а;
+
             //если есть пустые w, h, r - то return
             if (!(ip.w && ip.h && ip.r)) {
                 error = true;
@@ -277,8 +285,8 @@ function kadr4(){
         napr[naprCurrent][3] = arrIP;
         napr[naprCurrent].phi = _stage.phi;
         napr[naprCurrent][4] = _stage.phi;
-        napr[naprCurrent].pp = selectPP.value; //13900
-        napr[naprCurrent][5] = selectPP.value; //13900
+        napr[naprCurrent].pp = +selectPP.value; //13900
+        napr[naprCurrent][5] = +selectPP.value; //13900
         napr[naprCurrent].q = _stage.q;
         napr[naprCurrent][6] = _stage.q;
         napr[naprCurrent].imgData = canvas.getContext('2d').getImageData(0, 0, canvas.width, canvas.height);
@@ -323,7 +331,8 @@ function kadr4(){
 
 //КАДР 5 - вывод
 function kadr5(){
-    
+    console.log(arrIP);
+
     build_kadr_5();
 
     btn_new.addEventListener('click',() => {
@@ -349,11 +358,8 @@ function kadr5(){
         arrZdPhp[i][3] = arrZd[i].info.value;
     });
 
-    data.arrZd = arrZd;
+    data.arrZd = arrZdPhp;
     data.napr = napr;
-
-    console.log(napr);
-    console.log(arrZdPhp);
 
     btn_word.addEventListener('click',async() => {
 

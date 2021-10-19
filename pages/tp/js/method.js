@@ -232,15 +232,13 @@ function drawIP(stage) {
         let text = new createjs.Text(name, "9x Arial", "#004DFF");
         text.x = rectIP.x + 7;
         text.y = rectIP.y + 7;
-        ip.text = text;
-        stage.addChild(ip.text);
+        stage.addChild(text);
 
         let phi = 'φ = ' + ip.phi;
         let text2 = new createjs.Text(phi, "9x Arial", "#004DFF");
         text2.x = rectIP.x + 7;
         text2.y = rectIP.y + 18;
-        ip.text2 = text2;
-        stage.addChild(ip.text2);
+        stage.addChild(text2);
 
         
         //подпись ИП (первая точка) и риска. Проверка на перекрытие!!!!
