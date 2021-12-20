@@ -189,12 +189,14 @@ function kadr4(){
             ip.a = +ip.i_а.value;
 
             //удаляем ненужные свойства
+            /*
             delete ip.i_w;
             delete ip.i_h;
             delete ip.i_r;
             delete ip.i_x;
             delete ip.i_y;
             delete ip.i_а;
+            */
 
             //если есть пустые w, h, r - то return
             if (!(ip.w && ip.h && ip.r)) {
@@ -280,6 +282,17 @@ function kadr4(){
 
     //кнопка СЛЕДУЮЩЕЕ НАПРАВЛЕНИЕ
     bt_nextN.addEventListener('click', ()=>{
+        //удаляем ненужные свойства
+        arrIP.forEach((ip, i)=>{
+            delete ip.i_w;
+            delete ip.i_h;
+            delete ip.i_r;
+            delete ip.i_x;
+            delete ip.i_y;
+            delete ip.i_а;
+        });
+
+        
         //сохраняем данные: направление, ИП, ПП, т.Х и картинку канвас
         napr[naprCurrent].ip = arrIP;
         napr[naprCurrent][3] = arrIP;
@@ -331,7 +344,7 @@ function kadr4(){
 
 //КАДР 5 - вывод
 function kadr5(){
-    console.log(arrIP);
+    console.log(arrZd);
 
     build_kadr_5();
 
@@ -356,10 +369,13 @@ function kadr5(){
         arrZdPhp[i][1] = +arrZd[i].hk.value;
         arrZdPhp[i][2] = arrZd[i].walls.value;
         arrZdPhp[i][3] = arrZd[i].info.value;
+        arrZdPhp[i][4] = arrZd[i].name;
     });
 
     data.arrZd = arrZdPhp;
     data.napr = napr;
+
+    console.log(data);
 
     btn_word.addEventListener('click',async() => {
 

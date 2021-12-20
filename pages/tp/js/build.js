@@ -380,7 +380,7 @@ function build_kadr_5(){
                 
                 let _row3 = cr(divrow5, 'div', 'row container-fluid');
                     let _col31 = cr(_row3, 'div', 'col-4 font-weight-bold', 'Излучающ. поверхность(и): ');
-                    let _col32 = cr(_row3, 'div', 'col-6 border bg-white');
+                    let _col32 = cr(_row3, 'div', 'col-6 pr-5 border bg-white');
 
                 let _row4 = cr(divrow5, 'div', 'row container-fluid');
                     let _col41 = cr(_row4, 'div', 'col-4 font-weight-bold', 'Принимающая поверхность (материал): ');
@@ -407,6 +407,10 @@ function build_kadr_5(){
                 if (el.pp == 17400) _col42.textContent = 'Рулонная кровля';
                 if (el.pp == 13900) _col42.textContent = 'Древесина';
                 
+                //массив napr дополняет свойствами "строка ип с размерами" и "принимающая поверхность" для передаче серверу
+                el[7] = _col32.textContent;
+                el[8] = _col42.textContent;
+
                 //заполняем поле интенсивность
                 _col62.innerHTML =`${el.q} Вт/м<sup>2</sup>`;
 

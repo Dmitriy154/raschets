@@ -166,7 +166,7 @@ function addTextToCanvas (text, x, y, style, color) {
         t = new createjs.Text(text, style, color);
     } else {
         //стиль по умолчанию
-        t = new createjs.Text(text, "13x Arial", "#000");
+        t = new createjs.Text(text, "15px Arial", "#000");
     }
     t.x = x;
     t.y = y;
@@ -229,37 +229,37 @@ function drawIP(stage) {
         stage.phi = Math.round(stage.phi*1000)/1000;
 
         let name = 'ИП №'+ +(i+1) + ' ' + rasp;
-        let text = new createjs.Text(name, "9x Arial", "#004DFF");
+        let text = new createjs.Text(name, "15px Arial", "#004DFF");
         text.x = rectIP.x + 7;
-        text.y = rectIP.y + 7;
+        text.y = rectIP.y + 9;
         stage.addChild(text);
 
         let phi = 'φ = ' + ip.phi;
-        let text2 = new createjs.Text(phi, "9x Arial", "#004DFF");
+        let text2 = new createjs.Text(phi, "15px Arial", "#004DFF");
         text2.x = rectIP.x + 7;
-        text2.y = rectIP.y + 18;
+        text2.y = rectIP.y + 25;
         stage.addChild(text2);
 
         
         //подпись ИП (первая точка) и риска. Проверка на перекрытие!!!!
         // по Х (условие if чтобы не дублировать 0)
         if (rectIP.x !== 0) {
-            addTextToCanvas(ip.x, rectIP.x, stage.yn-12); 
+            addTextToCanvas(ip.x.toFixed(1), rectIP.x, stage.yn-12); 
             drawLine(rectIP.x, stage.yn+3, rectIP.x, stage.yn-3, 1, '#090');
         }
         if ((ip.x+ip.w) !== 0){
-            addTextToCanvas(ip.x+ip.w, rectIP.x + ip.w*stage.step, stage.yn-12); 
+            addTextToCanvas((ip.x+ip.w).toFixed(1), rectIP.x + ip.w*stage.step, stage.yn-12); 
             drawLine(rectIP.x + ip.w*stage.step, stage.yn+3, rectIP.x + ip.w*stage.step, stage.yn-3, 1, '#090');
         }
 
         //по Y
         if (ip.y !== 0){
-            addTextToCanvas(ip.y, stage.xn+3, stage.yn - ip.y*stage.step-5); 
+            addTextToCanvas(ip.y.toFixed(1), stage.xn+3, stage.yn - ip.y*stage.step-5); 
             drawLine(stage.xn-3, stage.yn - ip.y*stage.step, stage.xn+3, stage.yn - ip.y*stage.step, 1, '#090');
         }
 
         if ((ip.y+ip.h) !== 0){
-            addTextToCanvas(ip.y+ip.h, stage.xn+3, rectIP.y -5);
+            addTextToCanvas((ip.y+ip.h).toFixed(1), stage.xn+3, rectIP.y -5);
             drawLine(stage.xn-3, rectIP.y, stage.xn+3, rectIP.y, 1, '#090');   
         }
     }); //перебор всех ИП
@@ -268,7 +268,7 @@ function drawIP(stage) {
     drawLine(stage.xn, 0, stage.xn, stage.h, 1, '#0f1');
     drawLine(0, stage.yn, stage.w, stage.yn, 1, '#0f1');
 
-    addTextToCanvas('0', stage.xn - 8, stage.yn + 4); //ноль
+    addTextToCanvas('0', stage.xn - 10, stage.yn + 6); //ноль
 
     //рисуем точку X
     let pointX = new createjs.Shape();
@@ -311,7 +311,7 @@ function calcQ (stage){
     stage.q = Q;
 
     addTextToCanvas(phi, 4, 5);
-    addTextToCanvas(q, 4, 20);
+    addTextToCanvas(q, 4, 25);
 
     stage.update();
 }
@@ -400,8 +400,10 @@ function strIP (arr) {
         if (arr[i].a == 90) rasp = 'перпендикулярное';
         if (arr[i].a !== 0 && arr[i].a !== 90) rasp = 'под углом' + arr[i].a + ' град.';
 
-        result += `ИП № ${i+1}: расположение - ${rasp}, размеры ${arr[i].w} х  ${arr[i].h} м`;
+        result += `ИП  № ${i+1}:  расположение - ${rasp},  размеры ИП: ${arr[i].w} х ${arr[i].h} м; `;
+        console.log(result);
     }
+    
     return result;
 }
 
