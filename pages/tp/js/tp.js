@@ -395,8 +395,14 @@ function kadr5(){
 		body: fd
 		});
           
-        //let result = await response.json();
-        //console.log(result);
+        let result = await response.text();
+
+		await new Promise((resolve, reject) => setTimeout(resolve, 2000)); //задержка 2 сек
+		console.log(result);
+		location.href = result; //скачиваем файл
+		//удаляем файлы
+		
+
     });
 } // кадр 5
 

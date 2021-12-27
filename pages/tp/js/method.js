@@ -60,17 +60,16 @@ function rectXY (x1, x2, x3, y1, y2, y3, r, a) {
     //в ИП, в т.ч. на границах и в углу (ТОЛЬКО ДЛЯ ПАРАЛЛЕЛЬНОГО РАСПОЛОЖЕНИЯ!), для других - только на сторонах, но не внутри
     if (!(x3<x1 || x3>x2 || y3<y1 || y3>y2)) {
         //console.log('зона 1');
-
         if (a == '0') {
             w1 = w3 = x3-x1; w2 = w4 = x2-x3;  h1 = h2 = y2-y3; h3 = h4 = y3-y1;
             return phi_0(w1, h1,r) + phi_0(w2, h2,r) + phi_0(w3, h3,r) + phi_0(w4, h4,r);
         }
-
     }
 
     //Для остальных случаев
     if(x3>=x2 && y3<y2 && y3>y1) {
         //console.log('зона 2');
+
         w13 = w24 = x3-x1; w3 = w4 = x3-x2; h13 = h3 = y2-y3; h24 = h4 = y3-y1;
         if (a == '0') return phi_0(w13, h13,r) + phi_0(w24, h24,r) - phi_0(w3, h3,r) - phi_0(w4, h4,r);
         if (a == '90' && !arrIP.z) return phi_90(w13, h13,r) + phi_90(w24, h24,r) - phi_90(w3, h3,r) - phi_90(w4, h4,r);
@@ -81,16 +80,16 @@ function rectXY (x1, x2, x3, y1, y2, y3, r, a) {
 
     if (x3>x1 && x3<x2 && y3<=y1) {
         //console.log('зона 3');
+
         w13 = w3 = x3-x1; w24 = w4 = x2-x3; h13 = h24 = y2-y3; h3 = h4 = y1 - y3;
         if (a == '0') return phi_0(w13, h13,r) + phi_0(w24, h24,r) - phi_0(w3, h3,r) - phi_0(w4, h4,r);
         if (!arrIP.z) return alert('Ошибка, программа не учитывает сторону облучения (слева, справа). Выберите горизонтальную плоскость или измените данные точки Х или ИП');
         if (a == '90') return phi_90(h13, w13,r) + phi_90(h24, w24,r) - phi_90(h3, w3,r) - phi_90(h4, w4,r);
-        return phi_a(h13, w13,r,a) + phi_a(h24, w24,r,a) - phi_a(h3, w3,r,a) - phi_a(h4, w4,r,a);
-  
     }
 
     if (x3>=x2 && y3<=y1){
-       //console.log('зона 4');    
+      //console.log('зона 4');    
+
         w1234 = w34 = x3 - x1; w24 = w4 = x3 - x2; h1234 = h24 = y2 - y3; h34 = h4 = y1 - y3;
         if (a == '0') return phi_0(w1234, h1234,r) - phi_0(w34, h34,r) - phi_0(w24, h24,r) + phi_0(w4, h4,r);
         if (a == '90' && !arrIP.z) return phi_90(w1234, h1234,r) - phi_90(w34, h34,r) - phi_90(w24, h24,r) + phi_90(w4, h4,r);
@@ -154,9 +153,10 @@ function rectXY (x1, x2, x3, y1, y2, y3, r, a) {
         if (!arrIP.z) return phi_a(w1234, h1234,r,a) - phi_a(w34, h34,r,a) - phi_a(w24, h24,r,a) + phi_a(w4, h4,r,a);
         if (arrIP.z) return phi_a(h1234, w1234,r,a) - phi_a(h34, w34,r,a) - phi_a(h24, w24,r,a) + phi_a(h4, w4,r,a);                
     }
-
-    if (a !== '0') return alert('не размещайте точку Х в ИП, программа не учитывает сторону облучения');
-
+    
+    if (a !== '0') {
+        return alert('не размещайте точку Х в ИП, программа не учитывает сторону облучения');
+    }
 }
 
 //метод добавления текста в canvas
@@ -211,6 +211,8 @@ function drawIP(stage) {
     //определяем общий коэффициент облученности для сцены
     stage.phi = 0;
 
+    let a0 = true; // вспомогательная переменная для запуска функции searchPoint, чтобы запускать только для параллельных ИП
+
     arrIP.forEach((ip, i, arr)=>{
         let rectIP = new createjs.Shape();
         rectIP.graphics.beginStroke("red").beginFill("#e0e0e0").drawRect(0, 0, ip.w*stage.step, ip.h*stage.step);
@@ -222,6 +224,8 @@ function drawIP(stage) {
         let rasp = "под углом " + ip.a; //(парал., перп., под углом ...)
         if (ip.a == '0') rasp = "паралл.";
         if (ip.a == '90') rasp = "перп.";
+        
+        if (rasp !== "паралл.") a0 = false;
 
         ip.phi = +rectXY(ip.x, ip.x + ip.w, arr.x, ip.y, ip.y + ip.h, arr.y, ip.r, ip.a).toFixed(3);
 
@@ -279,13 +283,15 @@ function drawIP(stage) {
     //точка Х
     addTextToCanvas("Х", pointX.x + 6, pointX.y - 9, "bold 18px Arial", "#f00")
 
+
     //ищем точку с максимальным угловым коэффициентом
     //находим центр зоны расчета и определяем шаг (50%)
     let cx = stage.zonaW/2;
     let cy = stage.zonaH/2;
     let step = (stage.maxX-cx)*0.3; //процент 30%, постепенно уменьшается
     //делаем измерение в 5 точках и сравниваем результаты и движемся к нужной точке. И рисуем точку
-    searchPoint (cx, cy, step); //запускаем рукурсивную функцию с поиском нужной точки с максимальным phi
+    
+    if (a0) searchPoint (cx, cy, step); //запускаем рукурсивную функцию с поиском нужной точки с максимальным phi для ПАРАЛЛЕЛЬНЫХ
     
     //рисуем точку с максм. значением Х
     let pmax = new createjs.Shape();
@@ -377,11 +383,9 @@ searchPoint.count = 0; //начальное значение свойства ф
 //вспомогательная функция, параметры точки для которой делается расчет
 function searchPhi (x, y){
     let phi = 0;
-    
-   // console.dir(arrIP);
 
     arrIP.forEach((ip, i, arr)=>{
-        ip.phi = +rectXY(ip.x, ip.x + ip.w, x, ip.y, ip.y + ip.h, y, ip.r, ip.a).toFixed(5);
+        ip.phi = rectXY(ip.x, ip.x + ip.w, x, ip.y, ip.y + ip.h, y, ip.r, ip.a).toFixed(5);
         phi += ip.phi;
         phi = Math.round(phi*100000)/100000;
     });
