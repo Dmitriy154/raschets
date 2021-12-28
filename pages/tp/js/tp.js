@@ -397,15 +397,18 @@ function kadr5(){
           
         let result = await response.text();
 
-		await new Promise((resolve, reject) => setTimeout(resolve, 2000)); //задержка 2 сек
-		console.log(result);
-		location.href = result; //скачиваем файл
-		//удаляем файлы
+		await new Promise((resolve, reject) => setTimeout(resolve, 1500)); //задержка 1.5 сек
+		//console.log(result); //https://raschets.ru/dog/uploadTP/28.12_15.46.07_109.126.152.240/raschet.docx
 		
+		location.href = result; //скачиваем файл
+		
+		let nameFolder = result.split('/')[5]; //28.12_15.46.07_109.126.152.240
+
+		//удаляем файлы, делаем простой get запрос
+		let response2 = await fetch('https://raschets.ru/dog/uploadTP/util.php?nameFolder=' + nameFolder);
 
     });
 } // кадр 5
-
 
 /*
 1. console.log(pointMaxX);  //ВКЛЮЧИТЬ ПОСЛЕ ВСЕХ ТЕСТОВ!!!! методы 299
