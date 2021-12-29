@@ -344,8 +344,6 @@ function kadr4(){
 
 //КАДР 5 - вывод
 function kadr5(){
-    console.log(arrZd);
-
     build_kadr_5();
 
     btn_new.addEventListener('click',() => {
@@ -375,8 +373,6 @@ function kadr5(){
     data.arrZd = arrZdPhp;
     data.napr = napr;
 
-    console.log(data);
-
     btn_word.addEventListener('click',async() => {
 
         let fd = new FormData();
@@ -403,12 +399,16 @@ function kadr5(){
 		location.href = result; //скачиваем файл
 		
 		let nameFolder = result.split('/')[5]; //28.12_15.46.07_109.126.152.240
-
+		
 		//удаляем файлы, делаем простой get запрос
 		let response2 = await fetch('https://raschets.ru/dog/uploadTP/util.php?nameFolder=' + nameFolder);
+		
+		//после всего удаляем кнопку
+		btn_word.remove();
 
     });
 } // кадр 5
+
 
 /*
 1. console.log(pointMaxX);  //ВКЛЮЧИТЬ ПОСЛЕ ВСЕХ ТЕСТОВ!!!! методы 299

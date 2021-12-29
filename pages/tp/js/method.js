@@ -405,7 +405,6 @@ function strIP (arr) {
         if (arr[i].a !== 0 && arr[i].a !== 90) rasp = 'под углом' + arr[i].a + ' град.';
 
         result += `ИП  № ${i+1}:  расположение - ${rasp},  размеры ИП: ${arr[i].w} х ${arr[i].h} м; `;
-        console.log(result);
     }
     
     return result;
