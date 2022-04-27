@@ -34,6 +34,7 @@ function kadr1() {
         if (city.value) data.city = city.value;
         if (note.value) data.prim = note.value;
 
+
         //заполняем свойства name (краткое обозначение зданий)
         arrZd.forEach(element => {
             element.name = element.tip.value + ', ' + element.address.value;
@@ -223,7 +224,7 @@ function kadr4(){
          }
          
          //ОПРЕДЕЛЯЕМ РАЗМЕРЫ КАНВАСА И ОСЕЙ
-         let zonaW = maxX - minX; // в единицах
+         let zonaW = maxX - minX; // в единицах. 
          let zonaH = maxY - minY;
 
          let zonaWW; //zona W с учетом оси X в единицах оси
@@ -241,16 +242,19 @@ function kadr4(){
         if (minY < 0 && maxY > 0)   zonaHH = zonaH;
         if (maxY <= 0)              zonaHH = zonaH - maxY;
 
+        zonaWW += 1; //добавляем для подписи Х
+
         //Линейная интерполяция: 
         //step меняется от 5 до 80, в зависимости от ширины (высоты) от 0.5 до 50
         step = 80 + (5-80)*(0.5 - (zonaWW > zonaHH ? zonaWW : zonaHH))/(0.5 - 60);
 
-        let w_canvas = (zonaWW + 2*otstup)*step > 800 ? 800 : (zonaWW + 2*otstup)*step;
+        let w_canvas = (zonaWW + 2*otstup)*step > 800 ? 800 : (zonaWW + 2*otstup)*step; //дополнительный отсутуп для надписи Х
         let h_canvas = (zonaHH + 2*otstup)*step > 800 ? 800 : (zonaHH + 2*otstup)*step;
 
-        if (w_canvas == 800) step = 800/(zonaWW + 2*otstup);
+        if (w_canvas == 800) step = 800/(zonaWW + 2*otstup); 
         if (h_canvas == 800) step = 800/(zonaHH + 2*otstup);
-
+        
+ 
         //находим x0, y0 с учетом размеров канваса
         if (minX >= 0)              x0 = otstup;
         if (minX < 0 && maxX > 0)   x0 = otstup - minX;

@@ -9,7 +9,9 @@ function build_kadr_1(){
             //населенный пункт расчета
             let div_city = cr(row1, 'div', 'col-2');
                 city = cr(div_city, 'input', 'form-control');
-                city.setAttribute('placeholder', 'Населен. пункт');          
+                city.setAttribute('placeholder', 'Населен. пункт');
+				city.value = "г. Гомель";
+				city.title = 'Населенный пункт';
         
             //Примечание
             let div_note = cr(row1, 'div', 'col-10');

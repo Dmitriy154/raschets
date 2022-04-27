@@ -244,7 +244,13 @@ function drawIP(stage) {
         text2.y = rectIP.y + 25;
         stage.addChild(text2);
 
+        let rasst = 'r = ' + ip.r + ' м';
+        let text3 = new createjs.Text(rasst, "15px Arial", "#004DFF");
+        text3.x = rectIP.x + 7;
+        text3.y = rectIP.y + 41;
+        stage.addChild(text3);
         
+
         //подпись ИП (первая точка) и риска. Проверка на перекрытие!!!!
         // по Х (условие if чтобы не дублировать 0)
         if (rectIP.x !== 0) {
@@ -269,8 +275,8 @@ function drawIP(stage) {
     }); //перебор всех ИП
 
     //рисуем координатные оси
-    drawLine(stage.xn, 0, stage.xn, stage.h, 1, '#0f1');
-    drawLine(0, stage.yn, stage.w, stage.yn, 1, '#0f1');
+    drawLine(stage.xn, 0, stage.xn, stage.h, 1.5, '#0f1');
+    drawLine(0, stage.yn, stage.w, stage.yn, 1.5, '#0f1');
 
     addTextToCanvas('0', stage.xn - 10, stage.yn + 6); //ноль
 
@@ -281,8 +287,8 @@ function drawIP(stage) {
     pointX.y = stage.yn - arrIP.y*stage.step;
     stage.addChild(pointX);
     //точка Х
-    addTextToCanvas("Х", pointX.x + 6, pointX.y - 9, "bold 18px Arial", "#f00")
-
+    addTextToCanvas("Х", pointX.x + 6, pointX.y - 9, "bold 18px Arial", "#f00");
+    addTextToCanvas ("("+arrIP.x + ";" + arrIP.y + ")", pointX.x + 18, pointX.y - 9, "16px Arial", "#f00");
 
     //ищем точку с максимальным угловым коэффициентом
     //находим центр зоны расчета и определяем шаг (50%)

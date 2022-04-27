@@ -43,12 +43,14 @@ constructor(num, _stage) {
                             v == 'б' ? v='баня' : v = v;
                             e.target.value = v;
                         });
+						_tip.focus(); //устанавливаем фокус
                
                     //адрес
                     let divAdr = cr(row_zd_1, 'div', 'col-sm-4 m-1 p-0');
                         let _adr = cr(divAdr, 'input', 'form-control');
                         _adr.setAttribute('placeholder', 'Адрес здания (без названия нас. пункта)');
-                            this.address = _adr;
+						_adr.onfocus = function() {_adr.value = 'ул. ';};
+                        this.address = _adr;
 
                     //материал стен
                     let divMat = cr(row_zd_1, 'div', 'col-sm-4 m-1 p-0');
