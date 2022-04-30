@@ -3,8 +3,8 @@ let str_1 = cr(stage, 'div', 'row m-3 p-1');
 let col_11 = cr(str_1, 'div', 'col-lg-4 mx-auto');
 let col_21 = cr(str_1, 'div', 'col-lg-8 mx-auto');
 
-let bt_1 = cr(col_11, 'button', 'btn btn-primary btn-lg btn-block m-2', 'Выполнить расчет');
-let bt_2 = cr(col_11, 'button', 'btn btn-success btn-lg btn-block m-2', 'Расчет для категорий В1-В4, Д');
+//let bt_1 = cr(col_11, 'button', 'btn btn-primary btn-lg btn-block m-2', 'Выполнить расчет');
+let bt_2 = cr(col_11, 'button', 'btn btn-warning btn-lg btn-block m-2', 'Расчет категорий В1-В4, Д');
 
 //list
 let list_1 = cr(col_21, 'ul', 'list-group hover shadow p-1 mb-1 bg-white rounded');
@@ -21,7 +21,7 @@ list_1.innerHTML = `
     <a href="pages/kat/table_pue2.php"><li class="list-group-item list-group-item-action" id='li_data_pue_2'>Классы пожароопасных зон по ПУЭ</li></a>
 `
 
-bt_1.addEventListener('click', ()=> location.href = 'pages/kat/calc.php');
+//bt_1.addEventListener('click', ()=> location.href = 'pages/kat/calc.php');
 bt_2.addEventListener('click', ()=> location.href = 'pages/kat/simple_calc.php');
 
 
