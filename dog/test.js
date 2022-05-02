@@ -1,8 +1,9 @@
 let data = {
 	city: "Minsk",
 	prim: "Примечание",
-	arr: ['adress', 'materials', ['1','2','3']]
+	arr: 'Гомель'
 }
+
 
 //линия в канвасе
 canvasElem.addEventListener('mousemove', (e)=>{
@@ -10,6 +11,9 @@ canvasElem.addEventListener('mousemove', (e)=>{
       ctx.lineTo(e.clientX, e.clientY);
       ctx.stroke();
 });
+
+
+
 
 btn_send.addEventListener('click',async() => {
   
@@ -25,13 +29,13 @@ btn_send.addEventListener('click',async() => {
 		let json = await response.json();
 		*/
 		
-		
-		//отправляем картинку канвас
-		let blob = await new Promise(resolve => canvasElem.toBlob(resolve, 'image/png'));
 		let fd = new FormData();
-		//в переменную добавляем json, потом его декодируем и профит
 		fd.append('data', JSON.stringify(data));
-		fd.append('canvas_field', blob, 'canvas.png');
+		//отправляем картинку канвас
+		//let blob = await new Promise(resolve => canvasElem.toBlob(resolve, 'image/png'));
+		
+		//в переменную добавляем json, потом его декодируем и профит
+		//fd.append('canvas_field', blob, 'canvas.png');
 		
 		let response = await fetch('web_tp_word.php', {
 		method: 'POST',
